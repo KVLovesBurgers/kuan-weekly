@@ -37,7 +37,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ weekId: string
   const file = await readPersistentPdf(weekId, kind);
   if (!file) return new NextResponse("找不到檔案", { status: 404 });
 
-  return new NextResponse(file.bytes, {
+  return new NextResponse(new Uint8Array(file.bytes), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(file.filename)}`,

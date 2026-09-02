@@ -51,7 +51,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   if (!fs.existsSync(abs)) {
     const persisted = await readPersistentPdf(pdf.week_id, pdf.kind);
     if (!persisted) return new NextResponse("檔案遺失", { status: 404 });
-    return new NextResponse(persisted.bytes, {
+    return new NextResponse(new Uint8Array(persisted.bytes), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(persisted.filename)}`,
@@ -60,7 +60,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   }
 
   const bytes = fs.readFileSync(abs);
-  return new NextResponse(bytes, {
+  return new NextResponse(new Uint8Array(bytes), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(pdf.filename)}`,
