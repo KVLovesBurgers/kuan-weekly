@@ -28,8 +28,8 @@ export async function joinWaitlist(formData: FormData) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     redirect("/waitlist?error=" + encodeURIComponent("請輸入有效信箱。"));
   }
-  const db = getDb();
-  db.prepare(
+  const db = await getDb();
+  await db.prepare(
     "INSERT INTO waitlist (id, email, child_grade, note, created_at) VALUES (?, ?, ?, ?, ?)",
   ).run(uid("wait"), email, child_grade, note, new Date().toISOString());
   redirect("/waitlist?ok=1");
@@ -39,12 +39,12 @@ export async function saveChildProfile(formData: FormData) {
   const parent = await getParent();
   if (!parent) redirect("/login");
   const id = String(formData.get("child_id") ?? "");
-  const db = getDb();
-  const child = db.prepare("SELECT * FROM children WHERE id = ? AND parent_id = ?").get(id, parent.id) as
+  const db = await getDb();
+  const child = (await db.prepare("SELECT * FROM children WHERE id = ? AND parent_id = ?").get(id, parent.id)) as
     | ChildRow
     | undefined;
   if (!child) redirect("/dashboard");
-  db.prepare(
+  await db.prepare(
     `UPDATE children SET display_name=?, grade=?, school_progress=?, exam_target=?, weak_topics=? WHERE id=?`,
   ).run(
     String(formData.get("display_name") ?? child.display_name).trim() || child.display_name,
@@ -63,8 +63,8 @@ export async function saveFeedback(formData: FormData) {
   if (!parent) redirect("/login");
   const childId = String(formData.get("child_id") ?? "");
   const weekId = String(formData.get("week_id") ?? "");
-  const db = getDb();
-  const child = db.prepare("SELECT id FROM children WHERE id = ? AND parent_id = ?").get(childId, parent.id);
+  const db = await getDb();
+  const child = await db.prepare("SELECT id FROM children WHERE id = ? AND parent_id = ?").get(childId, parent.id);
   if (!child) redirect("/dashboard");
   const difficulty = String(formData.get("difficulty") ?? "");
   const completion = String(formData.get("completion") ?? "");
@@ -75,7 +75,7 @@ export async function saveFeedback(formData: FormData) {
   if (!["none", "some", "all"].includes(completion)) {
     redirect("/dashboard?error=" + encodeURIComponent("請選擇完成度。"));
   }
-  db.prepare(
+  await db.prepare(
     `INSERT INTO feedback (id, child_id, week_id, difficulty, completion, stuck_topic, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(child_id, week_id) DO UPDATE SET
@@ -99,18 +99,18 @@ export async function mockCheckout(formData: FormData) {
   const weak_topics = String(formData.get("weak_topics") ?? "");
   if (!display_name) redirect("/subscribe?error=" + encodeURIComponent("請填孩子稱呼。"));
 
-  const db = getDb();
-  if (seatsRemaining(db) <= 0) redirect("/waitlist");
+  const db = await getDb();
+  if ((await seatsRemaining(db)) <= 0) redirect("/waitlist");
 
   const childId = uid("child");
   const now = new Date().toISOString();
-  db.prepare(
+  await db.prepare(
     `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, 0, 'pending', ?, ?)`,
   ).run(childId, parent.id, display_name, grade, school_progress, exam_target, weak_topics, plan, now);
 
   const amount = plan === "yearly" ? SITE.yearlyPrice : SITE.monthlyPrice;
-  db.prepare(
+  await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'mock_incomplete', ?)`,
   ).run(uid("pay"), parent.id, childId, plan, amount, now);

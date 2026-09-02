@@ -19,17 +19,17 @@ export async function GET(_req: Request, ctx: { params: Promise<{ weekId: string
   }
 
   if (parent && !admin) {
-    const db = getDb();
-    const allowed = db
+    const db = await getDb();
+    const allowed = (await db
       .prepare(
         `SELECT c.id FROM children c
          WHERE c.parent_id = ? AND (c.subscription_status = 'active' OR c.subscription_status = 'demo')`,
       )
-      .all(parent.id) as { id: string }[];
+      .all(parent.id)) as { id: string }[];
     if (allowed.length === 0) return new NextResponse("尚未開通", { status: 403 });
   }
 
-  const week = getWeek(weekId);
+  const week = await getWeek(weekId);
   if (week && week.published === 0 && !admin) {
     return new NextResponse("本週尚未發布", { status: 403 });
   }

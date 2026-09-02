@@ -3,14 +3,14 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 import { getParent } from "@/lib/auth";
-import { getDb, seatsRemaining } from "@/lib/db";
+import { seatsRemaining } from "@/lib/db";
 import { SITE, seatCap } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const parent = await getParent();
-  const remaining = seatsRemaining(getDb());
+  const remaining = await seatsRemaining();
   const full = remaining <= 0;
 
   return (

@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { getDb } from "./db";
+import { mailConfigured, sendLoginEmail } from "./mail";
 import { uid } from "./ids";
 import { adminEmail, adminPassword, DEMO_PARENT_EMAIL } from "./config";
 
@@ -36,20 +37,20 @@ function unsign(raw: string) {
   return payload;
 }
 
-function ensureParent(email: string) {
-  const db = getDb();
+async function ensureParent(email: string) {
+  const db = await getDb();
   if (email === DEMO_PARENT_EMAIL) {
-    const row = db.prepare("SELECT id FROM parents WHERE email = ?").get(email) as
+    const row = (await db.prepare("SELECT id FROM parents WHERE email = ?").get(email)) as
       | { id: string }
       | undefined;
     return { id: row?.id ?? "parent_demo", email };
   }
-  let parent = db.prepare("SELECT id FROM parents WHERE email = ?").get(email) as
+  let parent = (await db.prepare("SELECT id FROM parents WHERE email = ?").get(email)) as
     | { id: string }
     | undefined;
   if (!parent) {
     const id = uid("parent");
-    db.prepare("INSERT INTO parents (id, email, created_at) VALUES (?, ?, ?)").run(
+    await db.prepare("INSERT INTO parents (id, email, created_at) VALUES (?, ?, ?)").run(
       id,
       email,
       new Date().toISOString(),
@@ -67,8 +68,16 @@ export async function requestMagicLink(emailRaw: string) {
   const exp = Date.now() + 15 * 60 * 1000;
   const t = sign(`magic|${email}|${exp}`);
   const url = `/login/verify?token=${encodeURIComponent(t)}`;
-  const smtpReady = Boolean(process.env.SMTP_HOST);
-  return { ok: true as const, url, showLink: !smtpReady, email };
+  const canMail = mailConfigured() && email !== DEMO_PARENT_EMAIL;
+  if (canMail) {
+    try {
+      await sendLoginEmail(email, url);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "寄信失敗";
+      return { ok: false as const, error: msg };
+    }
+  }
+  return { ok: true as const, url, showLink: !canMail, email };
 }
 
 export async function consumeMagicLink(raw: string) {
@@ -83,7 +92,7 @@ export async function consumeMagicLink(raw: string) {
   if (!email || !Number.isFinite(exp) || exp < Date.now()) {
     return { ok: false as const, error: "連結已過期，請重新索取。" };
   }
-  const parent = ensureParent(email);
+  const parent = await ensureParent(email);
   const session = sign(`sess|${parent.email}|${parent.id}|${Date.now() + THIRTY_DAYS * 1000}`);
   const jar = await cookies();
   jar.set(PARENT_COOKIE, session, {
@@ -108,7 +117,7 @@ export async function getParent() {
   const id = parts[2];
   const exp = Number(parts[3]);
   if (!email || !id || !Number.isFinite(exp) || exp < Date.now()) return null;
-  return ensureParent(email);
+  return await ensureParent(email);
 }
 
 export async function logoutParent() {

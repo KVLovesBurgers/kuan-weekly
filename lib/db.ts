@@ -1,46 +1,58 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync, type SQLInputValue } from "node:sqlite";
+import { createClient, type Client, type InValue } from "@libsql/client";
 import { DEMO_PARENT_EMAIL, seatCap } from "./config";
 
 type Stmt = {
-  get: (...args: unknown[]) => unknown;
-  run: (...args: unknown[]) => unknown;
-  all: (...args: unknown[]) => unknown[];
+  get: (...args: unknown[]) => Promise<unknown>;
+  run: (...args: unknown[]) => Promise<unknown>;
+  all: (...args: unknown[]) => Promise<unknown[]>;
 };
 
 export type KuanDb = {
-  exec: (sql: string) => void;
+  exec: (sql: string) => Promise<void>;
   prepare: (sql: string) => Stmt;
-  transaction: <T>(fn: () => T) => () => T;
 };
 
-const globalForDb = globalThis as unknown as { __kuanDb?: KuanDb };
+const globalForDb = globalThis as unknown as { __kuanDb?: Promise<KuanDb> };
 
-function wrap(raw: DatabaseSync): KuanDb {
+function wrapSqlite(raw: DatabaseSync): KuanDb {
   return {
-    exec(sql) {
+    async exec(sql) {
       raw.exec(sql);
     },
     prepare(sql) {
       const s = raw.prepare(sql);
       return {
-        get: (...args) => s.get(...(args as SQLInputValue[])),
-        run: (...args) => s.run(...(args as SQLInputValue[])),
-        all: (...args) => s.all(...(args as SQLInputValue[])) as unknown[],
+        get: async (...args) => s.get(...(args as SQLInputValue[])),
+        run: async (...args) => {
+          s.run(...(args as SQLInputValue[]));
+        },
+        all: async (...args) => s.all(...(args as SQLInputValue[])) as unknown[],
       };
     },
-    transaction(fn) {
-      return () => {
-        raw.exec("BEGIN");
-        try {
-          const result = fn();
-          raw.exec("COMMIT");
-          return result;
-        } catch (err) {
-          raw.exec("ROLLBACK");
-          throw err;
-        }
+  };
+}
+
+function wrapTurso(client: Client): KuanDb {
+  return {
+    async exec(sql) {
+      await client.executeMultiple(sql);
+    },
+    prepare(sql) {
+      return {
+        get: async (...args) => {
+          const r = await client.execute({ sql, args: args as InValue[] });
+          return r.rows[0];
+        },
+        run: async (...args) => {
+          await client.execute({ sql, args: args as InValue[] });
+        },
+        all: async (...args) => {
+          const r = await client.execute({ sql, args: args as InValue[] });
+          return r.rows as unknown[];
+        },
       };
     },
   };
@@ -58,23 +70,41 @@ function dbPath() {
   return path.join(writableRoot(), rel);
 }
 
-export function getDb() {
-  if (globalForDb.__kuanDb) return globalForDb.__kuanDb;
-  const file = dbPath();
-  fs.mkdirSync(path.dirname(file), { recursive: true });
+function tursoUrl() {
+  return (process.env.TURSO_DATABASE_URL || "").trim();
+}
+
+async function openDb(): Promise<KuanDb> {
   fs.mkdirSync(path.join(writableRoot(), "data", "pdfs"), { recursive: true });
-  const raw = new DatabaseSync(file);
-  const db = wrap(raw);
-  db.exec(process.env.VERCEL ? "PRAGMA journal_mode = DELETE" : "PRAGMA journal_mode = WAL");
-  db.exec("PRAGMA foreign_keys = ON");
-  migrate(db);
-  seed(db);
-  globalForDb.__kuanDb = db;
+  let db: KuanDb;
+  const url = tursoUrl();
+  if (url) {
+    db = wrapTurso(
+      createClient({
+        url,
+        authToken: process.env.TURSO_AUTH_TOKEN,
+      }),
+    );
+  } else {
+    const file = dbPath();
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    const raw = new DatabaseSync(file);
+    db = wrapSqlite(raw);
+    await db.exec(process.env.VERCEL ? "PRAGMA journal_mode = DELETE" : "PRAGMA journal_mode = WAL");
+    await db.exec("PRAGMA foreign_keys = ON");
+  }
+  await migrate(db);
+  await seed(db);
   return db;
 }
 
-function migrate(db: KuanDb) {
-  db.exec(`
+export function getDb() {
+  if (!globalForDb.__kuanDb) globalForDb.__kuanDb = openDb();
+  return globalForDb.__kuanDb;
+}
+
+async function migrate(db: KuanDb) {
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS parents (
       id TEXT PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
@@ -170,8 +200,8 @@ function migrate(db: KuanDb) {
   `);
 }
 
-function seed(db: KuanDb) {
-  const parent = db.prepare("SELECT id FROM parents WHERE email = ?").get(DEMO_PARENT_EMAIL) as
+async function seed(db: KuanDb) {
+  const parent = (await db.prepare("SELECT id FROM parents WHERE email = ?").get(DEMO_PARENT_EMAIL)) as
     | { id: string }
     | undefined;
   if (parent) return;
@@ -181,17 +211,18 @@ function seed(db: KuanDb) {
   const childId = "child_demo";
   const weekId = "week_demo_01";
 
-  const tx = db.transaction(() => {
-    db.prepare("INSERT INTO parents (id, email, created_at) VALUES (?, ?, ?)").run(
-      parentId,
-      DEMO_PARENT_EMAIL,
-      now,
-    );
-    db.prepare(
+  await db.prepare("INSERT INTO parents (id, email, created_at) VALUES (?, ?, ?)").run(
+    parentId,
+    DEMO_PARENT_EMAIL,
+    now,
+  );
+  await db
+    .prepare(
       `INSERT INTO children
         (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, 1, 'demo', NULL, ?)`,
-    ).run(
+    )
+    .run(
       childId,
       parentId,
       "安安（示範・未付費）",
@@ -201,10 +232,12 @@ function seed(db: KuanDb) {
       "應用題列式、分數四則",
       now,
     );
-    db.prepare(
+  await db
+    .prepare(
       `INSERT INTO weeks (id, week_label, title, synopsis, published, published_at, created_at)
        VALUES (?, ?, ?, ?, 1, ?, ?)`,
-    ).run(
+    )
+    .run(
       weekId,
       "2026 第 36 週",
       "分數應用與比率",
@@ -212,19 +245,18 @@ function seed(db: KuanDb) {
       now,
       now,
     );
-  });
-  tx();
 }
 
-export function paidSeatCount(db: KuanDb) {
-  const row = db
+export async function paidSeatCount(db: KuanDb) {
+  const row = (await db
     .prepare("SELECT COUNT(*) AS n FROM children WHERE subscription_status = 'active'")
-    .get() as { n: number };
-  return row.n;
+    .get()) as { n: number | bigint } | undefined;
+  return Number(row?.n ?? 0);
 }
 
-export function seatsRemaining(db: KuanDb) {
-  return Math.max(0, seatCap() - paidSeatCount(db));
+export async function seatsRemaining(db?: KuanDb) {
+  const d = db ?? (await getDb());
+  return Math.max(0, seatCap() - (await paidSeatCount(d)));
 }
 
 export type ChildRow = {

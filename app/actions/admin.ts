@@ -28,9 +28,9 @@ export async function adminLogout() {
 
 export async function createWeek(formData: FormData) {
   await requireAdmin();
-  const db = getDb();
+  const db = await getDb();
   const id = uid("week");
-  db.prepare(
+  await db.prepare(
     `INSERT INTO weeks (id, week_label, title, synopsis, published, published_at, created_at)
      VALUES (?, ?, ?, ?, 0, NULL, ?)`,
   ).run(
@@ -48,13 +48,13 @@ export async function createWeek(formData: FormData) {
 export async function publishWeek(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("week_id") ?? "");
-  const db = getDb();
+  const db = await getDb();
   const persisted = await listPersistentPdfs(id);
-  const sqliteN = (db.prepare("SELECT COUNT(*) AS n FROM pdf_files WHERE week_id = ?").get(id) as { n: number }).n;
+  const sqliteN = Number(((await db.prepare("SELECT COUNT(*) AS n FROM pdf_files WHERE week_id = ?").get(id)) as { n: number } | undefined)?.n ?? 0);
   if (persisted.length < 2 && sqliteN < 2) {
     redirect(`/admin/weeks/${id}?error=` + encodeURIComponent("請先上傳或產生兩份 PDF。"));
   }
-  db.prepare("UPDATE weeks SET published = 1, published_at = ? WHERE id = ?").run(new Date().toISOString(), id);
+  await db.prepare("UPDATE weeks SET published = 1, published_at = ? WHERE id = ?").run(new Date().toISOString(), id);
   await snapshotWeeksNow();
   revalidatePath("/admin");
   redirect(`/admin/weeks/${id}?ok=1`);
@@ -63,7 +63,7 @@ export async function publishWeek(formData: FormData) {
 export async function unpublishWeek(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("week_id") ?? "");
-  getDb().prepare("UPDATE weeks SET published = 0 WHERE id = ?").run(id);
+  await (await getDb()).prepare("UPDATE weeks SET published = 0 WHERE id = ?").run(id);
   await snapshotWeeksNow();
   revalidatePath("/admin");
   redirect(`/admin/weeks/${id}`);
@@ -102,14 +102,14 @@ export async function uploadPdfsAction(formData: FormData) {
 export async function activateChild(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("child_id") ?? "");
-  const db = getDb();
-  const child = db.prepare("SELECT * FROM children WHERE id = ?").get(id) as { is_demo: number; subscription_status: string } | undefined;
+  const db = await getDb();
+  const child = (await db.prepare("SELECT * FROM children WHERE id = ?").get(id)) as { is_demo: number; subscription_status: string } | undefined;
   if (!child) redirect("/admin");
   if (child.is_demo) redirect("/admin?error=" + encodeURIComponent("示範孩子不佔正取名額。"));
-  if (child.subscription_status !== "active" && seatsRemaining(db) <= 0) {
+  if (child.subscription_status !== "active" && (await seatsRemaining(db)) <= 0) {
     redirect("/admin?error=" + encodeURIComponent("正取名額已滿。"));
   }
-  db.prepare("UPDATE children SET subscription_status = 'active' WHERE id = ?").run(id);
+  await db.prepare("UPDATE children SET subscription_status = 'active' WHERE id = ?").run(id);
   revalidatePath("/admin");
   redirect("/admin?ok=1");
 }

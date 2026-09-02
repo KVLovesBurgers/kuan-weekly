@@ -16,21 +16,21 @@ export default async function AdminHome({
   const admin = await getAdmin();
   if (!admin) redirect("/admin/login");
   const sp = await searchParams;
-  const db = getDb();
-  const children = db.prepare("SELECT * FROM children ORDER BY created_at DESC").all() as ChildRow[];
+  const db = await getDb();
+  const children = (await db.prepare("SELECT * FROM children ORDER BY created_at DESC").all()) as ChildRow[];
   const weeks = await listWeeks(false);
   const weekFiles: Record<string, Awaited<ReturnType<typeof pdfsForWeek>>> = {};
   for (const w of weeks) {
     weekFiles[w.id] = await pdfsForWeek(w.id);
   }
-  const wait = db.prepare("SELECT * FROM waitlist ORDER BY created_at DESC").all() as {
+  const wait = (await db.prepare("SELECT * FROM waitlist ORDER BY created_at DESC").all()) as {
     id: string;
     email: string;
     child_grade: string;
     note: string;
     created_at: string;
   }[];
-  const feedbacks = db
+  const feedbacks = (await db
     .prepare(
       `SELECT f.*, c.display_name, w.week_label, w.title
        FROM feedback f
@@ -38,8 +38,10 @@ export default async function AdminHome({
        JOIN weeks w ON w.id = f.week_id
        ORDER BY f.created_at DESC`,
     )
-    .all() as (FeedbackRow & { display_name: string; week_label: string; title: string })[];
+    .all()) as (FeedbackRow & { display_name: string; week_label: string; title: string })[];
 
+  const paid = await paidSeatCount(db);
+  const remaining = await seatsRemaining(db);
   const diffLabel: Record<string, string> = Object.fromEntries(DIFFICULTY_OPTIONS);
   const doneLabel: Record<string, string> = Object.fromEntries(COMPLETION_OPTIONS);
 
@@ -53,7 +55,7 @@ export default async function AdminHome({
               {admin.email}
             </h1>
             <p className="muted">
-              正取 {paidSeatCount(db)} / {seatCap()} · 剩餘 {seatsRemaining(db)}
+              正取 {paid} / {seatCap()} · 剩餘 {remaining}
             </p>
           </div>
           <form action={adminLogout}>

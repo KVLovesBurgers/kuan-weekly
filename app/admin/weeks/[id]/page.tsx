@@ -17,7 +17,7 @@ export default async function WeekAdmin({
   if (!admin) redirect("/admin/login");
   const { id } = await params;
   const sp = await searchParams;
-  const week = getWeek(id);
+  const week = await getWeek(id);
   if (!week) redirect("/admin");
   const files = await pdfsForWeek(id);
 

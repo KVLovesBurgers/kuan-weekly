@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
-import { getDb, seatsRemaining } from "@/lib/db";
+import { seatsRemaining } from "@/lib/db";
 import { mockCheckout } from "@/app/actions/parent";
 import { GRADE_OPTIONS, SITE, seatCap } from "@/lib/config";
 
@@ -15,7 +15,7 @@ export default async function SubscribePage({
 }) {
   const parent = await getParent();
   if (!parent) redirect("/login");
-  const remaining = seatsRemaining(getDb());
+  const remaining = await seatsRemaining();
   if (remaining <= 0) redirect("/waitlist");
   const sp = await searchParams;
 

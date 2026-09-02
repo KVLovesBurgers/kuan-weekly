@@ -16,8 +16,8 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
     return NextResponse.redirect(new URL("/login", process.env.APP_URL ?? "http://localhost:3000"));
   }
 
-  const db = getDb();
-  const pdf = db.prepare("SELECT * FROM pdf_files WHERE id = ?").get(id) as PdfRow | undefined;
+  const db = await getDb();
+  const pdf = (await db.prepare("SELECT * FROM pdf_files WHERE id = ?").get(id)) as PdfRow | undefined;
   if (!pdf) {
     const m = id.match(/^(.*)-(student|parent)$/);
     if (m) {
@@ -27,16 +27,16 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   }
 
   if (parent && !admin) {
-    const allowed = db
+    const allowed = (await db
       .prepare(
         `SELECT c.id FROM children c
          WHERE c.parent_id = ? AND (c.subscription_status = 'active' OR c.subscription_status = 'demo')`,
       )
-      .all(parent.id) as { id: string }[];
+      .all(parent.id)) as { id: string }[];
     if (allowed.length === 0) return new NextResponse("尚未開通", { status: 403 });
   }
 
-  const week = getWeek(pdf.week_id);
+  const week = await getWeek(pdf.week_id);
   if (week && week.published === 0 && !admin) {
     return new NextResponse("本週尚未發布", { status: 403 });
   }
@@ -44,7 +44,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   let abs = absolutePdfPath(pdf);
   if (!fs.existsSync(abs) && week) {
     await ensureDemoPdfs(week);
-    const again = db.prepare("SELECT * FROM pdf_files WHERE id = ?").get(id) as PdfRow | undefined;
+    const again = (await db.prepare("SELECT * FROM pdf_files WHERE id = ?").get(id)) as PdfRow | undefined;
     if (!again) return new NextResponse("檔案遺失", { status: 404 });
     abs = absolutePdfPath(again);
   }

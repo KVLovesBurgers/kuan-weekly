@@ -18,16 +18,24 @@ export default async function DashboardPage({
   const parent = await getParent();
   if (!parent) redirect("/login");
   const sp = await searchParams;
-  const db = getDb();
-  const children = db
+  const db = await getDb();
+  const children = (await db
     .prepare("SELECT * FROM children WHERE parent_id = ? ORDER BY is_demo DESC, created_at")
-    .all(parent.id) as ChildRow[];
+    .all(parent.id)) as ChildRow[];
 
   const weeks = await listWeeks(true);
   if (weeks[0]) await ensureDemoPdfs(weeks[0]);
   const weekFiles: Record<string, Awaited<ReturnType<typeof pdfsForWeek>>> = {};
   for (const week of weeks) {
     weekFiles[week.id] = await pdfsForWeek(week.id);
+  }
+  const feedbackByKey: Record<string, FeedbackRow | undefined> = {};
+  for (const child of children) {
+    for (const week of weeks) {
+      feedbackByKey[`${child.id}:${week.id}`] = (await db
+        .prepare("SELECT * FROM feedback WHERE child_id = ? AND week_id = ?")
+        .get(child.id, week.id)) as FeedbackRow | undefined;
+    }
   }
 
   return (
@@ -87,9 +95,7 @@ export default async function DashboardPage({
                   {canDownload
                     ? weeks.map((week, idx) => {
                         const files = weekFiles[week.id] ?? [];
-                        const fb = db
-                          .prepare("SELECT * FROM feedback WHERE child_id = ? AND week_id = ?")
-                          .get(child.id, week.id) as FeedbackRow | undefined;
+                        const fb = feedbackByKey[`${child.id}:${week.id}`];
                         const student = files.find((f) => f.kind === "student");
                         const parentPdf = files.find((f) => f.kind === "parent");
                         return (

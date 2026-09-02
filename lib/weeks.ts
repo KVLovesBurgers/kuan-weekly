@@ -13,16 +13,16 @@ import {
 export async function hydrateWeeks() {
   const remote = await loadWeeksSnapshot();
   if (!remote?.length) return;
-  const db = getDb();
+  const db = await getDb();
   for (const w of remote) {
-    const existing = db.prepare("SELECT id FROM weeks WHERE id = ?").get(w.id) as { id: string } | undefined;
+    const existing = (await db.prepare("SELECT id FROM weeks WHERE id = ?").get(w.id)) as { id: string } | undefined;
     if (existing) {
-      db.prepare(
+      await db.prepare(
         `UPDATE weeks SET week_label = ?, title = ?, synopsis = ?, published = ?, published_at = ?, created_at = ?
          WHERE id = ?`,
       ).run(w.week_label, w.title, w.synopsis, w.published, w.published_at, w.created_at, w.id);
     } else {
-      db.prepare(
+      await db.prepare(
         `INSERT INTO weeks (id, week_label, title, synopsis, published, published_at, created_at)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
       ).run(w.id, w.week_label, w.title, w.synopsis, w.published, w.published_at, w.created_at);
@@ -30,22 +30,22 @@ export async function hydrateWeeks() {
   }
 }
 
-export function snapshotWeeksNow() {
-  const weeks = getDb().prepare("SELECT * FROM weeks ORDER BY created_at DESC").all() as WeekRow[];
+export async function snapshotWeeksNow() {
+  const weeks = (await (await getDb()).prepare("SELECT * FROM weeks ORDER BY created_at DESC").all()) as WeekRow[];
   return persistWeeksSnapshot(weeks);
 }
 
 export async function listWeeks(publishedOnly = false) {
   await hydrateWeeks();
-  const db = getDb();
+  const db = await getDb();
   const sql = publishedOnly
     ? "SELECT * FROM weeks WHERE published = 1 ORDER BY created_at DESC"
     : "SELECT * FROM weeks ORDER BY created_at DESC";
-  return db.prepare(sql).all() as WeekRow[];
+  return (await db.prepare(sql).all()) as WeekRow[];
 }
 
-export function getWeek(id: string) {
-  return getDb().prepare("SELECT * FROM weeks WHERE id = ?").get(id) as WeekRow | undefined;
+export async function getWeek(id: string) {
+  return (await (await getDb()).prepare("SELECT * FROM weeks WHERE id = ?").get(id)) as WeekRow | undefined;
 }
 
 export async function pdfsForWeek(weekId: string) {
@@ -64,9 +64,9 @@ export async function pdfsForWeek(weekId: string) {
         }) satisfies PdfRow,
     );
   }
-  return getDb()
+  return (await (await getDb())
     .prepare("SELECT * FROM pdf_files WHERE week_id = ?")
-    .all(weekId) as PdfRow[];
+    .all(weekId)) as PdfRow[];
 }
 
 export async function ensureDemoPdfs(week: WeekRow) {
@@ -77,10 +77,10 @@ export async function ensureDemoPdfs(week: WeekRow) {
 }
 
 export async function generatePlaceholderWeekPdfs(weekId: string) {
-  const week = getWeek(weekId);
+  const week = await getWeek(weekId);
   if (!week) throw new Error("找不到該週");
   const files = await writeWeekPdfs(week);
-  const db = getDb();
+  const db = await getDb();
   const now = new Date().toISOString();
   for (const [kind, file] of [
     ["student", files.student],
@@ -88,8 +88,8 @@ export async function generatePlaceholderWeekPdfs(weekId: string) {
   ] as const) {
     const abs = path.join(writableRoot(), file.storage_path);
     const bytes = fs.readFileSync(abs);
-    db.prepare("DELETE FROM pdf_files WHERE week_id = ? AND kind = ?").run(weekId, kind);
-    db.prepare(
+    await db.prepare("DELETE FROM pdf_files WHERE week_id = ? AND kind = ?").run(weekId, kind);
+    await db.prepare(
       `INSERT INTO pdf_files (id, week_id, kind, filename, storage_path, generated, created_at)
        VALUES (?, ?, ?, ?, ?, 1, ?)`,
     ).run(uid("pdf"), weekId, kind, file.filename, file.storage_path, now);
@@ -109,9 +109,9 @@ export async function saveUploadedPdf(
   const abs = path.join(writableRoot(), rel);
   fs.mkdirSync(path.dirname(abs), { recursive: true });
   fs.writeFileSync(abs, bytes);
-  const db = getDb();
-  db.prepare("DELETE FROM pdf_files WHERE week_id = ? AND kind = ?").run(weekId, safeKind);
-  db.prepare(
+  const db = await getDb();
+  await db.prepare("DELETE FROM pdf_files WHERE week_id = ? AND kind = ?").run(weekId, safeKind);
+  await db.prepare(
     `INSERT INTO pdf_files (id, week_id, kind, filename, storage_path, generated, created_at)
      VALUES (?, ?, ?, ?, ?, 0, ?)`,
   ).run(uid("pdf"), weekId, safeKind, filename, rel, new Date().toISOString());

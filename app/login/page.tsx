@@ -21,20 +21,20 @@ export default async function LoginPage({
         <div className="wrap" style={{ maxWidth: 520 }}>
           <p className="kicker">家長登入</p>
           <h1 className="display">用信箱收一次連結</h1>
-          <p className="muted">不設密碼。本機未接 SMTP 時，連結會直接顯示在這個頁面。</p>
+          <p className="muted">不設密碼。正式環境會寄信；示範信箱仍會在本頁顯示連結。</p>
           {error ? <p className="banner warn">{error}</p> : null}
           {sent ? (
             <div className="banner ok">
-              已為 {email || "你的信箱"} 產生登入連結。
+              已處理 {email || "你的信箱"} 的登入請求。
               {link ? (
                 <p style={{ margin: "10px 0 0" }}>
-                  開發模式連結：{" "}
+                  登入連結：{" "}
                   <a href={link} style={{ textDecoration: "underline" }}>
                     點此登入
                   </a>
                 </p>
               ) : (
-                <p>若已設定 SMTP，請到收件匣點選信件中的連結。</p>
+                <p>請到收件匣點選信件中的連結（含垃圾郵件匣）。</p>
               )}
             </div>
           ) : null}
@@ -42,7 +42,7 @@ export default async function LoginPage({
             <label htmlFor="email">電子信箱</label>
             <input id="email" name="email" type="email" required placeholder={DEMO_PARENT_EMAIL} />
             <button className="btn btn-ink" type="submit">
-              寄出／顯示登入連結
+              寄出登入連結
             </button>
             <p className="muted" style={{ fontSize: 13 }}>
               示範家長信箱：{DEMO_PARENT_EMAIL}（已有一名未付費示範孩子與一週已發布題本）
