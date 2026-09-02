@@ -1,0 +1,28 @@
+{
+  "name": "kuan-weekly",
+  "version": "1.0.0",
+  "private": true,
+  "description": "寬數週練 — 小學到高中數學每週練習包訂閱（v1）",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.5.2",
+    "@pdf-lib/fontkit": "^1.0.0",
+    "pdf-lib": "^1.17.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

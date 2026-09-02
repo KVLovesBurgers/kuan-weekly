@@ -1,0 +1,16 @@
+node_modules
+.next
+data/*.sqlite
+data/*.sqlite-journal
+data/pdfs/*
+!data/pdfs/.gitkeep
+.env
+.DS_Store
+
+data/*.ttf
+data/*.sqlite-wal
+data/*.sqlite-shm
+
+.env.local
+
+!data/NotoSansCJKtc-Regular.ttf
