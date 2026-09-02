@@ -5,11 +5,13 @@ import { revalidatePath } from "next/cache";
 import { getAdmin, loginAdmin, logoutAdmin } from "@/lib/auth";
 import { getDb, seatsRemaining } from "@/lib/db";
 import { uid } from "@/lib/ids";
-import { generatePlaceholderWeekPdfs, saveUploadedPdf } from "@/lib/weeks";
+import { generatePlaceholderWeekPdfs, hydrateWeeks, saveUploadedPdf, snapshotWeeksNow } from "@/lib/weeks";
+import { listPersistentPdfs } from "@/lib/pdf-store";
 
 async function requireAdmin() {
   const a = await getAdmin();
   if (!a) redirect("/admin/login");
+  await hydrateWeeks();
   return a;
 }
 
@@ -38,6 +40,7 @@ export async function createWeek(formData: FormData) {
     String(formData.get("synopsis") ?? "").trim(),
     new Date().toISOString(),
   );
+  await snapshotWeeksNow();
   revalidatePath("/admin");
   redirect(`/admin/weeks/${id}`);
 }
@@ -46,11 +49,13 @@ export async function publishWeek(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("week_id") ?? "");
   const db = getDb();
-  const pdfs = db.prepare("SELECT COUNT(*) AS n FROM pdf_files WHERE week_id = ?").get(id) as { n: number };
-  if (pdfs.n < 2) {
+  const persisted = await listPersistentPdfs(id);
+  const sqliteN = (db.prepare("SELECT COUNT(*) AS n FROM pdf_files WHERE week_id = ?").get(id) as { n: number }).n;
+  if (persisted.length < 2 && sqliteN < 2) {
     redirect(`/admin/weeks/${id}?error=` + encodeURIComponent("請先上傳或產生兩份 PDF。"));
   }
   db.prepare("UPDATE weeks SET published = 1, published_at = ? WHERE id = ?").run(new Date().toISOString(), id);
+  await snapshotWeeksNow();
   revalidatePath("/admin");
   redirect(`/admin/weeks/${id}?ok=1`);
 }
@@ -59,6 +64,7 @@ export async function unpublishWeek(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("week_id") ?? "");
   getDb().prepare("UPDATE weeks SET published = 0 WHERE id = ?").run(id);
+  await snapshotWeeksNow();
   revalidatePath("/admin");
   redirect(`/admin/weeks/${id}`);
 }
@@ -76,13 +82,18 @@ export async function uploadPdfsAction(formData: FormData) {
   const id = String(formData.get("week_id") ?? "");
   const student = formData.get("student") as File | null;
   const parent = formData.get("parent") as File | null;
-  if (student && student.size > 0) {
-    const buf = Buffer.from(await student.arrayBuffer());
-    saveUploadedPdf(id, "student", student.name, buf);
-  }
-  if (parent && parent.size > 0) {
-    const buf = Buffer.from(await parent.arrayBuffer());
-    saveUploadedPdf(id, "parent", parent.name, buf);
+  try {
+    if (student && student.size > 0) {
+      const buf = Buffer.from(await student.arrayBuffer());
+      await saveUploadedPdf(id, "student", student.name, buf);
+    }
+    if (parent && parent.size > 0) {
+      const buf = Buffer.from(await parent.arrayBuffer());
+      await saveUploadedPdf(id, "parent", parent.name, buf);
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "上傳失敗";
+    redirect(`/admin/weeks/${id}?error=` + encodeURIComponent(msg));
   }
   revalidatePath(`/admin/weeks/${id}`);
   redirect(`/admin/weeks/${id}?up=1`);

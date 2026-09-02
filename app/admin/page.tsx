@@ -18,7 +18,11 @@ export default async function AdminHome({
   const sp = await searchParams;
   const db = getDb();
   const children = db.prepare("SELECT * FROM children ORDER BY created_at DESC").all() as ChildRow[];
-  const weeks = listWeeks(false);
+  const weeks = await listWeeks(false);
+  const weekFiles: Record<string, Awaited<ReturnType<typeof pdfsForWeek>>> = {};
+  for (const w of weeks) {
+    weekFiles[w.id] = await pdfsForWeek(w.id);
+  }
   const wait = db.prepare("SELECT * FROM waitlist ORDER BY created_at DESC").all() as {
     id: string;
     email: string;
@@ -83,7 +87,7 @@ export default async function AdminHome({
             </thead>
             <tbody>
               {weeks.map((w) => {
-                const files = pdfsForWeek(w.id);
+                const files = weekFiles[w.id] ?? [];
                 return (
                   <tr key={w.id}>
                     <td>

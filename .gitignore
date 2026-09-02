@@ -14,3 +14,4 @@ data/*.sqlite-shm
 .env.local
 
 !data/NotoSansCJKtc-Regular.ttf
+.vercel

@@ -19,7 +19,7 @@ export default async function WeekAdmin({
   const sp = await searchParams;
   const week = getWeek(id);
   if (!week) redirect("/admin");
-  const files = pdfsForWeek(id);
+  const files = await pdfsForWeek(id);
 
   return (
     <main className="section">
@@ -43,7 +43,7 @@ export default async function WeekAdmin({
             {files.map((f) => (
               <li key={f.id}>
                 {f.kind === "student" ? "學生題本" : "家長解答"}：
-                <a href={`/pdf/${f.id}`} style={{ textDecoration: "underline" }}>
+                <a href={`/files/${id}/${f.kind}`} style={{ textDecoration: "underline" }}>
                   {f.filename}
                 </a>
                 {f.generated ? "（系統產生）" : "（上傳）"}

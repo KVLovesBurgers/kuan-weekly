@@ -23,8 +23,12 @@ export default async function DashboardPage({
     .prepare("SELECT * FROM children WHERE parent_id = ? ORDER BY is_demo DESC, created_at")
     .all(parent.id) as ChildRow[];
 
-  const weeks = listWeeks(true);
+  const weeks = await listWeeks(true);
   if (weeks[0]) await ensureDemoPdfs(weeks[0]);
+  const weekFiles: Record<string, Awaited<ReturnType<typeof pdfsForWeek>>> = {};
+  for (const week of weeks) {
+    weekFiles[week.id] = await pdfsForWeek(week.id);
+  }
 
   return (
     <>
@@ -82,7 +86,7 @@ export default async function DashboardPage({
 
                   {canDownload
                     ? weeks.map((week, idx) => {
-                        const files = pdfsForWeek(week.id);
+                        const files = weekFiles[week.id] ?? [];
                         const fb = db
                           .prepare("SELECT * FROM feedback WHERE child_id = ? AND week_id = ?")
                           .get(child.id, week.id) as FeedbackRow | undefined;
@@ -104,14 +108,14 @@ export default async function DashboardPage({
                             <p className="muted">{week.synopsis}</p>
                             <p style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                               {student ? (
-                                <a className="btn btn-ink" href={`/pdf/${student.id}`}>
+                                <a className="btn btn-ink" href={`/files/${week.id}/student`}>
                                   下載學生題本
                                 </a>
                               ) : (
                                 <span className="muted">學生題本準備中</span>
                               )}
                               {parentPdf ? (
-                                <a className="btn btn-paper" href={`/pdf/${parentPdf.id}`}>
+                                <a className="btn btn-paper" href={`/files/${week.id}/parent`}>
                                   下載家長解答
                                 </a>
                               ) : null}
