@@ -20,7 +20,7 @@ export async function requestMagicLink(emailRaw: string) {
     email,
     expires,
   );
-  const url = `${appUrl()}/login/verify?token=${t}`;
+  const url = `/login/verify?token=${t}`;
   const smtpReady = Boolean(process.env.SMTP_HOST);
   return { ok: true as const, url, showLink: !smtpReady, email };
 }
