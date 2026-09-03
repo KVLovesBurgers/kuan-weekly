@@ -43,6 +43,7 @@ export const GRADE_OPTIONS = [
   "高一",
   "高二",
   "高三",
+  "SAT Math",
 ] as const;
 
 /** 週練難度回饋：僅三選一，不含資優／競賽。 */
