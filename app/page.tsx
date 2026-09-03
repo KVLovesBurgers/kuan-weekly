@@ -80,6 +80,24 @@ export default async function HomePage() {
           </div>
         </section>
 
+        <section id="teacher" className="section">
+          <div className="wrap" style={{ maxWidth: 720 }}>
+            <p className="kicker">吳寬老師｜寬數</p>
+            <h2 className="display">誰在出題</h2>
+            <p className="muted" style={{ marginTop: 12 }}>
+              陽明交大應用數學。Stanford OHS 數學老師暨官方監考官。一對一課表目前已滿，週練是講義方案：每週兩份 PDF，不是即時私訊答題。
+            </p>
+            <p className="muted">
+              成效一例：學測數學 11 級到分科 58 級。經歷與 SAT／學測一對一請看個人頁。
+            </p>
+            <p style={{ marginTop: 20 }}>
+              <a className="btn btn-paper" href={SITE.oneOnOneUrl}>
+                認識吳寬老師
+              </a>
+            </p>
+          </div>
+        </section>
+
         <section id="how" className="section">
           <div className="wrap">
             <p className="kicker">01</p>
@@ -112,7 +130,7 @@ export default async function HomePage() {
             </p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               {[
-                ["年級", "小一到小六、國一到高三。題距與符號習慣跟著學制走。"],
+                ["年級", "小一到高三，另有 SAT Math。題距與符號習慣跟著學制走。"],
                 ["校內進度", "例如「翰林版二次函數剛結束，下一章指數對數」。"],
                 ["應考目標", "自由填寫，例如跟上段考、會考、學測，或目前想把哪個單元寫穩。"],
                 ["弱點單元", "三角恆等式、向量內積、一元二次、應用題列式……寫孩子真正卡住的名字。"],
