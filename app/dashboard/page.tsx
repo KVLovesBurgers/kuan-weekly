@@ -62,7 +62,7 @@ export default async function DashboardPage({
 
           {children.length === 0 ? (
             <p className="card" style={{ marginTop: 24 }}>
-              尚未登記孩子。可先<a href="/subscribe">走示範結帳</a>（不會扣款），或使用示範信箱登入。
+              尚未登記孩子。可先<a href="/subscribe">訂閱並付款</a>，或使用示範信箱登入。
             </p>
           ) : null}
 
@@ -78,7 +78,7 @@ export default async function DashboardPage({
                     </h2>
                     {child.is_demo ? <span className="badge demo">示範・未付費走流程</span> : null}
                     {child.subscription_status === "pending" ? (
-                      <span className="badge wait">待開通（示範結帳未完成）</span>
+                      <span className="badge wait">待開通（尚未完成付款）</span>
                     ) : null}
                     {child.subscription_status === "active" ? <span className="badge">已開通</span> : null}
                   </div>
@@ -203,7 +203,7 @@ export default async function DashboardPage({
 
           <p style={{ marginTop: 28 }}>
             <Link href="/subscribe" className="btn btn-ink">
-              再為一名孩子示範結帳
+              再為一名孩子訂閱
             </Link>
           </p>
         </div>

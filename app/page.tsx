@@ -130,7 +130,7 @@ export default async function HomePage() {
           <div className="wrap">
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
-            <p className="muted">一位孩子一份週練。第二個孩子再加一席。金流在 v1 為示範結帳，不會真正扣款。</p>
+            <p className="muted">一位孩子一份週練。第二個孩子再加一席。付款走綠界；測試期不會入帳，正式特店核准後才會進你的帳戶。</p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               <article className="card">
                 <p className="kicker">按月</p>
@@ -167,7 +167,7 @@ export default async function HomePage() {
               ["有 LINE 或線上問答嗎？", "本站是週練包：出題＋解答。若需要一對一，請跟老師討論，寄信 jjredick365@gmail.com。"],
               ["為什麼要兩份 PDF？", "學生題本避免一眼瞄到答案；家長對完之後才打開解答，並用三欄回饋告訴老師這週是偏易、剛好，還是偏難。"],
               ["會出 SAT 嗎？", "寬數週練 v1 做國內數學：小一到高三。SAT 不在本站導覽。"],
-              ["示範帳號是什麼？", "網站內建一名未付費示範孩子，方便走完下載與回饋。示範結帳不會把孩子標成已付款。"],
+              ["示範帳號是什麼？", "網站內建一名未付費示範孩子，方便走完下載與回饋。真家長走綠界付款後才開通；示範孩子本來就看得到講義。"],
               ["滿 20 名怎麼辦？", "正取額滿後改候補。老師從後台看到候補名單後再通知開席。"],
             ].map(([q, a]) => (
               <details key={q}>

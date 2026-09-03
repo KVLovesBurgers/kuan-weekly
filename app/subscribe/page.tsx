@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
-import { mockCheckout } from "@/app/actions/parent";
+import { startCheckout } from "@/app/actions/parent";
 import { GRADE_OPTIONS, SITE, seatCap } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -27,10 +27,10 @@ export default async function SubscribePage({
           <p className="kicker">訂閱</p>
           <h1 className="display">為一名孩子登記週練</h1>
           <p className="muted">
-            正取尚餘 {remaining} / {seatCap()} 名。以下是示範結帳：不會向銀行或金流請款，也不會把孩子標成已付費。
+            正取尚餘 {remaining} / {seatCap()} 名。送出後會到綠界付款（信用卡、ATM 等）。付成功後會開通該名孩子。
           </p>
           {sp.error ? <p className="banner warn">{sp.error}</p> : null}
-          <form action={mockCheckout} className="form card" style={{ marginTop: 20 }}>
+          <form action={startCheckout} className="form card" style={{ marginTop: 20 }}>
             <label>孩子稱呼（顯示於後台與 PDF 頁首）</label>
             <input name="display_name" required placeholder="例如：安安" />
             <label>年級</label>
@@ -50,9 +50,8 @@ export default async function SubscribePage({
               <option value="monthly">月繳 {SITE.currency}{SITE.monthlyPrice}</option>
               <option value="yearly">年繳 {SITE.currency}{SITE.yearlyPrice}</option>
             </select>
-            <div className="banner warn">示範結帳：送出後只會留下「未完成付款」紀錄，名額不會自動開通。</div>
             <button className="btn btn-ink" type="submit">
-              進入示範結帳（不扣款）
+              前往綠界付款
             </button>
           </form>
         </div>

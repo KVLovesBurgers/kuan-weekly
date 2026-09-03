@@ -88,10 +88,10 @@ export async function saveFeedback(formData: FormData) {
   redirect("/dashboard?fb=1");
 }
 
-export async function mockCheckout(formData: FormData) {
+export async function startCheckout(formData: FormData) {
   const parent = await getParent();
   if (!parent) redirect("/login");
-  const plan = String(formData.get("plan") ?? "monthly");
+  const plan = String(formData.get("plan") ?? "monthly") === "yearly" ? "yearly" : "monthly";
   const display_name = String(formData.get("display_name") ?? "").trim();
   const grade = String(formData.get("grade") ?? "");
   const school_progress = String(formData.get("school_progress") ?? "");
@@ -102,7 +102,9 @@ export async function mockCheckout(formData: FormData) {
   const db = await getDb();
   if ((await seatsRemaining(db)) <= 0) redirect("/waitlist");
 
+  const { merchantTradeNo } = await import("@/lib/ecpay");
   const childId = uid("child");
+  const tradeNo = merchantTradeNo();
   const now = new Date().toISOString();
   await db.prepare(
     `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
@@ -112,8 +114,8 @@ export async function mockCheckout(formData: FormData) {
   const amount = plan === "yearly" ? SITE.yearlyPrice : SITE.monthlyPrice;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
-     VALUES (?, ?, ?, ?, ?, 'mock_incomplete', ?)`,
-  ).run(uid("pay"), parent.id, childId, plan, amount, now);
+     VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
+  ).run(tradeNo, parent.id, childId, plan, amount, now);
 
-  redirect(`/subscribe/result?child=${childId}`);
+  redirect(`/subscribe/pay?trade=${encodeURIComponent(tradeNo)}`);
 }
