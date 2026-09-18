@@ -6,12 +6,17 @@ import { getParent, logoutParent, requestMagicLink } from "@/lib/auth";
 import { getDb, seatsRemaining, type ChildRow } from "@/lib/db";
 import { uid } from "@/lib/ids";
 import { SITE } from "@/lib/config";
+import { safeNextPath } from "@/lib/safe-next";
 
 export async function sendLoginLink(formData: FormData) {
   const email = String(formData.get("email") ?? "");
-  const res = await requestMagicLink(email);
-  if (!res.ok) redirect(`/login?error=${encodeURIComponent(res.error)}`);
-  const q = new URLSearchParams({ sent: "1", email: res.email });
+  const next = safeNextPath(String(formData.get("next") ?? "/dashboard"));
+  const res = await requestMagicLink(email, next);
+  if (!res.ok) {
+    const q = new URLSearchParams({ error: res.error, next });
+    redirect(`/login?${q.toString()}`);
+  }
+  const q = new URLSearchParams({ sent: "1", email: res.email, next });
   if (res.showLink) q.set("link", res.url);
   redirect(`/login?${q.toString()}`);
 }
@@ -90,7 +95,7 @@ export async function saveFeedback(formData: FormData) {
 
 export async function startCheckout(formData: FormData) {
   const parent = await getParent();
-  if (!parent) redirect("/login");
+  if (!parent) redirect("/login?next=/subscribe");
   const plan = String(formData.get("plan") ?? "monthly") === "yearly" ? "yearly" : "monthly";
   const display_name = String(formData.get("display_name") ?? "").trim();
   const grade = String(formData.get("grade") ?? "");

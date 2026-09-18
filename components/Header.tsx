@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { MobileNav } from "./MobileNav";
 
 export function Header({
   variant = "dark",
@@ -15,19 +16,26 @@ export function Header({
           <Logo />
           <span>寬數週練</span>
         </Link>
-        <nav className="nav" aria-label="主要">
-          <Link href="/#how" className="hide-sm">怎麼進行</Link>
-          <Link href="/#pricing" className="hide-sm">方案</Link>
-          <Link href="/#faq" className="hide-sm">常見問題</Link>
+        <nav className="nav nav-desktop" aria-label="主要">
+          <Link href="/#how" className="hide-sm">
+            怎麼進行
+          </Link>
+          <Link href="/#pricing" className="hide-sm">
+            方案
+          </Link>
+          <Link href="/#faq" className="hide-sm">
+            常見問題
+          </Link>
           {parentEmail ? (
             <Link href="/dashboard">家長後台</Link>
           ) : (
             <Link href="/login">家長登入</Link>
           )}
-          <Link href="/subscribe" className="btn btn-steel" style={{ minHeight: 36, padding: "0 12px" }}>
+          <Link href="/login?next=/subscribe" className="btn btn-steel" style={{ minHeight: 36, padding: "0 12px" }}>
             為孩子訂閱
           </Link>
         </nav>
+        <MobileNav parentEmail={parentEmail} />
       </div>
     </header>
   );

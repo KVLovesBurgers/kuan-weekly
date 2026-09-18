@@ -2,6 +2,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { sendLoginLink } from "@/app/actions/parent";
 import { DEMO_PARENT_EMAIL } from "@/lib/config";
+import { safeNextPath } from "@/lib/safe-next";
+import { getParent } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function LoginPage({
   searchParams,
@@ -11,8 +14,17 @@ export default async function LoginPage({
   const sp = await searchParams;
   const sent = sp.sent === "1";
   const link = typeof sp.link === "string" ? sp.link : "";
-  const email = typeof sp.email === "string" ? sp.email : "";
+  const emailParam = typeof sp.email === "string" ? sp.email : "";
   const error = typeof sp.error === "string" ? sp.error : "";
+  const next = safeNextPath(typeof sp.next === "string" ? sp.next : "/dashboard");
+
+  const parent = await getParent();
+  if (parent && !sent) {
+    redirect(next);
+  }
+
+  const isSubscribe = next === "/subscribe";
+  const isDemo = emailParam === DEMO_PARENT_EMAIL;
 
   return (
     <>
@@ -22,10 +34,20 @@ export default async function LoginPage({
           <p className="kicker">家長登入</p>
           <h1 className="display">用信箱收一次連結</h1>
           <p className="muted">不設密碼。正式環境會寄信；示範信箱仍會在本頁顯示連結。</p>
+          {isSubscribe ? (
+            <p className="banner ok" style={{ marginTop: 12 }}>
+              登入後即可登記孩子與查看匯款帳號
+            </p>
+          ) : null}
+          {isDemo && !sent ? (
+            <p className="muted" style={{ marginTop: 8, fontSize: 14 }}>
+              使用示範信箱 {DEMO_PARENT_EMAIL}
+            </p>
+          ) : null}
           {error ? <p className="banner warn">{error}</p> : null}
           {sent ? (
             <div className="banner ok">
-              已處理 {email || "你的信箱"} 的登入請求。
+              已處理 {emailParam || "你的信箱"} 的登入請求。
               {link ? (
                 <p style={{ margin: "10px 0 0" }}>
                   登入連結：{" "}
@@ -39,8 +61,16 @@ export default async function LoginPage({
             </div>
           ) : null}
           <form action={sendLoginLink} className="form card" style={{ marginTop: 20 }}>
+            <input type="hidden" name="next" value={next} />
             <label htmlFor="email">電子信箱</label>
-            <input id="email" name="email" type="email" required placeholder={DEMO_PARENT_EMAIL} />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              defaultValue={emailParam}
+              placeholder={DEMO_PARENT_EMAIL}
+            />
             <button className="btn btn-ink" type="submit">
               寄出登入連結
             </button>

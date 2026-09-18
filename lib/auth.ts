@@ -4,6 +4,7 @@ import { getDb } from "./db";
 import { mailConfigured, sendLoginEmail } from "./mail";
 import { uid } from "./ids";
 import { adminEmail, adminPassword, DEMO_PARENT_EMAIL } from "./config";
+import { safeNextPath } from "./safe-next";
 
 const PARENT_COOKIE = "kw_parent";
 const ADMIN_COOKIE = "kw_admin";
@@ -60,14 +61,16 @@ async function ensureParent(email: string) {
   return { id: parent.id, email };
 }
 
-export async function requestMagicLink(emailRaw: string) {
+export async function requestMagicLink(emailRaw: string, nextRaw?: string) {
   const email = emailRaw.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { ok: false as const, error: "請輸入有效的電子信箱。" };
   }
+  const next = safeNextPath(nextRaw);
   const exp = Date.now() + 15 * 60 * 1000;
   const t = sign(`magic|${email}|${exp}`);
-  const url = `/login/verify?token=${encodeURIComponent(t)}`;
+  const q = new URLSearchParams({ token: t, next });
+  const url = `/login/verify?${q.toString()}`;
   const canMail = mailConfigured() && email !== DEMO_PARENT_EMAIL;
   if (canMail) {
     try {

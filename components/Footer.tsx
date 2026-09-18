@@ -14,9 +14,11 @@ export function Footer() {
           <p className="dim" style={{ marginTop: 12 }}>
             {SITE.teacher} · {SITE.name}
           </p>
-          <p className="dim">出題＋解答、依程度排題、每周進度。</p>
+          <p className="dim">出題＋解答、依程度排題、每週進度。</p>
           <p className="dim" style={{ marginTop: 8 }}>
             <a href={SITE.oneOnOneUrl}>認識老師</a>
+            {" · "}
+            <Link href="/privacy">隱私權政策</Link>
           </p>
         </div>
         <div>

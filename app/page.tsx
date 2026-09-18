@@ -4,14 +4,40 @@ import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
-import { SITE, seatCap } from "@/lib/config";
+import { DEMO_PARENT_EMAIL, SITE, seatCap } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
+
+function CtaPair({ full }: { full: boolean }) {
+  return (
+    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20, alignItems: "center" }}>
+      {full ? (
+        <Link href="/waitlist" className="btn btn-ink">
+          名額已滿，加入候補
+        </Link>
+      ) : (
+        <Link href="/login?next=/subscribe" className="btn btn-ink">
+          為孩子訂閱週練
+        </Link>
+      )}
+      <Link
+        href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`}
+        className="btn btn-paper"
+      >
+        免付費看示範週
+      </Link>
+      <span className="muted" style={{ fontSize: 13 }}>
+        使用示範信箱 {DEMO_PARENT_EMAIL}
+      </span>
+    </div>
+  );
+}
 
 export default async function HomePage() {
   const parent = await getParent();
   const remaining = await seatsRemaining();
   const full = remaining <= 0;
+  const yearlySave = SITE.monthlyPrice * 12 - SITE.yearlyPrice;
 
   return (
     <>
@@ -26,14 +52,16 @@ export default async function HomePage() {
                 {full ? (
                   <>正取 {seatCap()} 名 · 目前已滿</>
                 ) : (
-                  <>正取 {seatCap()} 名 · 尚餘 <strong>{remaining}</strong> 名</>
+                  <>
+                    正取 {seatCap()} 名 · 尚餘 <strong>{remaining}</strong> 名
+                  </>
                 )}
               </p>
               <p className="lead" style={{ marginTop: 20 }}>
                 {SITE.tagline}
               </p>
               <p className="sub" style={{ marginTop: 12 }}>
-                每週一份學生題本、一份家長解答。小一到高三與 SAT Math 都收；出題＋解答、依程度排題、每周進度。
+                每週一份學生題本、一份家長解答。小一到高三與 SAT Math 都收；出題＋解答、依程度排題、每週進度。
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
                 {full ? (
@@ -41,17 +69,24 @@ export default async function HomePage() {
                     名額已滿，加入候補
                   </Link>
                 ) : (
-                  <Link href="/subscribe" className="btn btn-steel">
+                  <Link href="/login?next=/subscribe" className="btn btn-steel">
                     為孩子訂閱週練
                   </Link>
                 )}
-                <Link href="/login" className="btn btn-ghost">
-                  家長登入
+                <Link
+                  href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`}
+                  className="btn btn-ghost"
+                >
+                  免付費看示範週
                 </Link>
               </div>
-              <p className="sub" style={{ marginTop: 16, fontSize: 13 }}>
-                每名孩子 {SITE.currency}{SITE.monthlyPrice}/月或 {SITE.currency}{SITE.yearlyPrice}/年　·　正取 {seatCap()} 名
-                {full ? "　·　目前已滿" : `　·　尚餘 ${remaining} 名`}
+              <p className="sub" style={{ marginTop: 10, fontSize: 13 }}>
+                使用示範信箱 {DEMO_PARENT_EMAIL}
+              </p>
+              <p className="sub" style={{ marginTop: 12, fontSize: 13 }}>
+                每名孩子 {SITE.currency}
+                {SITE.monthlyPrice}/月或 {SITE.currency}
+                {SITE.yearlyPrice}/年
               </p>
             </div>
             <div className="orbit" aria-hidden>
@@ -64,10 +99,18 @@ export default async function HomePage() {
                 <circle cx="256" cy="160" r="4" fill="currentColor" />
                 <circle cx="160" cy="64" r="4" fill="currentColor" />
                 <circle cx="160" cy="160" r="3" fill="currentColor" />
-                <text x="160" y="22" textAnchor="middle" fill="currentColor" fontSize="12" opacity="0.7">二次函數</text>
-                <text x="300" y="164" textAnchor="end" fill="currentColor" fontSize="12" opacity="0.7">向量</text>
-                <text x="160" y="310" textAnchor="middle" fill="currentColor" fontSize="12" opacity="0.7">分數</text>
-                <text x="22" y="164" textAnchor="start" fill="currentColor" fontSize="12" opacity="0.7">函數</text>
+                <text x="160" y="22" textAnchor="middle" fill="currentColor" fontSize="12" opacity="0.7">
+                  二次函數
+                </text>
+                <text x="300" y="164" textAnchor="end" fill="currentColor" fontSize="12" opacity="0.7">
+                  向量
+                </text>
+                <text x="160" y="310" textAnchor="middle" fill="currentColor" fontSize="12" opacity="0.7">
+                  分數
+                </text>
+                <text x="22" y="164" textAnchor="start" fill="currentColor" fontSize="12" opacity="0.7">
+                  函數
+                </text>
               </svg>
             </div>
           </div>
@@ -87,7 +130,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-
         <section id="samples" className="section">
           <div className="wrap">
             <p className="kicker">真實題本</p>
@@ -104,6 +146,9 @@ export default async function HomePage() {
                 <figcaption>
                   <strong>學生題本</strong>
                   <span className="muted">提示在題下，解答不混進去</span>
+                  <span className="muted" style={{ fontSize: 13 }}>
+                    此為示範預覽一頁；完整 PDF 為兩頁。
+                  </span>
                 </figcaption>
               </figure>
               <figure className="sample-card">
@@ -114,9 +159,21 @@ export default async function HomePage() {
                 <figcaption>
                   <strong>家長解答</strong>
                   <span className="muted">步驟拆解，方便對完再回饋</span>
+                  <span className="muted" style={{ fontSize: 13 }}>
+                    此為示範預覽一頁；完整 PDF 為兩頁。
+                  </span>
                 </figcaption>
               </figure>
             </div>
+            <p className="muted" style={{ marginTop: 16, fontSize: 14 }}>
+              <Link
+                href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`}
+                style={{ textDecoration: "underline" }}
+              >
+                登入示範帳下載完整 PDF
+              </Link>
+            </p>
+            <CtaPair full={full} />
           </div>
         </section>
 
@@ -125,10 +182,11 @@ export default async function HomePage() {
             <p className="kicker">吳寬老師｜寬數</p>
             <h2 className="display">誰在出題</h2>
             <p className="muted" style={{ marginTop: 12 }}>
-              陽明交大應用數學。Stanford OHS 數學老師暨官方監考官。一對一課表目前已滿，週練是講義方案：每週兩份 PDF，不是即時私訊答題。
+              陽明交大應用數學。Stanford OHS 數學老師暨官方監考官。週練是講義方案：每週兩份 PDF，不提供 LINE
+              即時答題。
             </p>
             <p className="muted">
-              成效一例：學測數學 11 級到分科 58 級。經歷與 SAT／學測一對一請看個人頁。
+              成效一例：學測數學 11 級到分科 58 級（例如精誠高中備考）。更多經歷請看個人頁。
             </p>
             <p style={{ marginTop: 20 }}>
               <a className="btn btn-paper" href={SITE.oneOnOneUrl}>
@@ -147,7 +205,10 @@ export default async function HomePage() {
             </p>
             <div className="grid-3" style={{ marginTop: 28 }}>
               {[
-                ["週一出題", "依孩子年級、校內進度、應考目標與弱點單元出該週題本。小一到高三與 SAT Math 都依程度排題。"],
+                [
+                  "週一出題",
+                  "依孩子年級、校內進度、應考目標與弱點單元出該週題本。小一到高三與 SAT Math 都依程度排題。",
+                ],
                 ["孩子作答", "學生 PDF 可列印或平板作答。提示寫在題下，不把解答混進去。"],
                 ["家長對答＋回饋", "家長 PDF 含步驟拆解。填難度、完成度、卡關單元，三欄就夠。"],
               ].map(([t, d], i) => (
@@ -158,6 +219,7 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
+            <CtaPair full={full} />
           </div>
         </section>
 
@@ -188,31 +250,44 @@ export default async function HomePage() {
           <div className="wrap">
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
-            <p className="muted">一位孩子一份週練。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。</p>
+            <p className="muted">
+              一位孩子一份週練。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
+            </p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               <article className="card">
                 <p className="kicker">按月</p>
                 <p className="price">
-                  {SITE.currency}{SITE.monthlyPrice}
+                  {SITE.currency}
+                  {SITE.monthlyPrice}
                   <small> /月 · 每名孩子</small>
                 </p>
-                <p className="muted">適合先試一個月。要停用請寄信 jjredick365@gmail.com。</p>
+                <p className="muted">適合先試一個月。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年</p>
                 <p className="price">
-                  {SITE.currency}{SITE.yearlyPrice}
+                  {SITE.currency}
+                  {SITE.yearlyPrice}
                   <small> /年 · 每名孩子</small>
                 </p>
-                <p className="muted">約等於十個月月費（省約兩個月份額）。對準完整學年的每周進度。</p>
-                <p className="savings-note">年繳 {SITE.currency}{SITE.yearlyPrice} · 月繳一年 {SITE.currency}{SITE.monthlyPrice * 12}</p>
+                <p className="muted">對準完整學年的每週進度。</p>
+                <p className="savings-note">
+                  月繳一年 {SITE.currency}
+                  {SITE.monthlyPrice * 12} → 年繳 {SITE.currency}
+                  {SITE.yearlyPrice}，省 {SITE.currency}
+                  {yearlySave}
+                </p>
               </article>
             </div>
             <p style={{ marginTop: 24 }}>
               {full ? (
-                <Link href="/waitlist" className="btn btn-ink">名額已滿，登記候補</Link>
+                <Link href="/waitlist" className="btn btn-ink">
+                  名額已滿，登記候補
+                </Link>
               ) : (
-                <Link href="/subscribe" className="btn btn-ink">開始訂閱</Link>
+                <Link href="/login?next=/subscribe" className="btn btn-ink">
+                  開始訂閱
+                </Link>
               )}
             </p>
           </div>
@@ -223,15 +298,68 @@ export default async function HomePage() {
             <p className="kicker">04</p>
             <h2 className="display">常見問題</h2>
             {[
-              ["有 LINE 或線上問答嗎？", "本站是週練包：出題＋解答。若需要一對一，請跟老師討論，寄信 jjredick365@gmail.com。"],
-              ["為什麼要兩份 PDF？", "學生題本避免一眼瞄到答案；家長對完之後才打開解答，並用三欄回饋告訴老師這週是偏易、剛好，還是偏難。"],
-              ["會出 SAT 嗎？", "會。訂閱時年級選 SAT Math：題目英文、解答中文講解，對準 Digital SAT。國內段考／學測請選對應年級。"],
-              ["示範帳號是什麼？", "網站內建一名未付費示範孩子，方便走完下載與回饋。真家長匯款確認後才開通；示範孩子本來就看得到講義。"],
-              ["滿 20 名怎麼辦？", "正取額滿後改候補。老師從後台看到候補名單後再通知開席。"],
+              [
+                "有 LINE 或線上問答嗎？",
+                "本站是週練包：出題＋解答。不提供 LINE 即時答題。若另有需求，請寄信 " + SITE.contactEmail + "。",
+              ],
+              [
+                "為什麼要兩份 PDF？",
+                "學生題本避免一眼瞄到答案；家長對完之後才打開解答，並用三欄回饋告訴老師這週是偏易、剛好，還是偏難。",
+              ],
+              [
+                "會出 SAT 嗎？",
+                "會。訂閱時年級選 SAT Math：題目英文、解答中文講解，對準 Digital SAT。國內段考／學測請選對應年級。",
+              ],
+              [
+                "示範帳號是什麼？",
+                "網站內建一名未付費示範孩子，方便走完下載與回饋。真家長匯款確認後才開通；示範孩子本來就看得到講義。",
+              ],
+              [
+                "滿 20 名怎麼辦？",
+                "正取額滿後改候補。老師從後台看到候補名單後再通知開席。",
+              ],
+              [
+                "匯款後多久開通？",
+                "通常 1 個工作天內開通。請把轉帳證明寄到 " + SITE.contactEmail + "。",
+              ],
+              [
+                "每週什麼時候出題？",
+                "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
+              ],
+              [
+                "開通後第一週能下載什麼？",
+                "開通後即可下載已發布的週次題本與解答。",
+              ],
+              [
+                "怎麼停用？已匯款能退嗎？",
+                "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。",
+              ],
+              [
+                "第二個孩子怎麼訂？同帳號可以嗎？",
+                "第二個孩子再訂一席。同一家長帳號可掛多名孩子。",
+              ],
+              [
+                "有電子發票嗎？",
+                "目前提供匯款收據／對帳證明，如需收據請在寄證明時註明。",
+              ],
+              [
+                "個資怎麼用？",
+                "用途說明見隱私權政策。",
+              ],
             ].map(([q, a]) => (
               <details key={q}>
                 <summary>{q}</summary>
-                <p className="muted">{a}</p>
+                {q === "個資怎麼用？" ? (
+                  <p className="muted">
+                    用途說明見{" "}
+                    <Link href="/privacy" style={{ textDecoration: "underline" }}>
+                      隱私權政策
+                    </Link>
+                    。
+                  </p>
+                ) : (
+                  <p className="muted">{a}</p>
+                )}
               </details>
             ))}
           </div>
@@ -241,12 +369,24 @@ export default async function HomePage() {
           <div className="wrap card" style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
             <Logo size={40} />
             <div style={{ flex: 1 }}>
-              <h2 className="display" style={{ margin: 0, fontSize: 28 }}>先把這一週的觀念走穩</h2>
+              <h2 className="display" style={{ margin: 0, fontSize: 28 }}>
+                先把這一週的觀念走穩
+              </h2>
               <p className="muted" style={{ margin: "6px 0 0" }}>
                 登入後可看示範週的兩份 PDF。真正開席由老師確認名額。
               </p>
             </div>
-            <Link href="/login" className="btn btn-ink">用信箱登入</Link>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <Link href="/login?next=/subscribe" className="btn btn-ink">
+                為孩子訂閱
+              </Link>
+              <Link
+                href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`}
+                className="btn btn-paper"
+              >
+                免付費看示範週
+              </Link>
+            </div>
           </div>
         </section>
       </main>
