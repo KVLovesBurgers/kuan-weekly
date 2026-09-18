@@ -126,13 +126,22 @@ export default async function AdminHome({
                 <tr key={c.id}>
                   <td>
                     {c.display_name}
-                    {c.is_demo ? " · 示範" : ""}
+                    {c.is_demo ? <span className="muted">（示範）</span> : null}
                   </td>
                   <td>
-                    {c.grade} · {c.exam_target}
-                    <div className="muted">{c.weak_topics}</div>
+                    {c.grade}
+                    {c.exam_target ? <> · {c.exam_target}</> : null}
+                    {c.weak_topics ? <div className="muted">{c.weak_topics}</div> : null}
                   </td>
-                  <td>{c.subscription_status}</td>
+                  <td>
+                    {c.is_demo
+                      ? "示範"
+                      : c.subscription_status === "active"
+                        ? "已開通"
+                        : c.subscription_status === "pending"
+                          ? "待匯款"
+                          : c.subscription_status}
+                  </td>
                   <td>
                     {!c.is_demo && c.subscription_status !== "active" ? (
                       <form action={activateChild}>

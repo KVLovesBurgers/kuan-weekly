@@ -22,6 +22,13 @@ export default async function HomePage() {
             <div>
               <p className="kicker">吳寬老師 · 小學到高中數學</p>
               <h1 className="display">寬數週練</h1>
+              <p className="seat-chip" style={{ marginTop: 16 }}>
+                {full ? (
+                  <>正取 {seatCap()} 名 · 目前已滿</>
+                ) : (
+                  <>正取 {seatCap()} 名 · 尚餘 <strong>{remaining}</strong> 名</>
+                )}
+              </p>
               <p className="lead" style={{ marginTop: 20 }}>
                 {SITE.tagline}
               </p>
@@ -76,6 +83,39 @@ export default async function HomePage() {
             <div>
               <strong className="display">{seatCap()} 名正取</strong>
               <span className="sub">滿額轉候補，不超量出題</span>
+            </div>
+          </div>
+        </section>
+
+
+        <section id="samples" className="section">
+          <div className="wrap">
+            <p className="kicker">真實題本</p>
+            <h2 className="display">每週兩份 PDF 長這樣</h2>
+            <p className="muted" style={{ maxWidth: 560 }}>
+              示範週截圖。真訂閱後會依孩子年級、校內進度與弱點單元調整，不是固定同一本。
+            </p>
+            <div className="sample-grid" style={{ marginTop: 28 }}>
+              <figure className="sample-card">
+                <div className="sample-frame">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/samples/student-preview.png" alt="寬數週練學生題本示範頁" />
+                </div>
+                <figcaption>
+                  <strong>學生題本</strong>
+                  <span className="muted">提示在題下，解答不混進去</span>
+                </figcaption>
+              </figure>
+              <figure className="sample-card">
+                <div className="sample-frame sample-frame--tilt">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/samples/parent-preview.png" alt="寬數週練家長解答示範頁" />
+                </div>
+                <figcaption>
+                  <strong>家長解答</strong>
+                  <span className="muted">步驟拆解，方便對完再回饋</span>
+                </figcaption>
+              </figure>
             </div>
           </div>
         </section>
@@ -148,7 +188,7 @@ export default async function HomePage() {
           <div className="wrap">
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
-            <p className="muted">一位孩子一份週練。第二個孩子再加一席。付款走綠界；測試期不會入帳，正式特店核准後才會進你的帳戶。</p>
+            <p className="muted">一位孩子一份週練。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。</p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               <article className="card">
                 <p className="kicker">按月</p>
@@ -156,7 +196,7 @@ export default async function HomePage() {
                   {SITE.currency}{SITE.monthlyPrice}
                   <small> /月 · 每名孩子</small>
                 </p>
-                <p className="muted">適合先試一個月。隨時可在後台停用申請（v1 以郵件聯絡老師）。</p>
+                <p className="muted">適合先試一個月。要停用請寄信 jjredick365@gmail.com。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年</p>
@@ -164,7 +204,8 @@ export default async function HomePage() {
                   {SITE.currency}{SITE.yearlyPrice}
                   <small> /年 · 每名孩子</small>
                 </p>
-                <p className="muted">約等於十個月月費。對準完整學年的每周進度。</p>
+                <p className="muted">約等於十個月月費（省約兩個月份額）。對準完整學年的每周進度。</p>
+                <p className="savings-note">年繳 {SITE.currency}{SITE.yearlyPrice} · 月繳一年 {SITE.currency}{SITE.monthlyPrice * 12}</p>
               </article>
             </div>
             <p style={{ marginTop: 24 }}>
@@ -185,7 +226,7 @@ export default async function HomePage() {
               ["有 LINE 或線上問答嗎？", "本站是週練包：出題＋解答。若需要一對一，請跟老師討論，寄信 jjredick365@gmail.com。"],
               ["為什麼要兩份 PDF？", "學生題本避免一眼瞄到答案；家長對完之後才打開解答，並用三欄回饋告訴老師這週是偏易、剛好，還是偏難。"],
               ["會出 SAT 嗎？", "會。訂閱時年級選 SAT Math：題目英文、解答中文講解，對準 Digital SAT。國內段考／學測請選對應年級。"],
-              ["示範帳號是什麼？", "網站內建一名未付費示範孩子，方便走完下載與回饋。真家長走綠界付款後才開通；示範孩子本來就看得到講義。"],
+              ["示範帳號是什麼？", "網站內建一名未付費示範孩子，方便走完下載與回饋。真家長匯款確認後才開通；示範孩子本來就看得到講義。"],
               ["滿 20 名怎麼辦？", "正取額滿後改候補。老師從後台看到候補名單後再通知開席。"],
             ].map(([q, a]) => (
               <details key={q}>

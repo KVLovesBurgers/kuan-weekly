@@ -110,6 +110,10 @@ export async function activateChild(formData: FormData) {
     redirect("/admin?error=" + encodeURIComponent("正取名額已滿。"));
   }
   await db.prepare("UPDATE children SET subscription_status = 'active' WHERE id = ?").run(id);
+  await db
+    .prepare("UPDATE checkout_attempts SET status = 'paid' WHERE child_id = ? AND status = 'pending'")
+    .run(id);
   revalidatePath("/admin");
+  revalidatePath("/");
   redirect("/admin?ok=1");
 }

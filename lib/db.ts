@@ -225,11 +225,11 @@ async function seed(db: KuanDb) {
     .run(
       childId,
       parentId,
-      "安安（示範・未付費）",
+      "示範孩子",
       "小五",
-      "康軒版・分數與小數應用剛上完，正要進入比率",
+      "分數應用",
       "跟上段考",
-      "應用題列式、分數四則",
+      "應用題列式",
       now,
     );
   await db

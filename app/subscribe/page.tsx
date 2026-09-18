@@ -27,7 +27,7 @@ export default async function SubscribePage({
           <p className="kicker">訂閱</p>
           <h1 className="display">為一名孩子登記週練</h1>
           <p className="muted">
-            正取尚餘 {remaining} / {seatCap()} 名。送出後會到綠界付款（信用卡、ATM 等）。付成功後會開通該名孩子。
+            正取尚餘 {remaining} / {seatCap()} 名。送出後會看到匯款帳號；轉帳完成請把證明寄到老師信箱，確認後開通。
           </p>
           {sp.error ? <p className="banner warn">{sp.error}</p> : null}
           <form action={startCheckout} className="form card" style={{ marginTop: 20 }}>
@@ -51,7 +51,7 @@ export default async function SubscribePage({
               <option value="yearly">年繳 {SITE.currency}{SITE.yearlyPrice}</option>
             </select>
             <button className="btn btn-ink" type="submit">
-              前往綠界付款
+              查看匯款帳號
             </button>
           </form>
         </div>

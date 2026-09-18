@@ -10,6 +10,19 @@ export const SITE = {
   contactEmail: "jjredick365@gmail.com",
 };
 
+/** 目前主收款：私人匯款。綠界信用卡／ATM 審過後再開線上刷卡。 */
+export const BANK_TRANSFER = {
+  bankName: "兆豐國際商業銀行",
+  bankCode: "017",
+  accountName: "吳昱寬",
+  accountNumber: "02613264584",
+  proofEmail: SITE.contactEmail,
+} as const;
+
+export function ecpayPaymentsEnabled() {
+  return process.env.ECPAY_PAYMENTS_ENABLED === "1";
+}
+
 export function seatCap() {
   const n = Number(process.env.SEAT_CAP ?? "20");
   return Number.isFinite(n) && n > 0 ? n : 20;
