@@ -6,7 +6,7 @@ export const SITE = {
   monthlyPrice: 799,
   yearlyPrice: 7990,
   currency: "NT$",
-  oneOnOneUrl: "https://kuanmath.grok.me/",
+  oneOnOneUrl: "https://kuanmath.vercel.app",
   contactEmail: "jjredick365@gmail.com",
 };
 
