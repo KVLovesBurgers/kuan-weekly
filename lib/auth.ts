@@ -72,7 +72,8 @@ export async function requestMagicLink(emailRaw: string, nextRaw?: string) {
   if (email !== DEMO_PARENT_EMAIL) {
     await ensureParent(email);
   }
-  const exp = Date.now() + 60 * 60 * 1000;
+  // 24h: school/@edu.tw greylisting and Gmail soft-bounce retries often exceed 15–60m.
+  const exp = Date.now() + 24 * 60 * 60 * 1000;
   const t = sign(`magic|${email}|${exp}`);
   const q = new URLSearchParams({ token: t, next });
   const url = `/login/verify?${q.toString()}`;

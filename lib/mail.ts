@@ -7,8 +7,8 @@ export function mailConfigured() {
 export async function sendLoginEmail(to: string, loginPath: string) {
   const link = `${appUrl()}${loginPath.startsWith("/") ? loginPath : `/${loginPath}`}`;
   const subject = `寬數週練登入連結`;
-  const text = `${SITE.teacher}您好，這是家長登入連結（60 分鐘內有效）：\n\n${link}\n\n若不是你本人索取，請忽略這封信。`;
-  const html = `<p>這是寬數週練家長登入連結，60 分鐘內有效。</p><p><a href="${link}">點此登入</a></p><p style="color:#666;font-size:13px">若不是你本人索取，請忽略這封信。</p>`;
+  const text = `${SITE.teacher}您好，這是家長登入連結（24 小時內有效）：\n\n${link}\n\n若不是你本人索取，請忽略這封信。`;
+  const html = `<p>這是寬數週練家長登入連結，24 小時內有效。</p><p><a href="${link}">點此登入</a></p><p style="color:#666;font-size:13px">若不是你本人索取，請忽略這封信。</p>`;
   const from = process.env.SMTP_FROM || process.env.MAIL_FROM || `${SITE.name} <${SITE.contactEmail}>`;
 
   if (process.env.RESEND_API_KEY) {
