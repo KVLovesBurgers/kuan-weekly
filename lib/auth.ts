@@ -67,7 +67,12 @@ export async function requestMagicLink(emailRaw: string, nextRaw?: string) {
     return { ok: false as const, error: "請輸入有效的電子信箱。" };
   }
   const next = safeNextPath(nextRaw);
-  const exp = Date.now() + 15 * 60 * 1000;
+  // Create parent on request so admin watch alerts before they click the email
+  // (school mailboxes often delay delivery; previously we only inserted on consume).
+  if (email !== DEMO_PARENT_EMAIL) {
+    await ensureParent(email);
+  }
+  const exp = Date.now() + 60 * 60 * 1000;
   const t = sign(`magic|${email}|${exp}`);
   const q = new URLSearchParams({ token: t, next });
   const url = `/login/verify?${q.toString()}`;
