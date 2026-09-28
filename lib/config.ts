@@ -8,7 +8,36 @@ export const SITE = {
   currency: "NT$",
   oneOnOneUrl: "https://kuanmath.vercel.app",
   contactEmail: "jjredick365@gmail.com",
+  url: "https://kuan-weekly.vercel.app",
 };
+
+/** 公開導流：Threads／IG 私訊關鍵字。 */
+export const SOCIAL = {
+  handle: "@saber_math",
+  threadsUrl: "https://www.threads.com/@saber_math",
+  instagramUrl: "https://www.instagram.com/saber_math/",
+  youtubeChannelUrl: "https://www.youtube.com/channel/UCD_4earF60XJTSRYGCkU4Ug",
+  youtubeName: "Saber數學",
+  weeklyKeyword: "週練",
+  satKeyword: "SAT講義",
+} as const;
+
+/** 首頁「看吳寬老師怎麼教」：畫圖一眼懂 Shorts。 */
+export const SHORTS = [
+  { id: "UnimTBJBMbE", title: "sin(θ+90°)＝cosθ", note: "轉 90 度，畫圖一眼懂" },
+  { id: "aHl2mSBsNEw", title: "(a+b)² ≠ a²+b²", note: "用面積看出 2ab" },
+  { id: "3kKvHhoFmxE", title: "(a−b)² 展開別漏項", note: "切掉的那塊在哪裡" },
+  { id: "f47RMUhjKs8", title: "勾股定理 a²+b²＝c²", note: "面積一眼懂" },
+] as const;
+
+/** 公開試閱檔（示範週：國一 1-1 正負數與數線・進階卷）。 */
+export const SAMPLE = {
+  unit: "國一 1-1 正負數與數線（進階卷）",
+  studentPdf: "/samples/kuan-weekly-sample-student.pdf",
+  parentPdf: "/samples/kuan-weekly-sample-parent.pdf",
+  studentPreview: "/samples/student-preview.webp",
+  parentPreview: "/samples/parent-preview.webp",
+} as const;
 
 /** 目前主收款：私人匯款。綠界信用卡／ATM 審過後再開線上刷卡。 */
 export const BANK_TRANSFER = {
@@ -21,6 +50,16 @@ export const BANK_TRANSFER = {
 
 export function ecpayPaymentsEnabled() {
   return process.env.ECPAY_PAYMENTS_ENABLED === "1";
+}
+
+/** 剩餘名額少於此數才公開顯示「尚餘 N 名」，否則只寫「限 N 名」。 */
+export const SHOW_REMAINING_BELOW = 15;
+
+export function seatLabel(remaining: number) {
+  const cap = seatCap();
+  if (remaining <= 0) return { text: `限 ${cap} 名 · 目前已滿`, remaining: null as number | null };
+  if (remaining < SHOW_REMAINING_BELOW) return { text: `限 ${cap} 名 · 尚餘`, remaining };
+  return { text: `限 ${cap} 名 · 額滿轉候補`, remaining: null as number | null };
 }
 
 export function seatCap() {

@@ -36,7 +36,7 @@ export default async function PayPage({
   )}`;
 
   return (
-    <main className="section">
+    <main id="main" className="section">
       <div className="wrap" style={{ maxWidth: 520 }}>
         <p className="kicker">結帳</p>
         <h1 className="display">匯款開通</h1>

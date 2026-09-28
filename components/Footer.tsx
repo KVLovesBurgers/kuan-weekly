@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { SITE } from "@/lib/config";
+import { SITE, SOCIAL } from "@/lib/config";
 
 export function Footer() {
   return (
@@ -14,8 +14,10 @@ export function Footer() {
           <p className="dim" style={{ marginTop: 12 }}>
             {SITE.teacher} · {SITE.name}
           </p>
-          <p className="dim">出題＋解答、依程度排題、每週進度。</p>
+          <p className="dim">國中・高中數學每週題本＋家長解答。跟著學校進度，依程度排題。</p>
           <p className="dim" style={{ marginTop: 8 }}>
+            <Link href="/sample">題本試閱</Link>
+            {" · "}
             <a href={SITE.oneOnOneUrl}>認識老師</a>
             {" · "}
             <Link href="/privacy">隱私權政策</Link>
@@ -24,8 +26,21 @@ export function Footer() {
         <div>
           <p className="kicker">聯絡老師</p>
           <p style={{ marginTop: 8 }}>
-            請跟老師討論，寄信{" "}
-            <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+            到 Threads／IG {SOCIAL.handle} 私訊「{SOCIAL.weeklyKeyword}」領題本試閱
+          </p>
+          <p className="footer-links">
+            <a href={SOCIAL.threadsUrl} target="_blank" rel="noopener noreferrer">
+              Threads
+            </a>
+            <a href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer">
+              Instagram
+            </a>
+            <a href={SOCIAL.youtubeChannelUrl} target="_blank" rel="noopener noreferrer">
+              YouTube
+            </a>
+          </p>
+          <p style={{ marginTop: 8 }}>
+            或寄信 <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
           </p>
           <p className="dim" style={{ marginTop: 16 }}>
             後台：<Link href="/admin/login">老師登入</Link>

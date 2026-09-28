@@ -22,7 +22,7 @@ export default async function WeekAdmin({
   const files = await pdfsForWeek(id);
 
   return (
-    <main className="section">
+    <main id="main" className="section">
       <div className="wrap" style={{ maxWidth: 720 }}>
         <p>
           <Link href="/admin">← 後台</Link>

@@ -29,7 +29,7 @@ export default async function LoginPage({
   return (
     <>
       <Header />
-      <main className="section">
+      <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 520 }}>
           <p className="kicker">家長登入</p>
           <h1 className="display">用信箱收一次連結</h1>

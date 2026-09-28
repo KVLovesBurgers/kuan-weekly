@@ -7,7 +7,7 @@ export default async function AdminLogin({
 }) {
   const { error } = await searchParams;
   return (
-    <main className="section" style={{ background: "var(--ink)", color: "var(--paper)", minHeight: "100vh" }}>
+    <main id="main" className="section" style={{ background: "var(--ink)", color: "var(--paper)", minHeight: "100vh" }}>
       <div className="wrap" style={{ maxWidth: 420 }}>
         <p className="kicker">老師後台</p>
         <h1 className="display">寬數週練</h1>

@@ -46,7 +46,7 @@ export default async function AdminHome({
   const doneLabel: Record<string, string> = Object.fromEntries(COMPLETION_OPTIONS);
 
   return (
-    <main className="section">
+    <main id="main" className="section">
       <div className="wrap">
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
           <div>

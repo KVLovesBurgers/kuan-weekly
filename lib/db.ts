@@ -1,8 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
-import { DatabaseSync, type SQLInputValue } from "node:sqlite";
 import { createClient, type Client, type InValue } from "@libsql/client";
 import { DEMO_PARENT_EMAIL, seatCap } from "./config";
+
+type SQLInputValue = string | number | bigint | boolean | null | Uint8Array;
+type DatabaseSync = {
+  exec: (sql: string) => void;
+  prepare: (sql: string) => {
+    get: (...args: SQLInputValue[]) => unknown;
+    run: (...args: SQLInputValue[]) => unknown;
+    all: (...args: SQLInputValue[]) => unknown[];
+  };
+};
 
 type Stmt = {
   get: (...args: unknown[]) => Promise<unknown>;
@@ -88,7 +97,9 @@ async function openDb(): Promise<KuanDb> {
   } else {
     const file = dbPath();
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    const raw = new DatabaseSync(file);
+    // Lazy-load node:sqlite so serverless/Turso builds never touch the Node 22 builtin.
+    const sqlite = await import("node:sqlite");
+    const raw = new sqlite.DatabaseSync(file) as unknown as DatabaseSync;
     db = wrapSqlite(raw);
     await db.exec(process.env.VERCEL ? "PRAGMA journal_mode = DELETE" : "PRAGMA journal_mode = WAL");
     await db.exec("PRAGMA foreign_keys = ON");

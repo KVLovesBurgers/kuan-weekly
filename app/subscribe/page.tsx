@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { startCheckout } from "@/app/actions/parent";
-import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatCap } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -18,17 +18,19 @@ export default async function SubscribePage({
   if (!parent) redirect("/login?next=/subscribe");
   const remaining = await seatsRemaining();
   if (remaining <= 0) redirect("/waitlist");
+  const seat = seatLabel(remaining);
   const sp = await searchParams;
 
   return (
     <>
       <Header parentEmail={parent.email} />
-      <main className="section">
+      <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 640 }}>
           <p className="kicker">訂閱</p>
           <h1 className="display">為一名孩子登記週練</h1>
           <p className="muted">
-            正取尚餘 {remaining} / {seatCap()} 名。送出後會看到匯款帳號；轉帳完成請把證明寄到老師信箱，確認後開通。
+            {seat.text}
+            {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。送出後會看到匯款帳號；轉帳完成請把證明寄到老師信箱，確認後開通。
           </p>
 
           <div className="banner" style={{ marginTop: 16 }}>
@@ -53,7 +55,7 @@ export default async function SubscribePage({
             </label>
             <input name="display_name" required placeholder="例如：安安" />
             <label>年級*</label>
-            <select name="grade" required defaultValue="小五">
+            <select name="grade" required defaultValue="國一">
               {GRADE_OPTIONS.map((g) => (
                 <option key={g}>{g}</option>
               ))}

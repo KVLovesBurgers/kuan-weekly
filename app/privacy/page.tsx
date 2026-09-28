@@ -12,7 +12,7 @@ export default function PrivacyPage() {
   return (
     <>
       <Header />
-      <main className="section">
+      <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 720 }}>
           <p className="kicker">Privacy</p>
           <h1 className="display">隱私權政策</h1>

@@ -29,7 +29,7 @@ export default async function ResultPage({
   return (
     <>
       <Header parentEmail={parent.email} />
-      <main className="section">
+      <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 560 }}>
           <p className="kicker">結帳</p>
           {paid ? (

@@ -41,7 +41,7 @@ export default async function DashboardPage({
   return (
     <>
       <Header parentEmail={parent.email} />
-      <main className="section">
+      <main id="main" className="section">
         <div className="wrap">
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
             <div>

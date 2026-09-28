@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { SOCIAL } from "@/lib/config";
 
 export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
   const [open, setOpen] = useState(false);
@@ -9,6 +10,9 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
 
   return (
     <div className="mobile-nav">
+      <Link href="/sample" className="btn btn-steel mobile-cta">
+        免費試閱
+      </Link>
       <button
         type="button"
         className="nav-burger"
@@ -23,6 +27,12 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
       </button>
       {open ? (
         <div id="mobile-nav-panel" className="mobile-nav-panel" role="navigation" aria-label="手機選單">
+          <Link href="/sample" onClick={close}>
+            領題本試閱
+          </Link>
+          <Link href="/#videos" onClick={close}>
+            看老師怎麼教
+          </Link>
           <Link href="/#how" onClick={close}>
             怎麼進行
           </Link>
@@ -32,11 +42,8 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
           <Link href="/#faq" onClick={close}>
             常見問題
           </Link>
-          <Link href="/login?email=parent@demo.kuan.tw&next=/dashboard" onClick={close}>
-            示範
-          </Link>
           <Link href="/login?next=/subscribe" onClick={close}>
-            訂閱
+            為孩子訂閱
           </Link>
           {parentEmail ? (
             <Link href="/dashboard" onClick={close}>
@@ -47,6 +54,12 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
               家長登入
             </Link>
           )}
+          <a href={SOCIAL.threadsUrl} target="_blank" rel="noopener noreferrer" onClick={close}>
+            Threads 私訊「{SOCIAL.weeklyKeyword}」
+          </a>
+          <a href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer" onClick={close}>
+            IG 私訊「{SOCIAL.weeklyKeyword}」
+          </a>
         </div>
       ) : null}
     </div>
