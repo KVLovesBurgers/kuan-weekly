@@ -69,7 +69,7 @@ button, input, select, textarea { font-family: inherit; }
   transition: transform 0.12s, background 0.15s, box-shadow 0.15s;
 }
 .btn:active { transform: scale(0.97); }
-.btn-steel { background: var(--steel); color: var(--paper); }
+.btn-steel { background: var(--steel); color: var(--ink); font-weight: 600; }
 .btn-steel:hover { background: var(--steel-deep); }
 .btn-ink { background: var(--ink); color: var(--paper); }
 .btn-ghost {
