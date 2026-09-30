@@ -31,18 +31,18 @@ export default async function SamplePage() {
             領題本試閱
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
-            這是寬數週練真實的一週：<strong>{SAMPLE.unit}</strong>。學生題本 2 頁（先讀本週觀念、再作答，沒有答案）；家長解答
-            2 頁（每題答案＋步驟說明）。可以直接列印給孩子寫。
+            這是寬數週練真實的一週：<strong>{SAMPLE.unit}</strong>。學生題本 4 頁（本週觀念＋數線圖，再分基礎／段考常考／進階挑戰三關作答，沒有答案）；家長解答
+            4 頁（每題答案＋步驟說明＋常見錯誤，附家長陪讀指引）。A4 可以直接列印給孩子寫。
           </p>
 
           <div className="sample-downloads">
             <a className="dl-card" href={SAMPLE.studentPdf} download="寬數週練試閱-國一1-1-學生題本.pdf">
-              <span className="kicker">PDF · 2 頁</span>
+              <span className="kicker">PDF · 4 頁</span>
               <strong className="display">下載學生題本</strong>
               <span className="muted">給孩子作答，不含答案</span>
             </a>
             <a className="dl-card" href={SAMPLE.parentPdf} download="寬數週練試閱-國一1-1-家長解答.pdf">
-              <span className="kicker">PDF · 2 頁</span>
+              <span className="kicker">PDF · 4 頁</span>
               <strong className="display">下載家長解答</strong>
               <span className="muted">孩子寫完再打開對答</span>
             </a>
@@ -54,7 +54,7 @@ export default async function SamplePage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={SAMPLE.studentPreview}
-                  alt="學生題本第一頁：本週觀念與五題練習題"
+                  alt="學生題本第一頁：本週觀念、數線圖與基礎題"
                   width={900}
                   height={1273}
                   decoding="async"
@@ -62,7 +62,7 @@ export default async function SamplePage() {
               </div>
               <figcaption>
                 <strong>學生題本・第 1 頁</strong>
-                <span className="muted">本週觀念 → 練習題，提示寫在題下</span>
+                <span className="muted">本週觀念＋數線圖 → 三關 15 題</span>
               </figcaption>
             </figure>
             <figure className="sample-card">
@@ -70,7 +70,7 @@ export default async function SamplePage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={SAMPLE.parentPreview}
-                  alt="家長解答第一頁：每題答案與步驟說明"
+                  alt="家長解答第一頁：答案速查與每題步驟說明"
                   width={900}
                   height={1273}
                   loading="lazy"
@@ -79,7 +79,7 @@ export default async function SamplePage() {
               </div>
               <figcaption>
                 <strong>家長解答・第 1 頁</strong>
-                <span className="muted">答案＋為什麼，順便點出常見錯法</span>
+                <span className="muted">答案速查＋每題步驟與常見錯誤</span>
               </figcaption>
             </figure>
           </div>

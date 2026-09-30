@@ -31,9 +31,9 @@ export const SHORTS = [
   { id: "f47RMUhjKs8", title: "勾股定理 a²+b²＝c²", note: "面積一眼懂" },
 ] as const;
 
-/** 公開試閱檔（示範週：國一 1-1 正負數與數線・進階卷）。 */
+/** 公開試閱檔（示範週：國一 1-1 正負數與數線・學生題本 4 頁＋家長解答 4 頁）。 */
 export const SAMPLE = {
-  unit: "國一 1-1 正負數與數線（進階卷）",
+  unit: "國一 1-1 正負數與數線",
   studentPdf: "/samples/kuan-weekly-sample-student.pdf",
   parentPdf: "/samples/kuan-weekly-sample-parent.pdf",
   studentPreview: "/samples/student-preview.webp",
