@@ -54,11 +54,11 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
               家長登入
             </Link>
           )}
-          <a href={SOCIAL.threadsUrl} target="_blank" rel="noopener noreferrer" onClick={close}>
-            Threads 私訊「{SOCIAL.weeklyKeyword}」
-          </a>
           <a href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer" onClick={close}>
             IG 私訊「{SOCIAL.weeklyKeyword}」
+          </a>
+          <a href={SOCIAL.facebookUrl} target="_blank" rel="noopener noreferrer" onClick={close}>
+            臉書粉專 {SOCIAL.facebookName}
           </a>
         </div>
       ) : null}

@@ -11,11 +11,12 @@ export const SITE = {
   url: "https://kuan-weekly.vercel.app",
 };
 
-/** 公開導流：Threads／IG 私訊關鍵字。 */
+/** 公開導流：IG／臉書粉專私訊關鍵字。 */
 export const SOCIAL = {
   handle: "@saber_math",
-  threadsUrl: "https://www.threads.com/@saber_math",
   instagramUrl: "https://www.instagram.com/saber_math/",
+  facebookUrl: "https://www.facebook.com/profile.php?id=61594502669915",
+  facebookName: "吳寬數學",
   youtubeChannelUrl: "https://www.youtube.com/channel/UCD_4earF60XJTSRYGCkU4Ug",
   youtubeName: "Saber數學",
   weeklyKeyword: "週練",

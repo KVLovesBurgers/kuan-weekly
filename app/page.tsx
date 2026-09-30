@@ -66,14 +66,14 @@ export default async function HomePage() {
               </div>
               <p className="sub" style={{ marginTop: 14, fontSize: 14 }}>
                 或到{" "}
-                <a className="u" href={SOCIAL.threadsUrl} target="_blank" rel="noopener noreferrer">
-                  Threads
-                </a>
-                ／
                 <a className="u" href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer">
                   IG
                 </a>{" "}
-                {SOCIAL.handle} 私訊「{SOCIAL.weeklyKeyword}」領題本試閱
+                {SOCIAL.handle} 或{" "}
+                <a className="u" href={SOCIAL.facebookUrl} target="_blank" rel="noopener noreferrer">
+                  臉書粉專「{SOCIAL.facebookName}」
+                </a>{" "}
+                私訊「{SOCIAL.weeklyKeyword}」領題本試閱
               </p>
               <p className="seat-chip" style={{ marginTop: 20 }}>
                 {seat.text}
@@ -323,7 +323,7 @@ export default async function HomePage() {
                 準備 Digital SAT？五週講義
               </h2>
               <p className="muted" style={{ margin: 0 }}>
-                對準 Digital SAT Math 的五週講義。到 Threads／IG {SOCIAL.handle} 私訊「{SOCIAL.satKeyword}」，送 Week 1
+                對準 Digital SAT Math 的五週講義。到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.satKeyword}」，送 Week 1
                 試閱。
               </p>
             </div>
@@ -346,9 +346,11 @@ export default async function HomePage() {
                   "有 LINE 或線上問答嗎？",
                   "本站是週練包：出題＋解答，不提供 LINE 即時答題。想先問問題，可寄信 " +
                     SITE.contactEmail +
-                    "，或到 Threads／IG " +
+                    "，或到 IG " +
                     SOCIAL.handle +
-                    " 私訊。",
+                    " 或臉書粉專「" +
+                    SOCIAL.facebookName +
+                    "」私訊。",
                 ],
                 [
                   "為什麼要兩份 PDF？",
@@ -389,7 +391,7 @@ export default async function HomePage() {
                     <Link href="/sample" className="u">
                       題本試閱頁
                     </Link>{" "}
-                    直接下載一週的學生題本與家長解答；也可以到 Threads／IG {SOCIAL.handle} 私訊「
+                    直接下載一週的學生題本與家長解答；也可以到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「
                     {SOCIAL.weeklyKeyword}」領試閱。
                   </p>
                 ) : a === "demo" ? (
@@ -419,7 +421,7 @@ export default async function HomePage() {
                 先看一份真的題本
               </h2>
               <p className="muted" style={{ margin: "6px 0 0" }}>
-                不用登入就能下載試閱；有問題到 Threads／IG {SOCIAL.handle} 私訊「{SOCIAL.weeklyKeyword}」。
+                不用登入就能下載試閱；有問題到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.weeklyKeyword}」。
               </p>
             </div>
             <div className="cta-row" style={{ marginTop: 0 }}>

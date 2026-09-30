@@ -26,14 +26,14 @@ export function Footer() {
         <div>
           <p className="kicker">聯絡老師</p>
           <p style={{ marginTop: 8 }}>
-            到 Threads／IG {SOCIAL.handle} 私訊「{SOCIAL.weeklyKeyword}」領題本試閱
+            到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.weeklyKeyword}」領題本試閱
           </p>
           <p className="footer-links">
-            <a href={SOCIAL.threadsUrl} target="_blank" rel="noopener noreferrer">
-              Threads
-            </a>
             <a href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer">
               Instagram
+            </a>
+            <a href={SOCIAL.facebookUrl} target="_blank" rel="noopener noreferrer">
+              臉書粉專 {SOCIAL.facebookName}
             </a>
             <a href={SOCIAL.youtubeChannelUrl} target="_blank" rel="noopener noreferrer">
               YouTube

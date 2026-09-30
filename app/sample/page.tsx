@@ -89,7 +89,7 @@ export default async function SamplePage() {
               想先問問題，或領更多試閱？
             </h2>
             <p className="muted" style={{ margin: "0 0 16px" }}>
-              到 Threads／IG {SOCIAL.handle} 私訊「{SOCIAL.weeklyKeyword}」，領題本試閱；可以順便附上孩子年級與目前學校進度。
+              到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.weeklyKeyword}」，領題本試閱；可以順便附上孩子年級與目前學校進度。
             </p>
             <SocialDm />
           </div>

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { SITE, SOCIAL } from "@/lib/config";
 
 const title = "寬數週練｜國中數學・高中數學每週練習題本｜吳寬老師";
 const description =
@@ -49,6 +50,15 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: SITE.name,
+  url: SITE.url,
+  founder: { "@type": "Person", name: SITE.teacher },
+  sameAs: [SOCIAL.instagramUrl, SOCIAL.facebookUrl, SOCIAL.youtubeChannelUrl],
+};
+
 export const viewport: Viewport = {
   themeColor: "#0f1419",
   width: "device-width",
@@ -66,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@500;600;700&display=swap"
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>{children}</body>
     </html>
