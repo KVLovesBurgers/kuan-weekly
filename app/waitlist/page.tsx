@@ -20,16 +20,16 @@ export default async function WaitlistPage({
           {sp.ok ? <p className="banner ok">已登記。無需付款。</p> : null}
           {sp.error ? <p className="banner warn">{sp.error}</p> : null}
           <form action={joinWaitlist} className="form card" style={{ marginTop: 20 }}>
-            <label>電子信箱</label>
-            <input name="email" type="email" required />
-            <label>孩子年級</label>
-            <select name="grade" defaultValue="國一">
+            <label htmlFor="wl_email">電子信箱</label>
+            <input id="wl_email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" />
+            <label htmlFor="wl_grade">孩子年級</label>
+            <select id="wl_grade" name="grade" defaultValue="國一">
               {GRADE_OPTIONS.map((g) => (
                 <option key={g}>{g}</option>
               ))}
             </select>
-            <label>想對準的考試或單元</label>
-            <textarea name="note" placeholder="例如：國二、跟上段考、一元二次與應用題較弱" />
+            <label htmlFor="wl_note">想對準的考試或單元</label>
+            <textarea id="wl_note" name="note" placeholder="例如：國二、跟上段考、一元二次與應用題較弱" />
             <button className="btn btn-ink" type="submit">
               加入候補
             </button>

@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { SocialDm } from "@/components/SocialDm";
+import { SampleImg } from "@/components/SampleImg";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { DEMO_PARENT_EMAIL, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel } from "@/lib/config";
@@ -43,7 +44,7 @@ export default async function HomePage() {
         <section className="hero">
           <div className="wrap hero-grid">
             <div>
-              <p className="kicker">吳寬老師 · 國中・高中數學週練</p>
+              <p className="kicker">吳寬老師 · 交大應數 · Stanford OHS 數學老師</p>
               <h1 className="display">寬數週練</h1>
               <p className="promise display">
                 跟著學校進度，
@@ -64,18 +65,22 @@ export default async function HomePage() {
                   看方案
                 </a>
               </div>
-              <p className="sub" style={{ marginTop: 14, fontSize: 14 }}>
-                或到{" "}
-                <a className="u" href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer">
-                  IG
-                </a>{" "}
-                {SOCIAL.handle} 或{" "}
-                <a className="u" href={SOCIAL.facebookUrl} target="_blank" rel="noopener noreferrer">
-                  臉書粉專「{SOCIAL.facebookName}」
-                </a>{" "}
-                私訊「{SOCIAL.weeklyKeyword}」領題本試閱
+              <p className="hero-price">
+                <strong>
+                  {SITE.currency}
+                  {SITE.monthlyPrice}
+                </strong>{" "}
+                /月・每位孩子
+                <span className="hero-price-sep" aria-hidden="true">
+                  ｜
+                </span>
+                <span className="nowrap">
+                  年繳 {SITE.currency}
+                  {SITE.yearlyPrice.toLocaleString("en-US")}（省 {SITE.currency}
+                  {yearlySave.toLocaleString("en-US")}）
+                </span>
               </p>
-              <p className="seat-chip" style={{ marginTop: 20 }}>
+              <p className="seat-chip">
                 {seat.text}
                 {seat.remaining !== null ? (
                   <>
@@ -85,30 +90,19 @@ export default async function HomePage() {
                 ) : null}
               </p>
             </div>
-            <div className="orbit" aria-hidden="true">
-              <svg viewBox="0 0 320 320" width="100%" height="100%">
-                <circle cx="160" cy="160" r="108" fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.85" />
-                <circle cx="160" cy="160" r="72" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.25" />
-                <path d="M28 160h264M160 28v264" stroke="currentColor" strokeWidth="0.8" opacity="0.4" />
-                <path d="M160 160 L256 160 A96 96 0 0 0 160 64" fill="none" stroke="#8a9bb0" strokeWidth="1.8" />
-                <path d="M160 160 L228 160 L228 92 Z" fill="#8a9bb0" opacity="0.16" />
-                <circle cx="256" cy="160" r="4" fill="currentColor" />
-                <circle cx="160" cy="64" r="4" fill="currentColor" />
-                <circle cx="160" cy="160" r="3" fill="currentColor" />
-                <text x="160" y="22" textAnchor="middle" fill="currentColor" fontSize="12" opacity="0.7">
-                  三角函數
-                </text>
-                <text x="300" y="164" textAnchor="end" fill="currentColor" fontSize="12" opacity="0.7">
-                  向量
-                </text>
-                <text x="160" y="310" textAnchor="middle" fill="currentColor" fontSize="12" opacity="0.7">
-                  勾股定理
-                </text>
-                <text x="22" y="164" textAnchor="start" fill="currentColor" fontSize="12" opacity="0.7">
-                  二次函數
-                </text>
-              </svg>
-            </div>
+            <Link href="/sample" className="hero-preview" aria-label="免費看題本試閱：國一 1-1 正負數與數線">
+              <span className="hero-preview-page hero-preview-page--back" aria-hidden="true">
+                <SampleImg kind="parent" alt="" sizes="300px" />
+              </span>
+              <span className="hero-preview-page">
+                <SampleImg
+                  kind="student"
+                  alt="寬數週練學生題本第一頁：國一正負數與數線"
+                  sizes="340px"
+                />
+              </span>
+              <span className="hero-preview-tag">真實一週・{SAMPLE.unit}</span>
+            </Link>
           </div>
           <div className="wrap stats">
             <div>
@@ -136,15 +130,7 @@ export default async function HomePage() {
             <div className="sample-grid" style={{ marginTop: 28 }}>
               <figure className="sample-card">
                 <div className="sample-frame">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={SAMPLE.studentPreview}
-                    alt="寬數週練學生題本試閱頁：國一正負數與數線，本週觀念與練習題"
-                    width={900}
-                    height={1273}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <SampleImg kind="student" alt="寬數週練學生題本試閱頁：國一正負數與數線，本週觀念與練習題" />
                 </div>
                 <figcaption>
                   <strong>學生題本</strong>
@@ -153,15 +139,7 @@ export default async function HomePage() {
               </figure>
               <figure className="sample-card">
                 <div className="sample-frame sample-frame--tilt">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={SAMPLE.parentPreview}
-                    alt="寬數週練家長解答試閱頁：每題答案與步驟說明"
-                    width={900}
-                    height={1273}
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <SampleImg kind="parent" alt="寬數週練家長解答試閱頁：每題答案與步驟說明" />
                 </div>
                 <figcaption>
                   <strong>家長解答</strong>
@@ -203,8 +181,8 @@ export default async function HomePage() {
             <p className="kicker">吳寬老師｜寬數</p>
             <h2 className="display">誰在出題</h2>
             <p className="muted" style={{ marginTop: 12 }}>
-              陽明交大應用數學。Stanford OHS 數學老師暨官方監考官。週練是講義方案：每週兩份 PDF，不提供 LINE
-              即時答題。
+              陽明交大應用數學系畢業。Stanford OHS 數學老師暨官方監考官，也在站前教 SAT 數學。週練是講義方案：每週兩份
+              PDF，不提供 LINE 即時答題。
             </p>
             <p className="muted">成效一例：學測數學 11 級到分科 58 級（例如精誠高中備考）。更多經歷請看個人頁。</p>
             <p style={{ marginTop: 20 }}>

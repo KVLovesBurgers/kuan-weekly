@@ -26,7 +26,7 @@ export default async function SubscribePage({
       <Header parentEmail={parent.email} />
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 640 }}>
-          <p className="kicker">訂閱</p>
+          <p className="kicker">訂閱 · 第 2 步／共 3 步</p>
           <h1 className="display">為一名孩子登記週練</h1>
           <p className="muted">
             {seat.text}
@@ -50,31 +50,27 @@ export default async function SubscribePage({
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>
               請填寫標 * 的欄位
             </p>
-            <label>
-              孩子稱呼（顯示於後台與 PDF 頁首）*
-            </label>
-            <input name="display_name" required placeholder="例如：安安" />
-            <label>年級*</label>
-            <select name="grade" required defaultValue="國一">
+            <label htmlFor="display_name">孩子稱呼（顯示於後台與 PDF 頁首）*</label>
+            <input id="display_name" name="display_name" required maxLength={40} autoComplete="off" placeholder="例如：安安" />
+            <label htmlFor="grade">年級*</label>
+            <select id="grade" name="grade" required defaultValue="國一">
               {GRADE_OPTIONS.map((g) => (
                 <option key={g}>{g}</option>
               ))}
             </select>
-            <label>校內進度</label>
-            <textarea name="school_progress" placeholder="版本、章節、段考範圍" />
-            <label>應考目標</label>
-            <input name="exam_target" placeholder="例如：跟上段考、把分數應用寫穩" />
-            <label>弱點單元</label>
-            <textarea name="weak_topics" placeholder="例如：應用題列式、分數四則" />
-            <label>方案*</label>
-            <select name="plan" required defaultValue="monthly">
+            <label htmlFor="school_progress">校內進度</label>
+            <textarea id="school_progress" name="school_progress" placeholder="版本、章節、段考範圍" />
+            <label htmlFor="exam_target">應考目標</label>
+            <input id="exam_target" name="exam_target" placeholder="例如：跟上段考、把分數應用寫穩" />
+            <label htmlFor="weak_topics">弱點單元</label>
+            <textarea id="weak_topics" name="weak_topics" placeholder="例如：應用題列式、分數四則" />
+            <label htmlFor="plan">方案*</label>
+            <select id="plan" name="plan" required defaultValue="monthly">
               <option value="monthly">
-                月繳 {SITE.currency}
-                {SITE.monthlyPrice}
+                {`月繳 ${SITE.currency}${SITE.monthlyPrice} /月`}
               </option>
               <option value="yearly">
-                年繳 {SITE.currency}
-                {SITE.yearlyPrice}
+                {`年繳 ${SITE.currency}${SITE.yearlyPrice} /年（省 ${SITE.currency}${SITE.monthlyPrice * 12 - SITE.yearlyPrice}）`}
               </option>
             </select>
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>

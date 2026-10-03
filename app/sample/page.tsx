@@ -3,8 +3,10 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SocialDm } from "@/components/SocialDm";
+import { SampleImg } from "@/components/SampleImg";
 import { getParent } from "@/lib/auth";
-import { DEMO_PARENT_EMAIL, SAMPLE, SOCIAL } from "@/lib/config";
+import { seatsRemaining } from "@/lib/db";
+import { DEMO_PARENT_EMAIL, SAMPLE, SITE, SOCIAL, seatLabel } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
@@ -14,6 +16,16 @@ export const metadata: Metadata = {
     title: "免費題本試閱｜寬數週練",
     description: "免登入下載一週學生題本＋家長解答，看看寬數週練長什麼樣子。",
     url: "/sample",
+    siteName: "寬數週練",
+    locale: "zh_TW",
+    type: "website",
+    images: [{ url: "/og.png", width: 1280, height: 720, alt: "寬數週練｜免費題本試閱" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "免費題本試閱｜寬數週練",
+    description: "免登入下載一週學生題本＋家長解答，看看寬數週練長什麼樣子。",
+    images: ["/og.png"],
   },
 };
 
@@ -21,6 +33,9 @@ export const dynamic = "force-dynamic";
 
 export default async function SamplePage() {
   const parent = await getParent();
+  const remaining = await seatsRemaining();
+  const full = remaining <= 0;
+  const seat = seatLabel(remaining);
   return (
     <>
       <Header parentEmail={parent?.email} />
@@ -51,14 +66,7 @@ export default async function SamplePage() {
           <div className="sample-grid" style={{ marginTop: 36 }}>
             <figure className="sample-card">
               <div className="sample-frame">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={SAMPLE.studentPreview}
-                  alt="學生題本第一頁：本週觀念、數線圖與基礎題"
-                  width={900}
-                  height={1273}
-                  decoding="async"
-                />
+                <SampleImg kind="student" alt="學生題本第一頁：本週觀念、數線圖與基礎題" sizes="(max-width: 860px) calc(100vw - 64px), 400px" eager />
               </div>
               <figcaption>
                 <strong>學生題本・第 1 頁</strong>
@@ -67,15 +75,7 @@ export default async function SamplePage() {
             </figure>
             <figure className="sample-card">
               <div className="sample-frame sample-frame--tilt">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={SAMPLE.parentPreview}
-                  alt="家長解答第一頁：答案速查與每題步驟說明"
-                  width={900}
-                  height={1273}
-                  loading="lazy"
-                  decoding="async"
-                />
+                <SampleImg kind="parent" alt="家長解答第一頁：答案速查與每題步驟說明" sizes="(max-width: 860px) calc(100vw - 64px), 400px" />
               </div>
               <figcaption>
                 <strong>家長解答・第 1 頁</strong>
@@ -84,8 +84,46 @@ export default async function SamplePage() {
             </figure>
           </div>
 
-          <div className="card" style={{ marginTop: 36 }}>
-            <h2 className="display" style={{ fontSize: 24, margin: "0 0 8px" }}>
+          <section className="card next-step" style={{ marginTop: 36 }} aria-labelledby="next-step-title">
+            <div>
+              <p className="kicker">看完試閱之後</p>
+              <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 4px" }}>
+                覺得適合，就為孩子訂閱週練
+              </h2>
+              <p className="price">
+                {SITE.currency}
+                {SITE.monthlyPrice}
+                <small> /月 · 每位孩子</small>
+              </p>
+              <p className="muted" style={{ margin: 0, fontSize: 14 }}>
+                或年繳 {SITE.currency}
+                {SITE.yearlyPrice.toLocaleString("en-US")}。{seat.text}
+                {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
+              </p>
+              <ol className="steps-list">
+                <li>用信箱登入（不設密碼）</li>
+                <li>填孩子年級、校內進度與弱點單元</li>
+                <li>匯款後寄證明，約 1 個工作天開通</li>
+              </ol>
+            </div>
+            <div className="cta-row" style={{ marginTop: 0 }}>
+              {full ? (
+                <Link href="/waitlist" className="btn btn-ink">
+                  名額已滿，加入候補
+                </Link>
+              ) : (
+                <Link href="/login?next=/subscribe" className="btn btn-ink">
+                  為孩子訂閱週練
+                </Link>
+              )}
+              <Link href="/#pricing" className="btn btn-paper">
+                看方案細節
+              </Link>
+            </div>
+          </section>
+
+          <div className="card" style={{ marginTop: 20 }}>
+            <h2 className="display" style={{ fontSize: 22, margin: "0 0 8px" }}>
               想先問問題，或領更多試閱？
             </h2>
             <p className="muted" style={{ margin: "0 0 16px" }}>
@@ -94,14 +132,11 @@ export default async function SamplePage() {
             <SocialDm />
           </div>
 
-          <div className="cta-row" style={{ marginTop: 28 }}>
-            <Link href="/#pricing" className="btn btn-ink">
-              看方案
+          <p style={{ marginTop: 20 }}>
+            <Link href="/#videos" className="u muted">
+              先看吳寬老師怎麼教（YouTube 短影片）
             </Link>
-            <Link href="/#videos" className="btn btn-paper">
-              看吳寬老師怎麼教
-            </Link>
-          </div>
+          </p>
           <p className="muted" style={{ marginTop: 20, fontSize: 13 }}>
             想走一遍家長後台（下載、填回饋）？可用示範信箱 {DEMO_PARENT_EMAIL}{" "}
             <Link href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`} className="u">

@@ -1,6 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
 import { SITE, SOCIAL } from "@/lib/config";
+
+// 自架字型（next/font）：拿掉 fonts.googleapis.com 的阻塞式 CSS，改用可變字重、同網域載入。
+const sans = Noto_Sans_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-sans" });
+const serif = Noto_Serif_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-serif" });
 
 const title = "寬數週練｜國中數學・高中數學每週練習題本｜吳寬老師";
 const description =
@@ -55,7 +60,31 @@ const jsonLd = {
   "@type": "EducationalOrganization",
   name: SITE.name,
   url: SITE.url,
-  founder: { "@type": "Person", name: SITE.teacher },
+  description,
+  image: `${SITE.url}/og.png`,
+  areaServed: "TW",
+  founder: {
+    "@type": "Person",
+    name: SITE.teacher,
+    jobTitle: "數學老師",
+    alumniOf: "國立陽明交通大學 應用數學系",
+  },
+  makesOffer: [
+    {
+      "@type": "Offer",
+      name: "寬數週練｜按月",
+      price: SITE.monthlyPrice,
+      priceCurrency: "TWD",
+      url: `${SITE.url}/#pricing`,
+    },
+    {
+      "@type": "Offer",
+      name: "寬數週練｜按年",
+      price: SITE.yearlyPrice,
+      priceCurrency: "TWD",
+      url: `${SITE.url}/#pricing`,
+    },
+  ],
   sameAs: [SOCIAL.instagramUrl, SOCIAL.facebookUrl, SOCIAL.youtubeChannelUrl],
 };
 
@@ -67,15 +96,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant">
+    <html lang="zh-Hant-TW" className={`${sans.variable} ${serif.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@500;600;700&display=swap"
-        />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>{children}</body>

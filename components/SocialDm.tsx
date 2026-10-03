@@ -16,20 +16,20 @@ export function SocialDm({ keyword = SOCIAL.weeklyKeyword, tone = "light", compa
         href={SOCIAL.instagramUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`到 Instagram ${SOCIAL.handle} 私訊「${keyword}」（另開新分頁）`}
       >
         <InstagramIcon />
         {compact ? "IG 私訊" : `IG 私訊「${keyword}」`}
+        <span className="sr-only">（Instagram {SOCIAL.handle}，另開新分頁）</span>
       </a>
       <a
         className={cls}
         href={SOCIAL.facebookUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`到臉書粉專「${SOCIAL.facebookName}」私訊「${keyword}」（另開新分頁）`}
       >
         <FacebookIcon />
         {`臉書粉專 ${SOCIAL.facebookName}`}
+        <span className="sr-only">（私訊「{keyword}」，另開新分頁）</span>
       </a>
     </div>
   );

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getParent } from "@/lib/auth";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { getDb } from "@/lib/db";
 import { BANK_TRANSFER, SITE } from "@/lib/config";
 
@@ -36,9 +38,11 @@ export default async function PayPage({
   )}`;
 
   return (
+    <>
+    <Header parentEmail={parent.email} />
     <main id="main" className="section">
       <div className="wrap" style={{ maxWidth: 520 }}>
-        <p className="kicker">結帳</p>
+        <p className="kicker">訂閱 · 第 3 步／共 3 步</p>
         <h1 className="display">匯款開通</h1>
         <p className="muted">
           目前以銀行轉帳收款。匯完請把證明寄到老師信箱，確認入帳後會為「{child?.display_name ?? "孩子"}」開通正取。
@@ -97,5 +101,7 @@ export default async function PayPage({
         </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

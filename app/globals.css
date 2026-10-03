@@ -15,8 +15,8 @@
   --shadow-border: 0 0 0 1px #ddd6c8;
   --shadow-hover: 0 0 0 1px #c9c0ae;
   --radius: 12px;
-  --display: "Noto Serif TC", "Songti TC", serif;
-  --sans: "Noto Sans TC", "PingFang TC", sans-serif;
+  --display: var(--font-serif), "Noto Serif TC", "Songti TC", serif;
+  --sans: var(--font-sans), "Noto Sans TC", "PingFang TC", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -393,3 +393,73 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
   html { scroll-behavior: auto; }
   .btn, .short-play img, .dl-card { transition: none; }
 }
+
+/* ---- 2026-10-03 optimize: hero price + product preview, contrast, sample next step ---- */
+.hero-price {
+  margin: 18px 0 12px;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+.hero-price strong {
+  font-family: var(--display);
+  font-size: 22px;
+  color: var(--paper);
+}
+.hero-price-sep { margin: 0 6px; opacity: 0.5; }
+.hero-preview {
+  position: relative;
+  display: block;
+  width: min(100%, 380px);
+  aspect-ratio: 0.82;
+  margin: 0 auto;
+}
+.hero-preview-page {
+  position: absolute;
+  right: 0; top: 0;
+  width: 82%;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--paper-raised);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  transform: rotate(2deg);
+  transition: transform 0.2s;
+}
+.hero-preview-page img { display: block; width: 100%; height: auto; border-radius: 6px; background: #fff; }
+.hero-preview-page--back {
+  right: auto; left: 0; top: 8%;
+  width: 72%;
+  transform: rotate(-5deg);
+  opacity: 0.55;
+}
+.hero-preview:hover .hero-preview-page:not(.hero-preview-page--back) { transform: rotate(0.5deg) translateY(-4px); }
+.hero-preview-tag {
+  position: absolute; left: 4%; bottom: 0;
+  padding: 6px 12px; border-radius: 999px;
+  font-size: 13px; color: var(--ink);
+  background: var(--steel);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+@media (max-width: 860px) {
+  .hero .hero-preview { display: none; }
+}
+
+/* 淺色底上的小標用深一階的鋼藍，對比 >= 4.5:1；深色區塊維持原鋼藍。 */
+.kicker { color: #4f6075; }
+.hero .kicker, .ink-panel .kicker, .site-footer .kicker, .dl-card .kicker, .site-header .kicker { color: var(--steel); }
+.site-footer .dim { color: color-mix(in srgb, var(--paper) 64%, transparent); }
+.savings-note { color: #4f6075; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.next-step { display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.next-step > div:first-child { flex: 1; min-width: 240px; }
+.next-step .price { font-size: 32px; margin: 4px 0; }
+.steps-list { margin: 12px 0 0; padding-left: 20px; color: var(--muted); font-size: 14px; }
+.steps-list li { margin: 2px 0; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-preview-page { transition: none; }
+}
+.nowrap { white-space: nowrap; }

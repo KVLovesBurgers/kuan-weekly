@@ -31,13 +31,19 @@ export default async function LoginPage({
       <Header />
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 520 }}>
-          <p className="kicker">家長登入</p>
-          <h1 className="display">用信箱收一次連結</h1>
-          <p className="muted">不設密碼。正式環境會寄信；示範信箱仍會在本頁顯示連結。</p>
+          <p className="kicker">{isSubscribe ? "訂閱 · 第 1 步／共 3 步" : "家長登入"}</p>
+          <h1 className="display">{isSubscribe ? "先用信箱登入" : "用信箱收一次連結"}</h1>
+          <p className="muted">
+            不設密碼：輸入信箱，我們寄一封登入連結給你，點開就登入（連結 24 小時內有效）。
+          </p>
           {isSubscribe ? (
-            <p className="banner ok" style={{ marginTop: 12 }}>
-              登入後即可登記孩子與查看匯款帳號
-            </p>
+            <ol className="steps-list banner ok" style={{ marginTop: 12, paddingLeft: 34 }}>
+              <li>
+                <strong>用信箱登入</strong>（這一步）
+              </li>
+              <li>填孩子年級、校內進度、弱點單元，選月繳或年繳</li>
+              <li>看到匯款帳號，轉帳後寄證明，約 1 個工作天開通</li>
+            </ol>
           ) : null}
           {isDemo && !sent ? (
             <p className="muted" style={{ marginTop: 8, fontSize: 14 }}>
@@ -56,7 +62,7 @@ export default async function LoginPage({
                   </a>
                 </p>
               ) : (
-                <p>請到收件匣點選信件中的連結（含垃圾郵件匣）。</p>
+                <p style={{ margin: "10px 0 0" }}>請到收件匣點選信件中的連結；幾分鐘內沒收到，請看一下垃圾郵件匣或「促銷內容」分類。</p>
               )}
             </div>
           ) : null}
@@ -69,13 +75,15 @@ export default async function LoginPage({
               type="email"
               required
               defaultValue={emailParam}
-              placeholder={DEMO_PARENT_EMAIL}
+              placeholder="you@example.com"
+              autoComplete="email"
+              inputMode="email"
             />
             <button className="btn btn-ink" type="submit">
               寄出登入連結
             </button>
             <p className="muted" style={{ fontSize: 13 }}>
-              示範家長信箱：{DEMO_PARENT_EMAIL}（已有一名未付費示範孩子與一週已發布題本）
+              只想先看看家長後台？可用示範信箱 {DEMO_PARENT_EMAIL}（未付費示範孩子，連結會直接顯示在本頁）。
             </p>
           </form>
         </div>
