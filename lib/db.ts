@@ -105,6 +105,8 @@ async function openDb(): Promise<KuanDb> {
     await db.exec("PRAGMA foreign_keys = ON");
   }
   await migrate(db);
+  // 上線驗證用的測試名單（jjredick365+leadtest@…）一律清掉，不留在試閱名單。
+  await db.prepare("DELETE FROM leads WHERE email LIKE 'jjredick365+leadtest@%'").run();
   await seed(db);
   return db;
 }

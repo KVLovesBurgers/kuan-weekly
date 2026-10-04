@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdmin } from "@/lib/auth";
-import { adminLogout, activateChild, createWeek } from "@/app/actions/admin";
+import { adminLogout, activateChild, createWeek, deleteLead } from "@/app/actions/admin";
 import { getDb, paidSeatCount, seatsRemaining, type ChildRow, type FeedbackRow } from "@/lib/db";
 import { listWeeks, pdfsForWeek } from "@/lib/weeks";
 import { COMPLETION_OPTIONS, DIFFICULTY_OPTIONS, seatCap } from "@/lib/config";
@@ -189,7 +189,13 @@ export default async function AdminHome({
               <li key={l.id}>
                 {l.email} · {l.role || "未填"} · {l.grade || "未填年級"} · 來源 {l.source || "direct"}
                 {l.utm ? ` · ${l.utm}` : ""} · {Number(l.hits)} 次 ·{" "}
-                {new Date(l.created_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })}
+                {new Date(l.created_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })}{" "}
+                <form action={deleteLead} style={{ display: "inline" }}>
+                  <input type="hidden" name="id" value={l.id} />
+                  <button type="submit" className="u" style={{ background: "none", border: 0, padding: 0, cursor: "pointer", color: "inherit" }}>
+                    刪除
+                  </button>
+                </form>
               </li>
             ))}
           </ul>

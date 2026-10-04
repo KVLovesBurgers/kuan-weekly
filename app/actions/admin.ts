@@ -117,3 +117,14 @@ export async function activateChild(formData: FormData) {
   revalidatePath("/");
   redirect("/admin?ok=1");
 }
+
+export async function deleteLead(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  if (id) {
+    const db = await getDb();
+    await db.prepare("DELETE FROM leads WHERE id = ?").run(id);
+  }
+  revalidatePath("/admin");
+  redirect("/admin");
+}
