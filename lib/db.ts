@@ -164,6 +164,18 @@ async function migrate(db: KuanDb) {
       created_at TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS leads (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL UNIQUE,
+      grade TEXT NOT NULL DEFAULT '',
+      role TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT '',
+      utm TEXT NOT NULL DEFAULT '',
+      hits INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      last_seen_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS weeks (
       id TEXT PRIMARY KEY,
       week_label TEXT NOT NULL,

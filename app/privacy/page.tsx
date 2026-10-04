@@ -25,6 +25,7 @@ export default function PrivacyPage() {
           </h2>
           <ul className="muted" style={{ lineHeight: 1.9 }}>
             <li>家長電子信箱（登入與聯絡）</li>
+            <li>索取題本試閱時留下的信箱、身分（家長／學生）、孩子年級（選填）與來源頁面</li>
             <li>孩子暱稱、年級、校內進度、應考目標、弱點單元</li>
             <li>每週作答進度與難度／完成度回饋、卡關單元</li>
             <li>訂閱方案、匯款對帳相關紀錄（開通用）</li>
@@ -34,7 +35,7 @@ export default function PrivacyPage() {
             為什麼需要
           </h2>
           <p className="muted">
-            用於依程度出題、家長登入下載題本、確認匯款後開通席次，以及依回饋調整下一週題目。
+            用於寄送題本試閱與週練更新、依程度出題、家長登入下載題本、確認匯款後開通席次，以及依回饋調整下一週題目。
           </p>
 
           <h2 className="display" style={{ fontSize: 24, marginTop: 28 }}>

@@ -30,6 +30,16 @@ export default async function AdminHome({
     note: string;
     created_at: string;
   }[];
+  const leads = (await db.prepare("SELECT * FROM leads ORDER BY created_at DESC LIMIT 200").all()) as {
+    id: string;
+    email: string;
+    grade: string;
+    role: string;
+    source: string;
+    utm: string;
+    hits: number;
+    created_at: string;
+  }[];
   const feedbacks = (await db
     .prepare(
       `SELECT f.*, c.display_name, w.week_label, w.title
@@ -166,6 +176,20 @@ export default async function AdminHome({
               <li key={f.id} style={{ marginBottom: 10 }}>
                 <strong>{f.display_name}</strong> · {f.week_label} {f.title} · {diffLabel[f.difficulty]} ·{" "}
                 {doneLabel[f.completion]} · {f.stuck_topic || "未填卡關"}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section style={{ marginTop: 40 }}>
+          <h2 className="display">試閱名單（/sample）</h2>
+          {leads.length === 0 ? <p className="muted">目前沒有試閱名單。</p> : null}
+          <ul>
+            {leads.map((l) => (
+              <li key={l.id}>
+                {l.email} · {l.role || "未填"} · {l.grade || "未填年級"} · 來源 {l.source || "direct"}
+                {l.utm ? ` · ${l.utm}` : ""} · {Number(l.hits)} 次 ·{" "}
+                {new Date(l.created_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })}
               </li>
             ))}
           </ul>

@@ -9,7 +9,7 @@ const serif = Noto_Serif_TC({ subsets: ["latin"], display: "swap", preload: fals
 
 const title = "寬數週練｜國中數學・高中數學每週練習題本｜吳寬老師";
 const description =
-  "吳寬老師的國中、高中數學每週練習：跟著學校進度、每週練必錯題、畫圖把觀念講懂。每週一份學生題本＋一份家長解答，免登入先看題本試閱。";
+  "吳寬老師的國中、高中數學每週練習：跟著學校進度、每週練必錯題、畫圖把觀念講懂。每週一份學生題本＋一份家長解答，留信箱即可免費下載題本試閱。";
 
 export const metadata: Metadata = {
   title,

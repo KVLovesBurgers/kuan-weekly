@@ -399,7 +399,7 @@ export default async function HomePage() {
                 先看一份真的題本
               </h2>
               <p className="muted" style={{ margin: "6px 0 0" }}>
-                不用登入就能下載試閱；有問題到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.weeklyKeyword}」。
+                留個信箱就能下載試閱；有問題到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.weeklyKeyword}」。
               </p>
             </div>
             <div className="cta-row" style={{ marginTop: 0 }}>

@@ -4,17 +4,20 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
+import { cookies } from "next/headers";
 import { getParent } from "@/lib/auth";
+import { submitSampleLead } from "@/app/actions/lead";
+import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ROLES } from "@/lib/leads";
 import { seatsRemaining } from "@/lib/db";
 import { DEMO_PARENT_EMAIL, SAMPLE, SITE, SOCIAL, seatLabel } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
-  description: `免登入下載寬數週練一週的學生題本與家長解答（${SAMPLE.unit}）。吳寬老師出題：先讀觀念、再練段考常錯題，家長解答含步驟拆解。`,
+  description: `留下信箱即可下載寬數週練一週的學生題本與家長解答（${SAMPLE.unit}）。吳寬老師出題：先讀觀念、再練段考常錯題，家長解答含步驟拆解。`,
   alternates: { canonical: "/sample" },
   openGraph: {
     title: "免費題本試閱｜寬數週練",
-    description: "免登入下載一週學生題本＋家長解答，看看寬數週練長什麼樣子。",
+    description: "留下信箱，免費下載一週學生題本＋家長解答，看看寬數週練長什麼樣子。",
     url: "/sample",
     siteName: "寬數週練",
     locale: "zh_TW",
@@ -24,15 +27,31 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "免費題本試閱｜寬數週練",
-    description: "免登入下載一週學生題本＋家長解答，看看寬數週練長什麼樣子。",
+    description: "留下信箱，免費下載一週學生題本＋家長解答，看看寬數週練長什麼樣子。",
     images: ["/og.png"],
   },
 };
 
 export const dynamic = "force-dynamic";
 
-export default async function SamplePage() {
+export default async function SamplePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await searchParams;
+  const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? "";
+  const src = cleanSrc(one(sp.src));
+  const utm = {
+    utm_source: cleanUtm(one(sp.utm_source)),
+    utm_medium: cleanUtm(one(sp.utm_medium)),
+    utm_campaign: cleanUtm(one(sp.utm_campaign)),
+  };
+  const error = one(sp.error).slice(0, 80);
+  const justUnlocked = one(sp.ok) === "1";
   const parent = await getParent();
+  const jar = await cookies();
+  const unlocked = justUnlocked || jar.get(LEAD_COOKIE)?.value === "1" || Boolean(parent);
   const remaining = await seatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
@@ -41,7 +60,7 @@ export default async function SamplePage() {
       <Header parentEmail={parent?.email} />
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 880 }}>
-          <p className="kicker">題本試閱 · 免登入</p>
+          <p className="kicker">題本試閱 · 免費下載</p>
           <h1 className="display" style={{ fontSize: "clamp(32px, 5vw, 44px)", margin: "8px 0 12px" }}>
             領題本試閱
           </h1>
@@ -50,17 +69,79 @@ export default async function SamplePage() {
             4 頁（每題答案＋步驟說明＋常見錯誤，附家長陪讀指引）。A4 可以直接列印給孩子寫。
           </p>
 
-          <div className="sample-downloads">
-            <a className="dl-card" href={SAMPLE.studentPdf} download="寬數週練試閱-國一1-1-學生題本.pdf">
-              <span className="kicker">PDF · 4 頁</span>
-              <strong className="display">下載學生題本</strong>
-              <span className="muted">給孩子作答，不含答案</span>
-            </a>
-            <a className="dl-card" href={SAMPLE.parentPdf} download="寬數週練試閱-國一1-1-家長解答.pdf">
-              <span className="kicker">PDF · 4 頁</span>
-              <strong className="display">下載家長解答</strong>
-              <span className="muted">孩子寫完再打開對答</span>
-            </a>
+          <div id="get" style={{ scrollMarginTop: 80 }}>
+            {unlocked ? (
+              <>
+                {justUnlocked ? (
+                  <p className="banner ok" role="status" style={{ marginTop: 20 }}>
+                    已收到，題本試閱可以下載了。
+                  </p>
+                ) : null}
+                <div className="sample-downloads">
+                  <a className="dl-card" href={SAMPLE.studentPdf} download="寬數週練試閱-國一1-1-學生題本.pdf">
+                    <span className="kicker">PDF · 4 頁</span>
+                    <strong className="display">下載學生題本</strong>
+                    <span className="muted">給孩子作答，不含答案</span>
+                  </a>
+                  <a className="dl-card" href={SAMPLE.parentPdf} download="寬數週練試閱-國一1-1-家長解答.pdf">
+                    <span className="kicker">PDF · 4 頁</span>
+                    <strong className="display">下載家長解答</strong>
+                    <span className="muted">孩子寫完再打開對答</span>
+                  </a>
+                </div>
+              </>
+            ) : (
+              <form action={submitSampleLead} className="form card lead-form" style={{ marginTop: 24 }}>
+                <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
+                  留下信箱，馬上下載兩份 PDF
+                </h2>
+                {error ? (
+                  <p className="banner warn" role="alert" style={{ margin: 0 }}>
+                    {error}
+                  </p>
+                ) : null}
+                <input type="hidden" name="src" value={src} />
+                {Object.entries(utm).map(([k, v]) => (v ? <input key={k} type="hidden" name={k} value={v} /> : null))}
+                <label htmlFor="lead_email">電子信箱（必填）</label>
+                <input
+                  id="lead_email"
+                  name="email"
+                  type="email"
+                  required
+                  maxLength={200}
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="you@example.com"
+                />
+                <fieldset className="lead-role">
+                  <legend>我是</legend>
+                  {LEAD_ROLES.map((r, i) => (
+                    <label key={r} className="lead-radio">
+                      <input type="radio" name="role" value={r} defaultChecked={i === 0} /> {r}
+                    </label>
+                  ))}
+                </fieldset>
+                <label htmlFor="lead_grade">孩子年級（選填）</label>
+                <select id="lead_grade" name="grade" defaultValue="">
+                  <option value="">不填</option>
+                  {LEAD_GRADES.map((g) => (
+                    <option key={g} value={g}>
+                      {g}
+                    </option>
+                  ))}
+                </select>
+                <button className="btn btn-ink" type="submit">
+                  取得題本試閱
+                </button>
+                <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+                  信箱只用來寄送寬數週練的試閱與更新，不會提供給第三方；想刪除隨時來信告知。詳見
+                  <Link href="/privacy" className="u">
+                    隱私權政策
+                  </Link>
+                  。
+                </p>
+              </form>
+            )}
           </div>
 
           <div className="sample-grid" style={{ marginTop: 36 }}>
