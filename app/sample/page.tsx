@@ -48,10 +48,10 @@ export default async function SamplePage({
     utm_campaign: cleanUtm(one(sp.utm_campaign)),
   };
   const error = one(sp.error).slice(0, 80);
-  const justUnlocked = one(sp.ok) === "1";
   const parent = await getParent();
   const jar = await cookies();
-  const unlocked = justUnlocked || jar.get(LEAD_COOKIE)?.value === "1" || Boolean(parent);
+  const unlocked = jar.get(LEAD_COOKIE)?.value === "1" || Boolean(parent);
+  const justUnlocked = unlocked && one(sp.ok) === "1";
   const remaining = await seatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
