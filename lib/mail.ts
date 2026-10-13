@@ -42,6 +42,36 @@ export async function sendLeadAlert(lead: {
   await sendMail({ to: SITE.contactEmail, subject, text, html });
 }
 
+/** 試閱頁直接登記匯款訂閱時通知老師。 */
+export async function sendCheckoutAlert(o: {
+  email: string;
+  displayName: string;
+  grade: string;
+  plan: string;
+  amount: number;
+  tradeNo: string;
+  source: string;
+  createdAt: string;
+}) {
+  const subject = `寬數週練｜試閱頁登記匯款 ${o.displayName}（${o.grade}）`;
+  const tw = new Date(o.createdAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false });
+  const rows: [string, string][] = [
+    ["家長信箱", o.email],
+    ["孩子", o.displayName],
+    ["年級", o.grade],
+    ["方案", o.plan === "yearly" ? "年繳" : "月繳"],
+    ["金額", `${SITE.currency}${o.amount}`],
+    ["訂單", o.tradeNo],
+    ["來源 src", o.source || "direct"],
+    ["時間（台北）", tw],
+  ];
+  const text = `有家長在 /sample 看完試閱後登記匯款訂閱（待匯款）：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
+  const html = `<p>有家長在 /sample 看完試閱後登記匯款訂閱（待匯款）：</p><table>${rows
+    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td>${esc(v)}</td></tr>`)
+    .join("")}</table>`;
+  await sendMail({ to: SITE.contactEmail, subject, text, html });
+}
+
 async function sendMail({ to, subject, text, html }: { to: string; subject: string; text: string; html: string }) {
   const from = process.env.SMTP_FROM || process.env.MAIL_FROM || `${SITE.name} <${SITE.contactEmail}>`;
 

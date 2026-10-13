@@ -6,14 +6,25 @@ import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
 import { cookies } from "next/headers";
 import { getParent } from "@/lib/auth";
-import { submitSampleLead } from "@/app/actions/lead";
-import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ROLES } from "@/lib/leads";
-import { seatsRemaining } from "@/lib/db";
-import { DEMO_PARENT_EMAIL, SAMPLE, SITE, SOCIAL, seatLabel } from "@/lib/config";
+import { startSampleCheckout, submitSampleLead } from "@/app/actions/lead";
+import {
+  cleanSrc,
+  cleanTrack,
+  cleanUtm,
+  LEAD_COOKIE,
+  LEAD_GRADES,
+  LEAD_ID_COOKIE,
+  LEAD_ROLES,
+  LEAD_TRACK_COOKIE,
+  LEAD_TRADE_COOKIE,
+  type SampleTrack,
+} from "@/lib/leads";
+import { getDb, seatsRemaining } from "@/lib/db";
+import { BANK_TRANSFER, DEMO_PARENT_EMAIL, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
-  description: `留下信箱即可下載寬數週練一週的學生題本與家長解答（${SAMPLE.unit}）。吳寬老師出題：先讀觀念、再練段考常錯題，家長解答含步驟拆解。`,
+  description: "留下信箱，依孩子年級免費下載寬數週練試閱：國中段考、高中學測必錯題、SAT Math。吳寬老師出題，家長解答含步驟拆解。",
   alternates: { canonical: "/sample" },
   openGraph: {
     title: "免費題本試閱｜寬數週練",
@@ -55,6 +66,29 @@ export default async function SamplePage({
   const remaining = await seatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
+  const track: SampleTrack = cleanTrack(one(sp.track)) || cleanTrack(jar.get(LEAD_TRACK_COOKIE)?.value) || "jh";
+  const pack = SAMPLES[track];
+  const leadId = jar.get(LEAD_ID_COOKIE)?.value ?? "";
+  const canQuickSubscribe = unlocked && Boolean(leadId) && !parent;
+  const tradeParam = one(sp.trade).slice(0, 40);
+  let order: { id: string; plan: string; amount: number; display_name: string; email: string } | undefined;
+  if (tradeParam && jar.get(LEAD_TRADE_COOKIE)?.value === tradeParam) {
+    const db = await getDb();
+    order = (await db
+      .prepare(
+        `SELECT c.id, c.plan, c.amount, ch.display_name, p.email FROM checkout_attempts c
+         JOIN children ch ON ch.id = c.child_id JOIN parents p ON p.id = c.parent_id WHERE c.id = ?`,
+      )
+      .get(tradeParam)) as typeof order;
+  }
+  const leadGradeDefault = track === "sat" ? "SAT Math" : track === "gsat" ? "高三" : "國一";
+  const mailto = order
+    ? `mailto:${BANK_TRANSFER.proofEmail}?subject=${encodeURIComponent(
+        `寬數週練匯款證明｜${order.display_name}｜${order.id}`,
+      )}&body=${encodeURIComponent(
+        `老師您好，\n\n已匯款 ${SITE.currency}${order.amount}（${order.plan === "yearly" ? "年繳" : "月繳"}）。\n訂單編號：${order.id}\n孩子：${order.display_name}\n家長信箱：${order.email}\n\n（請附上轉帳證明截圖）\n`,
+      )}`
+    : "";
   return (
     <>
       <Header parentEmail={parent?.email} />
@@ -65,8 +99,7 @@ export default async function SamplePage({
             領題本試閱
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
-            這是寬數週練真實的一週：<strong>{SAMPLE.unit}</strong>。學生題本 4 頁（本週觀念＋數線圖，再分基礎／段考常考／進階挑戰三關作答，沒有答案）；家長解答
-            4 頁（每題答案＋步驟說明＋常見錯誤，附家長陪讀指引）。A4 可以直接列印給孩子寫。
+            依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本＋家長解答各 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
           </p>
 
           <div id="get" style={{ scrollMarginTop: 80 }}>
@@ -77,15 +110,29 @@ export default async function SamplePage({
                     已收到，題本試閱可以下載了。
                   </p>
                 ) : null}
+                <p className="muted" style={{ marginTop: 16 }}>
+                  目前顯示：<strong>{pack.label}試閱・{pack.unit}</strong>。也可以看
+                  {(Object.keys(SAMPLES) as SampleTrack[])
+                    .filter((k) => k !== track)
+                    .map((k, i) => (
+                      <span key={k}>
+                        {i ? "、" : ""}
+                        <Link href={`/sample?track=${k}#get`} className="u">
+                          {SAMPLES[k].label}
+                        </Link>
+                      </span>
+                    ))}
+                  。
+                </p>
                 <div className="sample-downloads">
-                  <a className="dl-card" href={SAMPLE.studentPdf} download="寬數週練試閱-國一1-1-學生題本.pdf">
-                    <span className="kicker">PDF · 4 頁</span>
+                  <a className="dl-card" href={pack.studentPdf} download={pack.studentName}>
+                    <span className="kicker">PDF · {pack.studentPages} 頁</span>
                     <strong className="display">下載學生題本</strong>
                     <span className="muted">給孩子作答，不含答案</span>
                   </a>
-                  <a className="dl-card" href={SAMPLE.parentPdf} download="寬數週練試閱-國一1-1-家長解答.pdf">
-                    <span className="kicker">PDF · 4 頁</span>
-                    <strong className="display">下載家長解答</strong>
+                  <a className="dl-card" href={pack.parentPdf} download={pack.parentName}>
+                    <span className="kicker">PDF · {pack.parentPages} 頁</span>
+                    <strong className="display">下載{pack.parentTitle}</strong>
                     <span className="muted">孩子寫完再打開對答</span>
                   </a>
                 </div>
@@ -101,6 +148,7 @@ export default async function SamplePage({
                   </p>
                 ) : null}
                 <input type="hidden" name="src" value={src} />
+                <input type="hidden" name="track" value={track} />
                 {Object.entries(utm).map(([k, v]) => (v ? <input key={k} type="hidden" name={k} value={v} /> : null))}
                 <label htmlFor="lead_email">電子信箱（必填）</label>
                 <input
@@ -121,8 +169,8 @@ export default async function SamplePage({
                     </label>
                   ))}
                 </fieldset>
-                <label htmlFor="lead_grade">孩子年級（選填）</label>
-                <select id="lead_grade" name="grade" defaultValue="">
+                <label htmlFor="lead_grade">孩子年級（選填，會給對應的試閱）</label>
+                <select id="lead_grade" name="grade" defaultValue={track === "gsat" ? "高三" : track === "sat" ? "SAT" : ""}>
                   <option value="">不填</option>
                   {LEAD_GRADES.map((g) => (
                     <option key={g} value={g}>
@@ -165,42 +213,122 @@ export default async function SamplePage({
             </figure>
           </div>
 
-          <section className="card next-step" style={{ marginTop: 36 }} aria-labelledby="next-step-title">
-            <div>
-              <p className="kicker">看完試閱之後</p>
-              <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 4px" }}>
-                覺得適合，就為孩子訂閱週練
-              </h2>
-              <p className="price">
-                {SITE.currency}
-                {SITE.monthlyPrice}
-                <small> /月 · 每位孩子</small>
-              </p>
-              <p className="muted" style={{ margin: 0, fontSize: 14 }}>
-                或年繳 {SITE.currency}
-                {SITE.yearlyPrice.toLocaleString("en-US")}。{seat.text}
-                {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
-              </p>
-              <ol className="steps-list">
-                <li>用信箱登入（不設密碼）</li>
-                <li>填孩子年級、校內進度與弱點單元</li>
-                <li>匯款後寄證明，約 1 個工作天開通</li>
-              </ol>
-            </div>
-            <div className="cta-row" style={{ marginTop: 0 }}>
-              {full ? (
-                <Link href="/waitlist" className="btn btn-ink">
-                  名額已滿，加入候補
-                </Link>
-              ) : (
-                <Link href="/login?next=/subscribe" className="btn btn-ink">
-                  為孩子訂閱週練
-                </Link>
-              )}
-              <Link href="/#pricing" className="btn btn-paper">
-                看方案細節
-              </Link>
-            </div>
+          <section id="subscribe" className="card next-step" style={{ marginTop: 36, scrollMarginTop: 80 }} aria-labelledby="next-step-title">
+            {order ? (
+              <div style={{ width: "100%" }}>
+                <p className="kicker">已登記・待匯款</p>
+                <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 8px" }}>
+                  匯款開通「{order.display_name}」的週練
+                </h2>
+                <p className="price" style={{ margin: "0 0 8px" }}>
+                  {SITE.currency}
+                  {order.amount}
+                  <small>
+                    {" "}
+                    · {order.plan === "yearly" ? "年繳" : "月繳"} · 訂單 {order.id}
+                  </small>
+                </p>
+                <p style={{ margin: "8px 0" }}>
+                  <strong>
+                    {BANK_TRANSFER.bankName}（{BANK_TRANSFER.bankCode}）
+                  </strong>
+                  <br />
+                  戶名：<strong>{BANK_TRANSFER.accountName}</strong>
+                  <br />
+                  帳號：<strong style={{ letterSpacing: "0.04em" }}>{BANK_TRANSFER.accountNumber}</strong>
+                </p>
+                <ol className="steps-list">
+                  <li>完成匯款，備註填孩子稱呼或訂單編號</li>
+                  <li>
+                    把轉帳證明寄到 <a href={mailto} className="u">{BANK_TRANSFER.proofEmail}</a>
+                  </li>
+                  <li>確認入帳後約 1 個工作天開通，之後用 {order.email} 登入後台下載每週題本</li>
+                </ol>
+              </div>
+            ) : canQuickSubscribe && !full ? (
+              <div style={{ width: "100%" }}>
+                <p className="kicker">看完試閱之後</p>
+                <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 4px" }}>
+                  覺得適合，直接匯款訂閱
+                </h2>
+                <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
+                  {SITE.currency}
+                  {SITE.monthlyPrice} /月，或年繳 {SITE.currency}
+                  {SITE.yearlyPrice.toLocaleString("en-US")}，每位孩子計價。{seat.text}
+                  {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。用剛剛留的信箱登記，不用再收登入信。
+                </p>
+                {error && one(sp.error).includes("孩子") ? (
+                  <p className="banner warn" role="alert">
+                    {error}
+                  </p>
+                ) : null}
+                <form action={startSampleCheckout} className="form">
+                  <label htmlFor="sub_name">孩子稱呼*</label>
+                  <input id="sub_name" name="display_name" required maxLength={40} autoComplete="off" placeholder="例如：安安" />
+                  <label htmlFor="sub_grade">年級*</label>
+                  <select id="sub_grade" name="grade" required defaultValue={leadGradeDefault}>
+                    {GRADE_OPTIONS.map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </select>
+                  <label htmlFor="sub_target">應考目標</label>
+                  <input id="sub_target" name="exam_target" maxLength={200} placeholder="例如：學測數A、段考、SAT" />
+                  <label htmlFor="sub_plan">方案*</label>
+                  <select id="sub_plan" name="plan" required defaultValue="monthly">
+                    <option value="monthly">{`月繳 ${SITE.currency}${SITE.monthlyPrice} /月`}</option>
+                    <option value="yearly">{`年繳 ${SITE.currency}${SITE.yearlyPrice} /年（省 ${SITE.currency}${SITE.monthlyPrice * 12 - SITE.yearlyPrice}）`}</option>
+                  </select>
+                  <button className="btn btn-ink" type="submit">
+                    看匯款帳號
+                  </button>
+                  <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+                    送出即表示已閱讀 <Link href="/privacy" className="u">隱私權政策</Link>。校內進度、弱點單元之後可在後台補。
+                  </p>
+                </form>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <p className="kicker">看完試閱之後</p>
+                  <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 4px" }}>
+                    覺得適合，就為孩子訂閱週練
+                  </h2>
+                  <p className="price">
+                    {SITE.currency}
+                    {SITE.monthlyPrice}
+                    <small> /月 · 每位孩子</small>
+                  </p>
+                  <p className="muted" style={{ margin: 0, fontSize: 14 }}>
+                    或年繳 {SITE.currency}
+                    {SITE.yearlyPrice.toLocaleString("en-US")}。{seat.text}
+                    {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
+                  </p>
+                  <ol className="steps-list">
+                    <li>{unlocked ? "用信箱登入（不設密碼）" : "先在上面留信箱領試閱"}</li>
+                    <li>填孩子年級與應考目標</li>
+                    <li>匯款後寄證明，約 1 個工作天開通</li>
+                  </ol>
+                </div>
+                <div className="cta-row" style={{ marginTop: 0 }}>
+                  {full ? (
+                    <Link href="/waitlist" className="btn btn-ink">
+                      名額已滿，加入候補
+                    </Link>
+                  ) : unlocked ? (
+                    <Link href="/login?next=/subscribe" className="btn btn-ink">
+                      為孩子訂閱週練
+                    </Link>
+                  ) : (
+                    <a href="#get" className="btn btn-ink">
+                      先領試閱
+                    </a>
+                  )}
+                  <Link href="/#pricing" className="btn btn-paper">
+                    看方案細節
+                  </Link>
+                </div>
+              </>
+            )}
           </section>
 
           <div className="card" style={{ marginTop: 20 }}>

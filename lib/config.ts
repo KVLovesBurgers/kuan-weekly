@@ -40,6 +40,43 @@ export const SAMPLE = {
   parentPreview: "/samples/parent-preview.webp",
 } as const;
 
+/** 試閱依年級分三份：國中（原本的國一 1-1）、高中學測、SAT。 */
+export const SAMPLES = {
+  jh: {
+    label: "國中",
+    unit: "國一 1-1 正負數與數線",
+    studentPdf: "/samples/kuan-weekly-sample-student.pdf",
+    parentPdf: "/samples/kuan-weekly-sample-parent.pdf",
+    studentName: "寬數週練試閱-國一1-1-學生題本.pdf",
+    parentName: "寬數週練試閱-國一1-1-家長解答.pdf",
+    studentPages: 4,
+    parentPages: 4,
+    parentTitle: "家長解答",
+  },
+  gsat: {
+    label: "高中學測",
+    unit: "高三・學測必錯 5 題",
+    studentPdf: "/samples/kuan-weekly-sample-gsat-student.pdf",
+    parentPdf: "/samples/kuan-weekly-sample-gsat-parent.pdf",
+    studentName: "寬數週練試閱-學測必錯5題-學生題本.pdf",
+    parentName: "寬數週練試閱-學測必錯5題-家長解答.pdf",
+    studentPages: 2,
+    parentPages: 2,
+    parentTitle: "家長解答",
+  },
+  sat: {
+    label: "SAT Math",
+    unit: "Digital SAT Math Ch.1 一元一次方程式",
+    studentPdf: "/samples/kuan-weekly-sample-sat-student.pdf",
+    parentPdf: "/samples/kuan-weekly-sample-sat-parent.pdf",
+    studentName: "寬數試閱-SAT-Ch1-講義.pdf",
+    parentName: "寬數試閱-SAT-Ch1-解答本.pdf",
+    studentPages: 12,
+    parentPages: 4,
+    parentTitle: "解答本",
+  },
+} as const;
+
 /** 目前主收款：私人匯款。綠界信用卡／ATM 審過後再開線上刷卡。 */
 export const BANK_TRANSFER = {
   bankName: "兆豐國際商業銀行",

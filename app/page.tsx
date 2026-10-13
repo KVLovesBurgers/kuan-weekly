@@ -44,27 +44,33 @@ export default async function HomePage() {
         <section className="hero">
           <div className="wrap hero-grid">
             <div>
-              <p className="kicker">吳寬老師 · 交大應數 · Stanford OHS 數學老師</p>
+              <p className="kicker">吳寬老師 · 交大應數 · 學測、SAT 數學老師</p>
               <h1 className="display">寬數週練</h1>
               <p className="promise display">
-                跟著學校進度，
+                離學測剩三個月，
                 <br />
-                每週練必錯題，
+                每週把必錯題
                 <br />
-                畫圖把觀念講懂。
+                練到不錯。
               </p>
               <p className="sub hero-sub">
-                給國中、高中孩子的每週數學題本：一份學生題本（不含答案）＋一份家長解答（步驟拆解）。小學與 SAT Math
-                也可依程度排題。
+                每週一份學生題本＋一份家長解答。家長不用會數學，照著解答就能對答案、看出孩子卡在哪。高三衝學測、國高中跟段考、SAT
+                都可以排。
+              </p>
+              <p className="sub hero-sub" style={{ marginTop: 8 }}>
+                <strong>成效一例：學測數學 11 級到分科 58 級。</strong>
               </p>
               <div className="cta-row" style={{ marginTop: 28 }}>
-                <Link href="/sample" className="btn btn-steel btn-lg">
-                  免費看題本試閱
+                <Link href="/sample?track=gsat" className="btn btn-steel btn-lg">
+                  免費下載學測試閱
                 </Link>
                 <a href="#pricing" className="btn btn-ghost btn-lg">
-                  看方案
+                  看方案與匯款方式
                 </a>
               </div>
+              <p className="muted" style={{ margin: "8px 0 0", fontSize: 13 }}>
+                留信箱即可下載，國中、SAT 也有對應試閱。
+              </p>
               <p className="hero-price">
                 <strong>
                   {SITE.currency}

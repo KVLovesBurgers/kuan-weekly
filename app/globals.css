@@ -387,7 +387,7 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
   .sample-downloads { grid-template-columns: 1fr; }
   .cta-row .btn, .cta-row .dm-row { width: 100%; }
   .cta-row .dm-row .btn { flex: 1; }
-  .hero .cta-row .btn { flex: 1; width: auto; }
+  .hero .cta-row .btn { flex: 1 1 100%; width: 100%; white-space: nowrap; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

@@ -42,9 +42,6 @@ export function Footer() {
           <p style={{ marginTop: 8 }}>
             或寄信 <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
           </p>
-          <p className="dim" style={{ marginTop: 16 }}>
-            後台：<Link href="/admin/login">老師登入</Link>
-          </p>
         </div>
       </div>
     </footer>
