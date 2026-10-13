@@ -96,18 +96,19 @@ export default async function HomePage() {
                 ) : null}
               </p>
             </div>
-            <Link href="/sample" className="hero-preview" aria-label="免費看題本試閱：國一 1-1 正負數與數線">
+            <Link href="/sample?track=gsat" className="hero-preview" aria-label="免費下載學測試閱：高三學測必錯 5 題">
               <span className="hero-preview-page hero-preview-page--back" aria-hidden="true">
-                <SampleImg kind="parent" alt="" sizes="300px" />
+                <SampleImg kind="parent" pack="gsat" alt="" sizes="300px" />
               </span>
               <span className="hero-preview-page">
                 <SampleImg
                   kind="student"
-                  alt="寬數週練學生題本第一頁：國一正負數與數線"
+                  pack="gsat"
+                  alt="寬數週練學測試閱學生題本第一頁：高三學測必錯 5 題"
                   sizes="340px"
                 />
               </span>
-              <span className="hero-preview-tag">真實一週・{SAMPLE.unit}</span>
+              <span className="hero-preview-tag">學測試閱・高三必錯 5 題</span>
             </Link>
           </div>
           <div className="wrap stats">

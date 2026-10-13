@@ -5,11 +5,17 @@ type Props = {
   alt: string;
   sizes?: string;
   eager?: boolean;
+  pack?: "jh" | "gsat";
 };
 
 /** 試閱頁縮圖：依螢幕寬度挑 480／640／900 寬的 webp，手機不用下載整張大圖。 */
-export function SampleImg({ kind, alt, sizes = "(max-width: 860px) calc(100vw - 64px), 520px", eager = false }: Props) {
-  const base = kind === "student" ? SAMPLE.studentPreview : SAMPLE.parentPreview;
+export function SampleImg({ kind, alt, sizes = "(max-width: 860px) calc(100vw - 64px), 520px", eager = false, pack = "jh" }: Props) {
+  const base =
+    pack === "gsat"
+      ? `/samples/gsat-${kind}-preview.webp`
+      : kind === "student"
+        ? SAMPLE.studentPreview
+        : SAMPLE.parentPreview;
   const stem = base.replace(/\.webp$/, "");
   return (
     // eslint-disable-next-line @next/next/no-img-element
