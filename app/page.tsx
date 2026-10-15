@@ -56,8 +56,7 @@ export default async function HomePage() {
                 練到不錯。
               </p>
               <p className="sub hero-sub">
-                每週一份學生題本＋一份家長解答。家長不用會數學，照著解答就能對答案、看出孩子卡在哪。高三衝學測、國高中跟段考、SAT
-                都可以排：高三衝刺學測，國中、高一高二打穩段考與基礎。
+                每週一份學生題本＋一份家長解答。家長不用會數學，照著解答就能對答案、看出孩子卡在哪。國中跟段考、高一高二打基礎、高三衝學測，SAT 也可以排。
               </p>
               <p className="sub hero-sub" style={{ marginTop: 8 }}>
                 <strong>成效一例：學測數學 11 級到分科 58 級。</strong>
