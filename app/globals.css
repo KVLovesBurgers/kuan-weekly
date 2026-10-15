@@ -473,3 +473,7 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .lead-role legend { padding: 0; float: left; margin-right: 8px; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
 .lead-radio { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; letter-spacing: 0; color: var(--charcoal); cursor: pointer; }
 .lead-radio input { width: auto; min-height: 0; margin: 0; }
+
+.countdown-chip { display: inline-block; margin: 6px 0 0; font-size: 14px; opacity: 0.85; }
+.countdown-chip strong { font-size: 18px; }
+.sample-tracks { flex-wrap: wrap; }

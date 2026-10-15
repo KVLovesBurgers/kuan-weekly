@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-/** 輕量 YouTube：先顯示縮圖，點了才載入 iframe。 */
+/** 輕量 YouTube：先顯示直式封面（oar2；hqdefault 對 Shorts 常是黑畫面），點了才載入 iframe。 */
 export function LiteYouTube({ id, title, note }: { id: string; title: string; note?: string }) {
   const [on, setOn] = useState(false);
   return (
@@ -19,10 +19,14 @@ export function LiteYouTube({ id, title, note }: { id: string; title: string; no
           <button type="button" className="short-play" onClick={() => setOn(true)} aria-label={`播放影片：${title}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+              src={`https://i.ytimg.com/vi/${id}/oar2.jpg`}
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (!img.src.includes("hq720")) img.src = `https://i.ytimg.com/vi/${id}/hq720.jpg`;
+              }}
               alt=""
-              width={480}
-              height={360}
+              width={540}
+              height={960}
               loading="lazy"
               decoding="async"
             />

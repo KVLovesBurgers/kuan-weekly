@@ -20,7 +20,7 @@ import {
   type SampleTrack,
 } from "@/lib/leads";
 import { getDb, seatsRemaining } from "@/lib/db";
-import { BANK_TRANSFER, DEMO_PARENT_EMAIL, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
@@ -86,7 +86,7 @@ export default async function SamplePage({
     ? `mailto:${BANK_TRANSFER.proofEmail}?subject=${encodeURIComponent(
         `寬數週練匯款證明｜${order.display_name}｜${order.id}`,
       )}&body=${encodeURIComponent(
-        `老師您好，\n\n已匯款 ${SITE.currency}${order.amount}（${order.plan === "yearly" ? "年繳" : "月繳"}）。\n訂單編號：${order.id}\n孩子：${order.display_name}\n家長信箱：${order.email}\n\n（請附上轉帳證明截圖）\n`,
+        `老師您好，\n\n已匯款 ${SITE.currency}${money(order.amount)}（${order.plan === "yearly" ? "年繳" : "月繳"}）。\n訂單編號：${order.id}\n孩子：${order.display_name}\n家長信箱：${order.email}\n\n（請附上轉帳證明截圖）\n`,
       )}`
     : "";
   return (
@@ -100,6 +100,22 @@ export default async function SamplePage({
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
             依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本＋家長解答各 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
+          </p>
+
+          <nav className="cta-row sample-tracks" aria-label="選擇試閱年級" style={{ marginTop: 16 }}>
+            {(["jh", "gsat", "sat"] as SampleTrack[]).map((k) => (
+              <Link
+                key={k}
+                href={`/sample?track=${k}${src ? `&src=${encodeURIComponent(src)}` : ""}#get`}
+                className={`btn ${k === track ? "btn-ink" : "btn-paper"}`}
+                aria-current={k === track ? "page" : undefined}
+              >
+                {k === "jh" ? "國中" : k === "gsat" ? "學測" : "SAT"}試閱
+              </Link>
+            ))}
+          </nav>
+          <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
+            目前選擇：<strong>{pack.label}・{pack.unit}</strong>
           </p>
 
           <div id="get" style={{ scrollMarginTop: 80 }}>
@@ -195,7 +211,7 @@ export default async function SamplePage({
           <div className="sample-grid" style={{ marginTop: 36 }}>
             <figure className="sample-card">
               <div className="sample-frame">
-                <SampleImg kind="student" alt="學生題本第一頁：本週觀念、數線圖與基礎題" sizes="(max-width: 860px) calc(100vw - 64px), 400px" eager />
+                <SampleImg pack={track === "gsat" ? "gsat" : "jh"} kind="student" alt={track === "gsat" ? "學測試閱學生題本第一頁" : "學生題本第一頁：本週觀念、數線圖與基礎題"} sizes="(max-width: 860px) calc(100vw - 64px), 400px" eager />
               </div>
               <figcaption>
                 <strong>學生題本・第 1 頁</strong>
@@ -204,7 +220,7 @@ export default async function SamplePage({
             </figure>
             <figure className="sample-card">
               <div className="sample-frame sample-frame--tilt">
-                <SampleImg kind="parent" alt="家長解答第一頁：答案速查與每題步驟說明" sizes="(max-width: 860px) calc(100vw - 64px), 400px" />
+                <SampleImg pack={track === "gsat" ? "gsat" : "jh"} kind="parent" alt={track === "gsat" ? "學測試閱家長解答第一頁" : "家長解答第一頁：答案速查與每題步驟說明"} sizes="(max-width: 860px) calc(100vw - 64px), 400px" />
               </div>
               <figcaption>
                 <strong>家長解答・第 1 頁</strong>
@@ -222,7 +238,7 @@ export default async function SamplePage({
                 </h2>
                 <p className="price" style={{ margin: "0 0 8px" }}>
                   {SITE.currency}
-                  {order.amount}
+                  {money(order.amount)}
                   <small>
                     {" "}
                     · {order.plan === "yearly" ? "年繳" : "月繳"} · 訂單 {order.id}
@@ -253,8 +269,8 @@ export default async function SamplePage({
                 </h2>
                 <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
                   {SITE.currency}
-                  {SITE.monthlyPrice} /月，或年繳 {SITE.currency}
-                  {SITE.yearlyPrice.toLocaleString("en-US")}，每位孩子計價。{seat.text}
+                  {money(SITE.monthlyPrice)} /月，或年繳 {SITE.currency}
+                  {money(SITE.yearlyPrice)}，每位孩子計價。{seat.text}
                   {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。用剛剛留的信箱登記，不用再收登入信。
                 </p>
                 {error && one(sp.error).includes("孩子") ? (
@@ -275,8 +291,8 @@ export default async function SamplePage({
                   <input id="sub_target" name="exam_target" maxLength={200} placeholder="例如：學測數A、段考、SAT" />
                   <label htmlFor="sub_plan">方案*</label>
                   <select id="sub_plan" name="plan" required defaultValue="monthly">
-                    <option value="monthly">{`月繳 ${SITE.currency}${SITE.monthlyPrice} /月`}</option>
-                    <option value="yearly">{`年繳 ${SITE.currency}${SITE.yearlyPrice} /年（省 ${SITE.currency}${SITE.monthlyPrice * 12 - SITE.yearlyPrice}）`}</option>
+                    <option value="monthly">{`月繳 ${SITE.currency}${money(SITE.monthlyPrice)} /月`}</option>
+                    <option value="yearly">{`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}</option>
                   </select>
                   <button className="btn btn-ink" type="submit">
                     看匯款帳號
@@ -295,12 +311,12 @@ export default async function SamplePage({
                   </h2>
                   <p className="price">
                     {SITE.currency}
-                    {SITE.monthlyPrice}
+                    {money(SITE.monthlyPrice)}
                     <small> /月 · 每位孩子</small>
                   </p>
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>
                     或年繳 {SITE.currency}
-                    {SITE.yearlyPrice.toLocaleString("en-US")}。{seat.text}
+                    {money(SITE.yearlyPrice)}。{seat.text}
                     {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
                   </p>
                   <ol className="steps-list">
@@ -345,13 +361,6 @@ export default async function SamplePage({
             <Link href="/#videos" className="u muted">
               先看吳寬老師怎麼教（YouTube 短影片）
             </Link>
-          </p>
-          <p className="muted" style={{ marginTop: 20, fontSize: 13 }}>
-            想走一遍家長後台（下載、填回饋）？可用示範信箱 {DEMO_PARENT_EMAIL}{" "}
-            <Link href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`} className="u">
-              登入示範帳
-            </Link>
-            。
           </p>
         </div>
       </main>

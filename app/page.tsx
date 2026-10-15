@@ -7,7 +7,7 @@ import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
-import { DEMO_PARENT_EMAIL, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel } from "@/lib/config";
+import { GSAT_DATE, gsatDaysLeft, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +35,7 @@ export default async function HomePage() {
   const remaining = await seatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
+  const daysLeft = gsatDaysLeft();
   const yearlySave = SITE.monthlyPrice * 12 - SITE.yearlyPrice;
 
   return (
@@ -45,17 +46,18 @@ export default async function HomePage() {
           <div className="wrap hero-grid">
             <div>
               <p className="kicker">吳寬老師 · 交大應數 · 學測、SAT 數學老師</p>
+              <p className="countdown-chip" title={`116 學年度學測 ${GSAT_DATE.slice(0, 10)} 起`}>
+                距離 116 學測（2027/1/22）還有 <strong>{daysLeft}</strong> 天
+              </p>
               <h1 className="display">寬數週練</h1>
               <p className="promise display">
-                離學測剩三個月，
-                <br />
                 每週把必錯題
                 <br />
                 練到不錯。
               </p>
               <p className="sub hero-sub">
                 每週一份學生題本＋一份家長解答。家長不用會數學，照著解答就能對答案、看出孩子卡在哪。高三衝學測、國高中跟段考、SAT
-                都可以排。
+                都可以排：高三衝刺學測，國中、高一高二打穩段考與基礎。
               </p>
               <p className="sub hero-sub" style={{ marginTop: 8 }}>
                 <strong>成效一例：學測數學 11 級到分科 58 級。</strong>
@@ -74,7 +76,7 @@ export default async function HomePage() {
               <p className="hero-price">
                 <strong>
                   {SITE.currency}
-                  {SITE.monthlyPrice}
+                  {money(SITE.monthlyPrice)}
                 </strong>{" "}
                 /月・每位孩子
                 <span className="hero-price-sep" aria-hidden="true">
@@ -82,8 +84,8 @@ export default async function HomePage() {
                 </span>
                 <span className="nowrap">
                   年繳 {SITE.currency}
-                  {SITE.yearlyPrice.toLocaleString("en-US")}（省 {SITE.currency}
-                  {yearlySave.toLocaleString("en-US")}）
+                  {money(SITE.yearlyPrice)}（省 {SITE.currency}
+                  {money(yearlySave)}）
                 </span>
               </p>
               <p className="seat-chip">
@@ -122,7 +124,7 @@ export default async function HomePage() {
             </div>
             <div>
               <strong className="display">限 {seatCap()} 名</strong>
-              <span className="sub">額滿轉候補，不超量收</span>
+              <span className="sub">{seat.short}</span>
             </div>
           </div>
         </section>
@@ -132,7 +134,7 @@ export default async function HomePage() {
             <p className="kicker">題本試閱</p>
             <h2 className="display">每週兩份 PDF 長這樣</h2>
             <p className="muted" style={{ maxWidth: 580 }}>
-              這是真實一週：{SAMPLE.unit}。訂閱後會依孩子年級、校內進度與弱點單元調整，不是固定同一本。
+              下圖是國中真實一週（{SAMPLE.unit}）；學測與 SAT 另有對應試閱。訂閱後會依孩子年級、校內進度與弱點單元調整，不是固定同一本。
             </p>
             <div className="sample-grid" style={{ marginTop: 28 }}>
               <figure className="sample-card">
@@ -154,9 +156,16 @@ export default async function HomePage() {
                 </figcaption>
               </figure>
             </div>
-            <div className="cta-row">
-              <Link href="/sample" className="btn btn-ink">
-                免費下載完整試閱 PDF
+            <p className="muted" style={{ marginTop: 24 }}>依孩子年級選一份免費試閱：</p>
+            <div className="cta-row sample-tracks">
+              <Link href="/sample?track=jh&src=home-samples#get" className="btn btn-paper">
+                國中試閱
+              </Link>
+              <Link href="/sample?track=gsat&src=home-samples#get" className="btn btn-ink">
+                學測試閱
+              </Link>
+              <Link href="/sample?track=sat&src=home-samples#get" className="btn btn-paper">
+                SAT 試閱
               </Link>
               <SocialDm />
             </div>
@@ -262,7 +271,7 @@ export default async function HomePage() {
                 <p className="kicker">按月</p>
                 <p className="price">
                   {SITE.currency}
-                  {SITE.monthlyPrice}
+                  {money(SITE.monthlyPrice)}
                   <small> /月 · 每名孩子</small>
                 </p>
                 <p className="muted">適合先試一個月。要停用請寄信 {SITE.contactEmail}。</p>
@@ -271,15 +280,15 @@ export default async function HomePage() {
                 <p className="kicker">按年</p>
                 <p className="price">
                   {SITE.currency}
-                  {SITE.yearlyPrice}
+                  {money(SITE.yearlyPrice)}
                   <small> /年 · 每名孩子</small>
                 </p>
                 <p className="muted">對準完整學年的每週進度。</p>
                 <p className="savings-note">
                   月繳一年 {SITE.currency}
-                  {SITE.monthlyPrice * 12} → 年繳 {SITE.currency}
-                  {SITE.yearlyPrice}，省 {SITE.currency}
-                  {yearlySave}
+                  {money(SITE.monthlyPrice * 12)} → 年繳 {SITE.currency}
+                  {money(SITE.yearlyPrice)}，省 {SITE.currency}
+                  {money(yearlySave)}
                 </p>
               </article>
             </div>
@@ -347,7 +356,6 @@ export default async function HomePage() {
                     SOCIAL.satKeyword +
                     "」可先看 Week 1。",
                 ],
-                ["示範帳號是什麼？", "demo"],
                 ["名額滿了怎麼辦？", `限 ${seatCap()} 名，額滿後改候補。老師從後台看到候補名單後再通知開席。`],
                 ["匯款後多久開通？", "通常 1 個工作天內開通。請把轉帳證明寄到 " + SITE.contactEmail + "。"],
                 [
@@ -378,17 +386,6 @@ export default async function HomePage() {
                     </Link>{" "}
                     直接下載一週的學生題本與家長解答；也可以到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「
                     {SOCIAL.weeklyKeyword}」領試閱。
-                  </p>
-                ) : a === "demo" ? (
-                  <p className="muted">
-                    想走一遍家長後台（下載 PDF、填回饋），可用示範信箱 {DEMO_PARENT_EMAIL}{" "}
-                    <Link
-                      href={`/login?email=${encodeURIComponent(DEMO_PARENT_EMAIL)}&next=/dashboard`}
-                      className="u"
-                    >
-                      登入示範帳
-                    </Link>
-                    。示範孩子未付費、不佔名額；真家長匯款確認後才開通。
                   </p>
                 ) : (
                   <p className="muted">{a}</p>

@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getParent, logoutParent, requestMagicLink } from "@/lib/auth";
 import { getDb, seatsRemaining, type ChildRow } from "@/lib/db";
+import { DEMO_PARENT_EMAIL } from "@/lib/config";
+
+const DEMO_READONLY = "/dashboard?error=" + encodeURIComponent("示範帳號為唯讀，無法新增或修改資料。");
 import { uid } from "@/lib/ids";
 import { SITE } from "@/lib/config";
 import { safeNextPath } from "@/lib/safe-next";
@@ -43,6 +46,7 @@ export async function joinWaitlist(formData: FormData) {
 export async function saveChildProfile(formData: FormData) {
   const parent = await getParent();
   if (!parent) redirect("/login");
+  if (parent.email === DEMO_PARENT_EMAIL) redirect(DEMO_READONLY);
   const id = String(formData.get("child_id") ?? "");
   const db = await getDb();
   const child = (await db.prepare("SELECT * FROM children WHERE id = ? AND parent_id = ?").get(id, parent.id)) as
@@ -66,6 +70,7 @@ export async function saveChildProfile(formData: FormData) {
 export async function saveFeedback(formData: FormData) {
   const parent = await getParent();
   if (!parent) redirect("/login");
+  if (parent.email === DEMO_PARENT_EMAIL) redirect(DEMO_READONLY);
   const childId = String(formData.get("child_id") ?? "");
   const weekId = String(formData.get("week_id") ?? "");
   const db = await getDb();
@@ -96,6 +101,7 @@ export async function saveFeedback(formData: FormData) {
 export async function startCheckout(formData: FormData) {
   const parent = await getParent();
   if (!parent) redirect("/login?next=/subscribe");
+  if (parent.email === DEMO_PARENT_EMAIL) redirect(DEMO_READONLY);
   const plan = String(formData.get("plan") ?? "monthly") === "yearly" ? "yearly" : "monthly";
   const display_name = String(formData.get("display_name") ?? "").trim();
   const grade = String(formData.get("grade") ?? "");

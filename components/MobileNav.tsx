@@ -51,7 +51,7 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
             </Link>
           ) : (
             <Link href="/login" onClick={close}>
-              家長登入
+              家長後台
             </Link>
           )}
           <a href={SOCIAL.instagramUrl} target="_blank" rel="noopener noreferrer" onClick={close}>

@@ -1,7 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { sendLoginLink } from "@/app/actions/parent";
-import { DEMO_PARENT_EMAIL } from "@/lib/config";
 import { safeNextPath } from "@/lib/safe-next";
 import { getParent } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -24,14 +23,13 @@ export default async function LoginPage({
   }
 
   const isSubscribe = next === "/subscribe";
-  const isDemo = emailParam === DEMO_PARENT_EMAIL;
 
   return (
     <>
       <Header />
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 520 }}>
-          <p className="kicker">{isSubscribe ? "訂閱 · 第 1 步／共 3 步" : "家長登入"}</p>
+          <p className="kicker">{isSubscribe ? "訂閱 · 第 1 步／共 3 步" : "家長後台"}</p>
           <h1 className="display">{isSubscribe ? "先用信箱登入" : "用信箱收一次連結"}</h1>
           <p className="muted">
             不設密碼：輸入信箱，我們寄一封登入連結給你，點開就登入（連結 24 小時內有效）。
@@ -44,11 +42,6 @@ export default async function LoginPage({
               <li>填孩子年級、校內進度、弱點單元，選月繳或年繳</li>
               <li>看到匯款帳號，轉帳後寄證明，約 1 個工作天開通</li>
             </ol>
-          ) : null}
-          {isDemo && !sent ? (
-            <p className="muted" style={{ marginTop: 8, fontSize: 14 }}>
-              使用示範信箱 {DEMO_PARENT_EMAIL}
-            </p>
           ) : null}
           {error ? <p className="banner warn">{error}</p> : null}
           {sent ? (
@@ -82,9 +75,6 @@ export default async function LoginPage({
             <button className="btn btn-ink" type="submit">
               寄出登入連結
             </button>
-            <p className="muted" style={{ fontSize: 13 }}>
-              只想先看看家長後台？可用示範信箱 {DEMO_PARENT_EMAIL}（未付費示範孩子，連結會直接顯示在本頁）。
-            </p>
           </form>
         </div>
       </main>

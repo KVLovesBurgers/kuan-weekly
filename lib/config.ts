@@ -93,12 +93,22 @@ export function ecpayPaymentsEnabled() {
 /** 剩餘名額少於此數才公開顯示「尚餘 N 名」，否則只寫「限 N 名」。 */
 export const SHOW_REMAINING_BELOW = 15;
 
+/** 全站統一的即時名額文字：剩 X 名，或已滿，加入候補。 */
 export function seatLabel(remaining: number) {
   const cap = seatCap();
-  if (remaining <= 0) return { text: `限 ${cap} 名 · 目前已滿`, remaining: null as number | null };
-  if (remaining < SHOW_REMAINING_BELOW) return { text: `限 ${cap} 名 · 尚餘`, remaining };
-  return { text: `限 ${cap} 名 · 額滿轉候補`, remaining: null as number | null };
+  if (remaining <= 0) return { text: `限 ${cap} 名 · 已滿，加入候補`, short: "已滿，加入候補", full: true, remaining: null as number | null };
+  return { text: `限 ${cap} 名 · 剩 ${remaining} 名`, short: `剩 ${remaining} 名`, full: false, remaining: null as number | null };
 }
+
+/** 116 學年度學測：116 年 1 月 22 日至 24 日（大考中心 116 學年度簡章）。 */
+export const GSAT_DATE = "2027-01-22T00:00:00+08:00";
+
+export function gsatDaysLeft(now = new Date()) {
+  const ms = new Date(GSAT_DATE).getTime() - now.getTime();
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+
+export const money = (n: number) => n.toLocaleString("en-US");
 
 export function seatCap() {
   const n = Number(process.env.SEAT_CAP ?? "20");

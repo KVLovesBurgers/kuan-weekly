@@ -90,6 +90,9 @@ export async function startSampleCheckout(formData: FormData) {
         | undefined)
     : undefined;
   if (!lead) redirect("/sample?error=" + encodeURIComponent("請先留下信箱領試閱。") + "#get");
+  if (lead.email.trim().toLowerCase().endsWith("@demo.kuan.tw")) {
+    redirect("/sample?error=" + encodeURIComponent("示範帳號為唯讀，無法訂閱。") + "#subscribe");
+  }
 
   const display_name = String(formData.get("display_name") ?? "").trim().slice(0, 40);
   const gradeRaw = String(formData.get("grade") ?? "");

@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { startCheckout } from "@/app/actions/parent";
-import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -67,10 +67,10 @@ export default async function SubscribePage({
             <label htmlFor="plan">方案*</label>
             <select id="plan" name="plan" required defaultValue="monthly">
               <option value="monthly">
-                {`月繳 ${SITE.currency}${SITE.monthlyPrice} /月`}
+                {`月繳 ${SITE.currency}${money(SITE.monthlyPrice)} /月`}
               </option>
               <option value="yearly">
-                {`年繳 ${SITE.currency}${SITE.yearlyPrice} /年（省 ${SITE.currency}${SITE.monthlyPrice * 12 - SITE.yearlyPrice}）`}
+                {`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}
               </option>
             </select>
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>

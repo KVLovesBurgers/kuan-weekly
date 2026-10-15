@@ -1,7 +1,10 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { joinWaitlist } from "@/app/actions/parent";
-import { GRADE_OPTIONS } from "@/lib/config";
+import { GRADE_OPTIONS, seatLabel } from "@/lib/config";
+import { seatsRemaining } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 export default async function WaitlistPage({
   searchParams,
@@ -9,13 +12,15 @@ export default async function WaitlistPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const sp = await searchParams;
+  const seat = seatLabel(await seatsRemaining());
   return (
     <>
       <Header />
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 560 }}>
           <p className="kicker">候補</p>
-          <h1 className="display">本期名額已滿</h1>
+          <h1 className="display">{seat.full ? "本期名額已滿，加入候補" : "加入候補名單"}</h1>
+          <p className="seat-chip">{seat.text}</p>
           <p className="muted">留下信箱與年級，老師開席時會依候補順序聯絡。候補不收費、也不佔名額。</p>
           {sp.ok ? <p className="banner ok">已登記。無需付款。</p> : null}
           {sp.error ? <p className="banner warn">{sp.error}</p> : null}

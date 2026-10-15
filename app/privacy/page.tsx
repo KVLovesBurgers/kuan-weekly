@@ -35,7 +35,7 @@ export default function PrivacyPage() {
             為什麼需要
           </h2>
           <p className="muted">
-            用於寄送題本試閱與週練更新、依程度出題、家長登入下載題本、確認匯款後開通席次，以及依回饋調整下一週題目。
+            用於寄送題本試閱與週練更新、依程度出題、家長後台下載題本、確認匯款後開通席次，以及依回饋調整下一週題目。
           </p>
 
           <h2 className="display" style={{ fontSize: 24, marginTop: 28 }}>

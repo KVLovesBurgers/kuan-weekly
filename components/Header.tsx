@@ -35,7 +35,7 @@ export function Header({
           {parentEmail ? (
             <Link href="/dashboard">家長後台</Link>
           ) : (
-            <Link href="/login">家長登入</Link>
+            <Link href="/login">家長後台</Link>
           )}
           <Link href="/sample" className="btn btn-steel" style={{ minHeight: 36, padding: "0 14px" }}>
             免費題本試閱
