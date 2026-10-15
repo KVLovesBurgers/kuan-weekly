@@ -97,7 +97,8 @@ export const SHOW_REMAINING_BELOW = 15;
 export function seatLabel(remaining: number) {
   const cap = seatCap();
   if (remaining <= 0) return { text: `限 ${cap} 名 · 已滿，加入候補`, short: "已滿，加入候補", full: true, remaining: null as number | null };
-  return { text: `限 ${cap} 名 · 剩 ${remaining} 名`, short: `剩 ${remaining} 名`, full: false, remaining: null as number | null };
+  if (remaining < SHOW_REMAINING_BELOW) return { text: `限 ${cap} 名 · 剩 ${remaining} 名`, short: `剩 ${remaining} 名`, full: false, remaining: null as number | null };
+  return { text: `限 ${cap} 名`, short: `限 ${cap} 名`, full: false, remaining: null as number | null };
 }
 
 /** 116 學年度學測：116 年 1 月 22 日至 24 日（大考中心 116 學年度簡章）。 */

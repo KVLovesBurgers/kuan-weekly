@@ -123,7 +123,7 @@ export default async function HomePage() {
             </div>
             <div>
               <strong className="display">限 {seatCap()} 名</strong>
-              <span className="sub">{seat.short}</span>
+              <span className="sub">{seat.short === `限 ${seatCap()} 名` ? "依名額收，不超量" : seat.short}</span>
             </div>
           </div>
         </section>
@@ -363,7 +363,6 @@ export default async function HomePage() {
                 ],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
-                ["有電子發票嗎？", "目前提供匯款收據／對帳證明，如需收據請在寄證明時註明。"],
                 ["個資怎麼用？", "privacy"],
               ] as const
             ).map(([q, a]) => (
