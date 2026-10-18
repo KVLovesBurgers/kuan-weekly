@@ -14,8 +14,8 @@ export type PracticeSheet = {
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
   { series: "學測數A 長片", title: "三角函數 一次複習（sin 210° 是正還是負？）", topic: "特殊角、廣義角符號、平方關係、正弦與餘弦定理、面積、疊合最大值", level: "高中", driveId: "1eaPs155DBk5KbDjvMPUWHN0hhf9rAgjx", publishAt: "2026-10-25T15:53:00+08:00" },
-  { series: "畫圖一眼懂 #27", title: "|x − 3| < 2 怎麼解？數線一秒看懂", topic: "絕對值不等式就是距離：小於夾中間、大於往兩邊", level: "高中", driveId: "1Gwcn1UBU5nwBn3iUXdj8kXvdPikvW7zv", publishAt: "2026-10-25T19:07:00+08:00" },
-  { series: "學測一眼懂 #26", title: "每個人都加 10 分，標準差變多少？", topic: "標準差：加常數不變、乘 a 變 |a| 倍", level: "高中", driveId: "1dHMCCWgeDL5JsTmHZUgGBVQH6MPnd06H", publishAt: "2026-10-24T19:07:00+08:00" },
+  { series: "畫圖一眼懂 #27", title: "|x − 3| < 2 怎麼解？數線一秒看懂", topic: "絕對值不等式就是距離：小於夾中間、大於往兩邊", level: "高中", driveId: "1Gwcn1UBU5nwBn3iUXdj8kXvdPikvW7zv", publishAt: "2026-10-26T19:07:00+08:00" },
+  { series: "學測一眼懂 #26", title: "每個人都加 10 分，標準差變多少？", topic: "標準差：加常數不變、乘 a 變 |a| 倍", level: "高中", driveId: "1dHMCCWgeDL5JsTmHZUgGBVQH6MPnd06H", publishAt: "2026-10-25T19:07:00+08:00" },
   { series: "畫圖一眼懂 #25", title: "兩邊 5、8 夾 60 度，第三邊是 7", topic: "餘弦定理：兩邊夾角求第三邊、三邊求角、判斷鈍角", level: "高中", driveId: "1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f", publishAt: "2026-10-23T19:07:00+08:00" },
   { series: "學測一眼懂 #24", title: "兩個向量垂直，t 是多少？內積等於 0", topic: "向量內積：坐標算法、垂直等於內積 0、夾角與長度", level: "高中", driveId: "1YK2q2BYjLBBr-jlK4eL6R0X89FrjHMJI", publishAt: "2026-10-22T19:07:00+08:00" },
   { series: "學測數A 長片", title: "排列組合 一次講完（5 顆糖分 3 人有幾種？）", topic: "排列、相鄰插空、捷徑走法、組合、重複組合、分組", level: "高中", driveId: "1lnFhgWQX-a19d9CLPRoBW2fKX0elHIcv", publishAt: "2026-10-22T15:53:00+08:00" },
