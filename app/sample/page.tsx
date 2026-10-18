@@ -19,7 +19,8 @@ import {
   LEAD_TRADE_COOKIE,
   type SampleTrack,
 } from "@/lib/leads";
-import { getDb, seatsRemaining } from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { cachedSeatsRemaining } from "@/lib/seats";
 import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -63,7 +64,7 @@ export default async function SamplePage({
   const jar = await cookies();
   const unlocked = jar.get(LEAD_COOKIE)?.value === "1" || Boolean(parent);
   const justUnlocked = unlocked && one(sp.ok) === "1";
-  const remaining = await seatsRemaining();
+  const remaining = await cachedSeatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
   const track: SampleTrack = cleanTrack(one(sp.track)) || cleanTrack(jar.get(LEAD_TRACK_COOKIE)?.value) || "jh";

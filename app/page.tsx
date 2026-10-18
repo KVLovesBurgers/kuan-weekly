@@ -5,11 +5,11 @@ import { Logo } from "@/components/Logo";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
-import { getParent } from "@/lib/auth";
-import { seatsRemaining } from "@/lib/db";
-import { GSAT_DATE, gsatDaysLeft, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { cachedSeatsRemaining } from "@/lib/seats";
+import { GSAT_DATE, gsatDaysLeft, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
-export const dynamic = "force-dynamic";
+// 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
+export const revalidate = 300;
 
 function CtaPair({ full }: { full: boolean }) {
   return (
@@ -31,8 +31,7 @@ function CtaPair({ full }: { full: boolean }) {
 }
 
 export default async function HomePage() {
-  const parent = await getParent();
-  const remaining = await seatsRemaining();
+  const remaining = await cachedSeatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
   const daysLeft = gsatDaysLeft();
@@ -40,7 +39,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Header parentEmail={parent?.email} />
+      <Header />
       <main id="main">
         <section className="hero">
           <div className="wrap hero-grid">
@@ -313,11 +312,11 @@ export default async function HomePage() {
             <div>
               <p className="kicker">另一份講義</p>
               <h2 className="display" style={{ fontSize: 26, margin: "6px 0 8px" }}>
-                準備 Digital SAT？五週講義
+                準備 Digital SAT？完整數學講義
               </h2>
               <p className="muted" style={{ margin: 0 }}>
-                對準 Digital SAT Math 的五週講義。到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.satKeyword}」，送 Week 1
-                試閱。
+                21 章觀念練習本＋解答本＋2 套模考與附錄，題目全部原創，英文原題搭配中文詳解。電子 PDF，NT${money(SAT_BOOK.price)}。
+                可以先<Link href="/sample?track=sat&src=home-sat#get">免費下載第 1 章試閱</Link>，或到 IG {SOCIAL.handle}、臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.satKeyword}」。
               </p>
             </div>
             <SocialDm keyword={SOCIAL.satKeyword} />
@@ -351,9 +350,11 @@ export default async function HomePage() {
                 ],
                 [
                   "會出 SAT 嗎？",
-                  "會。訂閱時年級選 SAT Math：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 五週講義，私訊「" +
+                  "會。訂閱時年級選 SAT Math：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義（21 章＋2 套模考，電子 PDF，NT$" +
+                    money(SAT_BOOK.price) +
+                    "），第 1 章可免費試閱，購買請私訊「" +
                     SOCIAL.satKeyword +
-                    "」可先看 Week 1。",
+                    "」。",
                 ],
                 ["名額滿了怎麼辦？", `限 ${seatCap()} 名，額滿後改候補。老師從後台看到候補名單後再通知開席。`],
                 ["匯款後多久開通？", "通常 1 個工作天內開通。請把轉帳證明寄到 " + SITE.contactEmail + "。"],

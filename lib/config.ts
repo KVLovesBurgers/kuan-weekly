@@ -23,6 +23,13 @@ export const SOCIAL = {
   satKeyword: "SAT講義",
 } as const;
 
+/** Digital SAT 完整數學講義 v1.0（取代舊五週版，2026-10-18 起只賣完整版）。交貨走私訊＋Drive 個別分享。 */
+export const SAT_BOOK = {
+  name: "Digital SAT 完整數學講義 v1.0",
+  price: 990,
+  contents: "21 章觀念練習本＋解答本＋2 套模考與附錄",
+} as const;
+
 /** 首頁「看吳寬老師怎麼教」：畫圖一眼懂 Shorts。 */
 export const SHORTS = [
   { id: "UnimTBJBMbE", title: "sin(θ+90°)＝cosθ", note: "轉 90 度，畫圖一眼懂" },

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { cleanSrc } from "@/lib/leads";
+import { Suspense } from "react";
+import { PracticeTrialLink } from "@/components/PracticeTrialLink";
 import { driveUrl, livePracticeSheets } from "@/lib/practice-sheets";
 
 export const metadata: Metadata = {
@@ -19,21 +20,14 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+// 靜態＋ISR：每 60 秒重算，新練習題在 publishAt 後一分鐘內出現。src 追蹤改在瀏覽器端讀。
+export const revalidate = 60;
 
 const fmtDate = (iso: string) =>
   new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", month: "numeric", day: "numeric" }).format(new Date(iso));
 
-export default async function PracticePage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const sp = await searchParams;
-  const raw = Array.isArray(sp.src) ? sp.src[0] : sp.src;
-  const src = cleanSrc(raw);
+export default function PracticePage() {
   const sheets = livePracticeSheets();
-  const trialHref = `/sample?src=${src ? `practice-${src}`.slice(0, 40) : "practice"}`;
 
   return (
     <>
@@ -73,9 +67,15 @@ export default async function PracticePage({
             <p className="muted">
               想每週固定練一份這種有詳解的題目，可以看看寬數週練。
             </p>
-            <Link href={trialHref} className="practice-cta-link">
-              免費試閱一週題本
-            </Link>
+            <Suspense
+              fallback={
+                <Link href="/sample?src=practice" className="practice-cta-link">
+                  免費試閱一週題本
+                </Link>
+              }
+            >
+              <PracticeTrialLink />
+            </Suspense>
           </div>
         </div>
       </main>

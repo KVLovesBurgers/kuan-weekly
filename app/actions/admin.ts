@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getAdmin, loginAdmin, logoutAdmin } from "@/lib/auth";
 import { getDb, seatsRemaining } from "@/lib/db";
 import { uid } from "@/lib/ids";
@@ -115,6 +115,7 @@ export async function activateChild(formData: FormData) {
     .run(id);
   revalidatePath("/admin");
   revalidatePath("/");
+  revalidateTag("seats");
   redirect("/admin?ok=1");
 }
 
