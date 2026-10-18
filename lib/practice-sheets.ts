@@ -13,6 +13,7 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "國三段考", title: "國三段考練習：圓（弧長、圓周角、弦切角）", topic: "弧長與扇形、圓心角與圓周角、直徑所對圓周角、弦切角、圓內接四邊形", level: "國中", driveId: "1UtEkfeHf-6oQMtNozJZMwXVhlQ04KMar", publishAt: "2026-10-18T16:00:00+08:00" },
   { series: "畫圖一眼懂 #21", title: "99 × 101 心算 3 秒：平方差畫圖就懂", topic: "平方差 a² − b² ＝ (a + b)(a − b)，剪拼圖看懂速算", level: "國中", driveId: "1WCsZRivJ68te1jn7WFYIEFixHieVV0EI", publishAt: "2026-10-19T19:07:00+08:00" },
   { series: "Digital SAT Ch.2", title: "二元一次方程式與公式變形 完整帶練", topic: "SAT 英文原題風格，附中文關鍵字與逐步詳解", level: "SAT", driveId: "1trphOaYKfKLGBP5jPw7GNY3EMrVCiDyP", publishAt: "2026-10-19T15:53:00+08:00" },
   { series: "學測一眼懂 #20", title: "兩顆骰子和是 7，機率是 1/11 嗎？", topic: "古典機率：用 6 × 6 格子數出所有等可能結果", level: "高中", driveId: "1X9EMH_cbhLwf0zNNUr7yyCcA0H6DneaR", publishAt: "2026-10-18T19:07:00+08:00" },
