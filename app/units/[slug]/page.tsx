@@ -5,7 +5,9 @@ import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { UnitTrialLink } from "@/components/UnitTrialLink";
-import { UNIT_PACKS, findUnitPack, unitPdf } from "@/lib/unit-packs";
+import { UNIT_PACKS, findUnitPack, unitPdf, unitOg } from "@/lib/unit-packs";
+import { ShareToParents } from "@/components/ShareToParents";
+import { TrackView, UnitPdfLink } from "@/components/Tracking";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -24,7 +26,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description,
     alternates: { canonical: `/units/${u.slug}` },
-    openGraph: { title, description, url: `/units/${u.slug}`, siteName: "Saber數學", locale: "zh_TW", type: "website" },
+    openGraph: {
+      title,
+      description,
+      url: `/units/${u.slug}`,
+      siteName: "Saber數學",
+      locale: "zh_TW",
+      type: "website",
+      images: [{ url: unitOg(u.slug), width: 1200, height: 630, alt: `${u.title} 單元包：3 題附詳解` }],
+    },
+    twitter: { card: "summary_large_image", title, description, images: [unitOg(u.slug)] },
   };
 }
 
@@ -36,6 +47,9 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <Header />
+      <Suspense fallback={null}>
+        <TrackView kind="unit_view" target={u.slug} />
+      </Suspense>
       <main id="main" className="section practice-page">
         <div className="wrap" style={{ maxWidth: 760 }}>
           <p className="kicker">
@@ -57,10 +71,20 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
                 <li key={p}>{p}</li>
               ))}
             </ul>
-            <a className="btn btn-ink practice-btn" href={unitPdf(u.slug)} target="_blank" rel="noopener" download>
-              下載 3 題附詳解（PDF）
-            </a>
+            <Suspense
+              fallback={
+                <a className="btn btn-ink practice-btn" href={unitPdf(u.slug)} target="_blank" rel="noopener">
+                  下載 3 題附詳解（PDF）
+                </a>
+              }
+            >
+              <UnitPdfLink slug={u.slug} className="btn btn-ink practice-btn">
+                下載 3 題附詳解（PDF）
+              </UnitPdfLink>
+            </Suspense>
           </div>
+
+          <ShareToParents path={`/units/${u.slug}`} topic={u.title} />
 
           <p className="muted" style={{ marginTop: 24, fontSize: 14 }}>
             其他單元在 <Link href="/units" className="practice-cta-link">單元包</Link>，每支影片的練習題在{" "}

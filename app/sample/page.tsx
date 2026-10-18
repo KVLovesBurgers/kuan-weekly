@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
+import { ShareToParents } from "@/components/ShareToParents";
+import { SamplePdfLink } from "@/components/Tracking";
 import { cookies } from "next/headers";
 import { getParent } from "@/lib/auth";
 import { startSampleCheckout, submitSampleLead } from "@/app/actions/lead";
@@ -142,16 +144,34 @@ export default async function SamplePage({
                   。
                 </p>
                 <div className="sample-downloads">
-                  <a className="dl-card" href={pack.studentPdf} download={pack.studentName}>
+                  <SamplePdfLink className="dl-card" href={pack.studentPdf} download={pack.studentName} target={`${track}-student`} src={src}>
                     <span className="kicker">PDF · {pack.studentPages} 頁</span>
                     <strong className="display">下載學生題本</strong>
                     <span className="muted">給孩子作答，不含答案</span>
-                  </a>
-                  <a className="dl-card" href={pack.parentPdf} download={pack.parentName}>
+                  </SamplePdfLink>
+                  <SamplePdfLink className="dl-card" href={pack.parentPdf} download={pack.parentName} target={`${track}-parent`} src={src}>
                     <span className="kicker">PDF · {pack.parentPages} 頁</span>
                     <strong className="display">下載{pack.parentTitle}</strong>
                     <span className="muted">孩子寫完再打開對答</span>
-                  </a>
+                  </SamplePdfLink>
+                </div>
+                <div className="card parent-guide" style={{ marginTop: 20 }}>
+                  <p className="kicker">家長怎麼用解答</p>
+                  <h2 className="display" style={{ fontSize: 22, margin: "4px 0 4px" }}>不用會數學，照這 4 步就好</h2>
+                  <ol>
+                    <li>把學生題本印給孩子，請他自己寫，不要先看解答。</li>
+                    <li>寫完打開{pack.parentTitle}，第一頁是答案速查，先對對錯。</li>
+                    <li>錯的題目看該題的步驟拆解，請孩子講給你聽，講不出來的那一步就是卡住的地方。</li>
+                    <li>每題附常見錯誤，對照看孩子是觀念不懂還是粗心，下週題本會針對這裡加練。</li>
+                  </ol>
+                  <p className="muted" style={{ margin: "12px 0 0", fontSize: 14 }}>
+                    方案：{SITE.currency}
+                    {money(SITE.monthlyPrice)} /月，或年繳 {SITE.currency}
+                    {money(SITE.yearlyPrice)}，每位孩子計價。付款方式是銀行匯款：登記後會看到匯款帳號，匯款後把轉帳證明寄到 {BANK_TRANSFER.proofEmail}，確認入帳約 1 個工作天開通。
+                  </p>
+                  <p style={{ margin: "8px 0 0" }}>
+                    <a href="#subscribe" className="u">往下看訂閱與匯款步驟</a>
+                  </p>
                 </div>
               </>
             ) : (
@@ -208,6 +228,8 @@ export default async function SamplePage({
               </form>
             )}
           </div>
+
+          <ShareToParents path={`/sample?track=${track}`} />
 
           <div className="sample-grid" style={{ marginTop: 36 }}>
             <figure className="sample-card">

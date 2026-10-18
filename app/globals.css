@@ -495,3 +495,17 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
   .practice-card { padding: 22px 24px; }
   .practice-btn { width: auto; }
 }
+
+/* 學生版首屏（有 src 時） */
+.student-hero { background: #18222c; color: var(--paper); padding: 40px 0 32px; border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent); }
+.student-hero-title { font-size: clamp(28px, 6vw, 44px); margin: 6px 0 14px; line-height: 1.2; }
+.student-steps { margin: 0; padding-left: 20px; line-height: 1.8; max-width: 640px; }
+.student-hero .cta-row { margin-top: 20px; }
+.student-hero-note { margin: 14px 0 0; font-size: 13px; color: color-mix(in srgb, var(--paper) 70%, transparent); }
+/* 單元包 → 試閱 → 方案 */
+.path-steps { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); margin-top: 24px; }
+.path-steps .card { display: flex; flex-direction: column; gap: 6px; }
+.path-steps .path-no { font-size: 13px; letter-spacing: .08em; opacity: .7; }
+@media (max-width: 760px) { .path-steps { grid-template-columns: 1fr; } }
+/* 試閱下載後的家長指引 */
+.parent-guide ol { margin: 8px 0 0; padding-left: 20px; line-height: 1.8; }

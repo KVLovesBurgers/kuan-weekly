@@ -32,6 +32,8 @@ export const UNIT_PACKS: UnitPack[] = [
 ];
 
 export const unitPdf = (slug: string) => `/units/${slug}.pdf`;
+/** 每個單元包的分享圖：public/units/<slug>-og.png（1200×630，以 Pillow 產生）。 */
+export const unitOg = (slug: string) => `/units/${slug}-og.png`;
 
 /** 已公開的單元包，依原陣列順序。 */
 export function liveUnitPacks(now = new Date()) {

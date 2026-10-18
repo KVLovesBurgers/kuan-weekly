@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { StudentHero } from "@/components/StudentHero";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
@@ -41,6 +43,9 @@ export default async function HomePage() {
     <>
       <Header />
       <main id="main">
+        <Suspense fallback={null}>
+          <StudentHero />
+        </Suspense>
         <section className="hero">
           <div className="wrap hero-grid">
             <div>
@@ -123,6 +128,33 @@ export default async function HomePage() {
             <div>
               <strong className="display">限 {seatCap()} 名</strong>
               <span className="sub">{seat.short === `限 ${seatCap()} 名` ? "依名額收，不超量" : seat.short}</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="path" className="section">
+          <div className="wrap">
+            <p className="kicker">三步看懂適不適合</p>
+            <h2 className="display">單元包 → 試閱 → 方案</h2>
+            <div className="path-steps">
+              <div className="card">
+                <span className="path-no">第 1 步</span>
+                <strong className="display">單元包</strong>
+                <span className="muted">卡在哪個單元就下載那一份，3 題由淺到深，附觀念、圖和逐步詳解。</span>
+                <Link href="/units" className="u">看單元包</Link>
+              </div>
+              <div className="card">
+                <span className="path-no">第 2 步</span>
+                <strong className="display">一週試閱</strong>
+                <span className="muted">留信箱下載學生題本＋家長解答，實際寫一週看看。</span>
+                <Link href="/sample" className="u">領題本試閱</Link>
+              </div>
+              <div className="card">
+                <span className="path-no">第 3 步</span>
+                <strong className="display">方案</strong>
+                <span className="muted">覺得適合再訂閱，按孩子計價，匯款後約 1 個工作天開通。</span>
+                <a href="#pricing" className="u">看方案與匯款方式</a>
+              </div>
             </div>
           </div>
         </section>

@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { UnitTrialLink } from "@/components/UnitTrialLink";
+import { ShareToParents } from "@/components/ShareToParents";
+import { TrackView } from "@/components/Tracking";
 import { liveUnitPacks } from "@/lib/unit-packs";
 
 export const metadata: Metadata = {
@@ -30,6 +32,9 @@ export default function UnitsPage() {
   return (
     <>
       <Header />
+      <Suspense fallback={null}>
+        <TrackView kind="units_view" />
+      </Suspense>
       <main id="main" className="section practice-page">
         <div className="wrap" style={{ maxWidth: 760 }}>
           <p className="kicker">Saber數學</p>
@@ -67,6 +72,8 @@ export default function UnitsPage() {
             沒有你要的單元？在影片底下留言單元名稱，會排進下一批。每支影片對應的練習題在
             <Link href="/practice" className="practice-cta-link">免費練習題</Link>。
           </p>
+
+          <ShareToParents path="/units" />
 
           <div className="practice-cta">
             <p className="muted">想每週固定練一份這種有詳解的題目，可以看看寬數週練。</p>

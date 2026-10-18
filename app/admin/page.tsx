@@ -40,6 +40,16 @@ export default async function AdminHome({
     hits: number;
     created_at: string;
   }[];
+  const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
+  const events = (await db
+    .prepare(
+      `SELECT kind, target, source, COUNT(*) AS n FROM site_events WHERE created_at >= ?
+       GROUP BY kind, target, source ORDER BY n DESC LIMIT 100`,
+    )
+    .all(since30)) as { kind: string; target: string; source: string; n: number }[];
+  const leadSrc = (await db
+    .prepare("SELECT source, COUNT(*) AS n FROM leads WHERE created_at >= ? GROUP BY source ORDER BY n DESC")
+    .all(since30)) as { source: string; n: number }[];
   const feedbacks = (await db
     .prepare(
       `SELECT f.*, c.display_name, w.week_label, w.title
@@ -176,6 +186,19 @@ export default async function AdminHome({
               <li key={f.id} style={{ marginBottom: 10 }}>
                 <strong>{f.display_name}</strong> · {f.week_label} {f.title} · {diffLabel[f.difficulty]} ·{" "}
                 {doneLabel[f.completion]} · {f.stuck_topic || "未填卡關"}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section style={{ marginTop: 40 }}>
+          <h2 className="display">來源統計（最近 30 天）</h2>
+          <p className="muted">試閱留信箱：{leadSrc.length ? leadSrc.map((r) => `${r.source || "direct"} ${Number(r.n)}`).join("、") : "無"}</p>
+          {events.length === 0 ? <p className="muted">還沒有單元包或下載紀錄。</p> : null}
+          <ul>
+            {events.map((e) => (
+              <li key={`${e.kind}-${e.target}-${e.source}`}>
+                {({ unit_view: "單元包頁瀏覽", units_view: "單元包列表瀏覽", unit_pdf: "單元包 PDF 下載", sample_pdf: "試閱 PDF 下載", share_click: "傳給爸媽看" } as Record<string, string>)[e.kind] ?? e.kind} · {e.target || "-"} · 來源 {e.source || "direct"} · {Number(e.n)} 次
               </li>
             ))}
           </ul>

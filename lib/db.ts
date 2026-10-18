@@ -213,6 +213,14 @@ async function migrate(db: KuanDb) {
       FOREIGN KEY (week_id) REFERENCES weeks(id)
     );
 
+    CREATE TABLE IF NOT EXISTS site_events (
+      id TEXT PRIMARY KEY,
+      kind TEXT NOT NULL,
+      target TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS checkout_attempts (
       id TEXT PRIMARY KEY,
       parent_id TEXT NOT NULL,
