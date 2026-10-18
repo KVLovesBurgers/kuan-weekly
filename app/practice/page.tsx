@@ -40,6 +40,10 @@ export default function PracticePage() {
             影片留言「練習」的題目都在這裡。找到你看的那支，點按鈕開啟檔案，題目和詳解都在同一份。
           </p>
 
+          <p className="muted" style={{ marginTop: 8 }}>
+            想依單元找題目？到 <Link href="/units" className="practice-cta-link">單元包</Link>，每個單元 3 題附詳解。
+          </p>
+
           <ul className="practice-list">
             {sheets.map((s) => (
               <li key={s.driveId} className="card practice-card">
