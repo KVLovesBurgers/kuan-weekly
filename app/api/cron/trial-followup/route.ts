@@ -46,7 +46,13 @@ export async function GET(req: Request) {
 
   const leads = await eligibleFollowupLeads(db);
   if (url.searchParams.get("dry") === "1") {
-    return NextResponse.json({ ok: true, dry: true, eligible: leads.length });
+    const mask = (e: string) => e.replace(/^(.).*(@.*)$/, "$1***$2");
+    return NextResponse.json({
+      ok: true,
+      dry: true,
+      eligible: leads.length,
+      leads: leads.map((l) => ({ email: mask(String(l.email)), created_at: String(l.created_at) })),
+    });
   }
   if (!mailConfigured()) return NextResponse.json({ error: "mail not configured" }, { status: 500 });
 
