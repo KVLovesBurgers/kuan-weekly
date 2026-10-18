@@ -221,6 +221,21 @@ async function migrate(db: KuanDb) {
       created_at TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS lead_followups (
+      email TEXT NOT NULL,
+      kind TEXT NOT NULL,
+      status TEXT NOT NULL,
+      sent_at TEXT NOT NULL,
+      error TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (email, kind)
+    );
+
+    CREATE TABLE IF NOT EXISTS email_optouts (
+      email TEXT PRIMARY KEY,
+      note TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS checkout_attempts (
       id TEXT PRIMARY KEY,
       parent_id TEXT NOT NULL,
