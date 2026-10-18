@@ -135,13 +135,13 @@ export default async function HomePage() {
         <section id="path" className="section">
           <div className="wrap">
             <p className="kicker">三步看懂適不適合</p>
-            <h2 className="display">單元包 → 試閱 → 方案</h2>
+            <h2 className="display">免費練習題 → 試閱 → 方案</h2>
             <div className="path-steps">
               <div className="card">
                 <span className="path-no">第 1 步</span>
-                <strong className="display">單元包</strong>
-                <span className="muted">卡在哪個單元就下載那一份，3 題由淺到深，附觀念、圖和逐步詳解。</span>
-                <Link href="/units" className="u">看單元包</Link>
+                <strong className="display">免費練習題</strong>
+                <span className="muted">依單元整理，卡在哪個單元就從那裡開始練，每份都有題目和逐步詳解。</span>
+                <Link href="/units" className="u">依單元找練習題</Link>
               </div>
               <div className="card">
                 <span className="path-no">第 2 步</span>

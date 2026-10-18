@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/": ["./data/NotoSansCJKtc-Regular.ttf"],
   },
+  // /practice 已併入 /units：舊網址（含 DM 裡的連結與 ?src=）永久轉址。public/practice/*.pdf 檔案照常可開。
+  async redirects() {
+    return [
+      { source: "/practice", destination: "/units", permanent: true },
+      { source: "/practice/:path((?!.*\\.pdf$).*)", destination: "/units", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

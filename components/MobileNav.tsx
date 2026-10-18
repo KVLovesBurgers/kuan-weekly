@@ -28,7 +28,7 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
       {open ? (
         <div id="mobile-nav-panel" className="mobile-nav-panel" role="navigation" aria-label="手機選單">
           <Link href="/units" onClick={close}>
-            單元包（3 題附詳解）
+            免費練習題（依單元）
           </Link>
           <Link href="/sample" onClick={close}>
             領題本試閱

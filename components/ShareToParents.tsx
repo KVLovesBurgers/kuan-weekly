@@ -13,7 +13,7 @@ export function ShareToParents({ path, topic }: { path: string; topic?: string }
   const [copied, setCopied] = useState(false);
   const url = `${SITE_URL}${path}${path.includes("?") ? "&" : "?"}src=share`;
   const text = topic
-    ? `爸媽，這是吳寬老師的「${topic}」單元包，3 題附詳解，我想照這個練。另外也有每週一份題本＋家長解答的寬數週練，家長不用會數學也能對答案，可以免費試閱：`
+    ? `爸媽，這是吳寬老師的「${topic}」練習題，每題都有詳解，我想照這個練。另外也有每週一份題本＋家長解答的寬數週練，家長不用會數學也能對答案，可以免費試閱：`
     : "爸媽，這是吳寬老師的寬數週練：每週一份學生題本＋家長解答，家長不用會數學也能幫我對答案、看出我卡在哪。可以先免費試閱一週，你看看適不適合我：";
   const lineHref = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
 

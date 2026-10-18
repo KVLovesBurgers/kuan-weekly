@@ -21,7 +21,7 @@ export function Header({
         </Link>
         <nav className="nav nav-desktop" aria-label="主要">
           <Link href="/units" className="hide-sm">
-            單元包
+            練習題
           </Link>
           <Link href="/#videos" className="hide-sm">
             教學影片

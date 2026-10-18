@@ -483,7 +483,13 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .practice-title { font-size: clamp(30px, 6vw, 40px); margin: 6px 0 0; }
 .practice-list { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 14px; }
 .practice-card { padding: 18px 18px 20px; border-radius: 18px; }
-.practice-card h2 { font-size: 20px; line-height: 1.4; margin: 8px 0 4px; }
+.practice-card h2, .practice-card h3 { font-size: 20px; line-height: 1.4; margin: 8px 0 4px; }
+.unit-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.unit-jump a { display: inline-block; padding: 6px 12px; border-radius: 999px; box-shadow: var(--shadow-border); font-size: 14px; color: var(--ink); text-decoration: none; }
+.unit-section { margin-top: 32px; scroll-margin-top: 80px; }
+.unit-section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.unit-section-head h2 { font-size: 22px; margin: 0; }
+.unit-level { margin-top: 36px; font-size: 14px; letter-spacing: .08em; color: var(--muted); }
 .practice-card p { margin: 0 0 14px; font-size: 15px; }
 .practice-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .practice-meta .badge { margin-right: 4px; background: transparent; color: var(--ink); box-shadow: var(--shadow-border); }

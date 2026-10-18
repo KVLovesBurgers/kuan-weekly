@@ -22,7 +22,7 @@ export function StudentHero() {
         <h2 className="display student-hero-title">先拿 3 題，再請爸媽看</h2>
         <ol className="student-steps">
           <li>
-            <strong>先拿 3 題：</strong>選你卡的單元，下載 3 題附詳解，自己寫完再對答案。
+            <strong>先拿 3 題：</strong>選你卡的單元，下載練習題和詳解，自己寫完再對答案。
           </li>
           <li>
             <strong>覺得有用：</strong>領一週免費試閱，題本給你寫、解答給爸媽對。
@@ -32,7 +32,7 @@ export function StudentHero() {
           </li>
         </ol>
         <div className="cta-row">
-          <Link href={`/units?${q}`} className="btn btn-steel btn-lg">先拿 3 題（單元包）</Link>
+          <Link href={`/units?${q}`} className="btn btn-steel btn-lg">先拿免費練習題</Link>
           <Link href={`/sample?${q}`} className="btn btn-ghost btn-lg">領一週試閱</Link>
         </div>
         <p className="muted student-hero-note">下面是給爸媽看的介紹。</p>
