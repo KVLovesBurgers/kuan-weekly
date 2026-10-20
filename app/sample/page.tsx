@@ -109,12 +109,15 @@ export default async function SamplePage({
       <Header parentEmail={parent?.email} />
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 880 }}>
-          <p className="kicker">題本試閱 · 免費下載</p>
+          <p className="kicker">題本試閱 · 7 天完整試用</p>
           <h1 className="display" style={{ fontSize: "clamp(32px, 5vw, 44px)", margin: "8px 0 12px" }}>
             領題本試閱
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
-            依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本＋家長解答各 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
+            留下信箱並選孩子年級：<strong>國一、國二、國三、高三</strong>可以領 7 天完整試用，是完整的一週題本（學生題本 15 題＋家長解答，每題有步驟和常見錯誤）。國一、國二是第二次段考範圍；國三有圓和相似形兩份；高三有學測數A、數B 各一份。下載連結也會寄到信箱，從留信箱那天算起，第 7 天晚上 11:59 關閉。
+          </p>
+          <p className="muted" style={{ maxWidth: 620 }}>
+            <strong>高一、高二</strong>目前提供學測必錯 5 題試閱（對數、向量、條件機率、數列、餘弦定理）；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本，這兩種不會關閉。A4 可以直接列印給孩子寫。
           </p>
 
           <nav className="cta-row sample-tracks" aria-label="選擇試閱年級" style={{ marginTop: 16 }}>
