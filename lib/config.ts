@@ -166,3 +166,10 @@ export const COMPLETION_OPTIONS = [
   ["some", "寫了一部分"],
   ["all", "全部寫完"],
 ] as const;
+
+/** 開通時間提示：只在 2026-11-02（台北）以前顯示，過了自動消失，不延期。 */
+export const START_BY_DEADLINE = "2026-11-02T00:00:00+08:00";
+export const START_BY_NOTE = "11/2 前開通，第二次段考前可以練滿 3 週";
+export function startByNote(now = new Date()) {
+  return now.getTime() < new Date(START_BY_DEADLINE).getTime() ? START_BY_NOTE : "";
+}

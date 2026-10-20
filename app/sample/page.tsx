@@ -23,7 +23,7 @@ import {
 } from "@/lib/leads";
 import { getDb } from "@/lib/db";
 import { cachedSeatsRemaining } from "@/lib/seats";
-import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
@@ -69,6 +69,7 @@ export default async function SamplePage({
   const remaining = await cachedSeatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
+  const startBy = startByNote();
   const track: SampleTrack = cleanTrack(one(sp.track)) || cleanTrack(jar.get(LEAD_TRACK_COOKIE)?.value) || "jh";
   const pack = SAMPLES[track];
   const leadId = jar.get(LEAD_ID_COOKIE)?.value ?? "";
@@ -294,7 +295,7 @@ export default async function SamplePage({
                   {SITE.currency}
                   {money(SITE.monthlyPrice)} /月，或年繳 {SITE.currency}
                   {money(SITE.yearlyPrice)}，每位孩子計價。{seat.text}
-                  {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。用剛剛留的信箱登記，不用再收登入信。
+                  {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。{startBy ? `${startBy}。` : ""}用剛剛留的信箱登記，不用再收登入信。
                 </p>
                 {error && one(sp.error).includes("孩子") ? (
                   <p className="banner warn" role="alert">
@@ -341,6 +342,7 @@ export default async function SamplePage({
                     或年繳 {SITE.currency}
                     {money(SITE.yearlyPrice)}。{seat.text}
                     {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
+                    {startBy ? `${startBy}。` : ""}
                   </p>
                   <ol className="steps-list">
                     <li>{unlocked ? "用信箱登入（不設密碼）" : "先在上面留信箱領試閱"}</li>

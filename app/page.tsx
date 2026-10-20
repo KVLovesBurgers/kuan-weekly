@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 import { LiteYouTube } from "@/components/LiteYouTube";
-import { SocialDm } from "@/components/SocialDm";
+import { InstagramIcon, SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { GSAT_DATE, gsatDaysLeft, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
@@ -227,10 +227,10 @@ export default async function HomePage() {
             <p className="kicker">吳寬老師｜寬數</p>
             <h2 className="display">誰在出題</h2>
             <p className="muted" style={{ marginTop: 12 }}>
-              陽明交大應用數學系畢業。Stanford OHS 數學老師暨官方監考官，也在站前教 SAT 數學。週練是講義方案：每週兩份
+              陽明交大應用數學系畢業。現任國中數學教師，曾任菁英國際 SAT 數學老師，也是梭羅國際教育 AMC 競賽數學老師；Stanford OHS（史丹佛線上高中）官方授權監考官，並指導該校學生數學。週練是講義方案：每週兩份
               PDF，不提供 LINE 即時答題。
             </p>
-            <p className="muted">成效一例：學測數學 11 級到分科 58 級（例如精誠高中備考）。更多經歷請看個人頁。</p>
+            <p className="muted">學生案例：精誠高中學測數學 11 級到分科 58 級。更多經歷請看個人頁。</p>
             <p style={{ marginTop: 20 }}>
               <a className="btn btn-paper" href={SITE.oneOnOneUrl}>
                 認識吳寬老師
@@ -442,6 +442,31 @@ export default async function HomePage() {
                 免費看題本試閱
               </Link>
               <SocialDm compact />
+            </div>
+          </div>
+        </section>
+
+        <section id="gsat-mock" className="section" style={{ paddingTop: 0 }}>
+          <div className="wrap card sat-card">
+            <div>
+              <p className="kicker">學測考前</p>
+              <h2 className="display" style={{ fontSize: 22, margin: "6px 0 8px" }}>
+                學測數學考前猜題卷
+              </h2>
+              <p className="muted" style={{ margin: 0 }}>
+                數A、數B 各三回，依 111–115 學測的命題分布原創設計。
+                <br />
+                題型、題數、作答時間和正式考試相同，每回附完整詳解與答題卷。
+                <br />
+                加贈該科的命題分析報告，PDF 電子檔。
+              </p>
+            </div>
+            <div className="dm-row">
+              <a className="btn btn-paper" href="https://instagram.com/saber_math" target="_blank" rel="noopener noreferrer">
+                <InstagramIcon />
+                IG 私訊詢問
+                <span className="sr-only">（Instagram @saber_math，另開新分頁）</span>
+              </a>
             </div>
           </div>
         </section>

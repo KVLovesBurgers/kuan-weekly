@@ -6,8 +6,7 @@ import {
   eligibleFollowupLeads,
   FOLLOWUP_BATCH_LIMIT,
   FOLLOWUP_KIND,
-  FOLLOWUP_SUBJECT,
-  FOLLOWUP_TEXT,
+  buildFollowup,
 } from "@/lib/followup";
 
 export const runtime = "nodejs";
@@ -40,8 +39,9 @@ export async function GET(req: Request) {
 
   if (url.searchParams.get("test") === "1") {
     if (!mailConfigured()) return NextResponse.json({ error: "mail not configured" }, { status: 500 });
-    await sendFollowupEmail(SITE.contactEmail, `[測試] ${FOLLOWUP_SUBJECT}`, FOLLOWUP_TEXT);
-    return NextResponse.json({ ok: true, test: true, to: SITE.contactEmail });
+    const v = buildFollowup({ role: url.searchParams.get("role") ?? "家長", grade: url.searchParams.get("grade") ?? "" });
+    await sendFollowupEmail(SITE.contactEmail, `[測試] ${v.subject}`, v.text);
+    return NextResponse.json({ ok: true, test: true, to: SITE.contactEmail, variant: v.variant });
   }
 
   const leads = await eligibleFollowupLeads(db);
@@ -51,7 +51,7 @@ export async function GET(req: Request) {
       ok: true,
       dry: true,
       eligible: leads.length,
-      leads: leads.map((l) => ({ email: mask(String(l.email)), created_at: String(l.created_at) })),
+      leads: leads.map((l) => ({ email: mask(String(l.email)), created_at: String(l.created_at), variant: buildFollowup(l).variant })),
     });
   }
   if (!mailConfigured()) return NextResponse.json({ error: "mail not configured" }, { status: 500 });
@@ -74,7 +74,8 @@ export async function GET(req: Request) {
       .get(email, FOLLOWUP_KIND)) as { status: string; sent_at: string } | undefined;
     if (!claim || claim.status !== "sending" || claim.sent_at !== now) continue;
     try {
-      await sendFollowupEmail(email, FOLLOWUP_SUBJECT, FOLLOWUP_TEXT);
+      const mail = buildFollowup(lead);
+      await sendFollowupEmail(email, mail.subject, mail.text);
       await db
         .prepare("UPDATE lead_followups SET status = 'sent', sent_at = ? WHERE email = ? AND kind = ?")
         .run(new Date().toISOString(), email, FOLLOWUP_KIND);

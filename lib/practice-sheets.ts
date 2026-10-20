@@ -15,6 +15,8 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "畫圖一眼懂 #29", title: "1＋3＋5＋…＋19 等於多少？拼正方形就知道", topic: "奇數和＝n²、偶數和、大正方形減小正方形、等差級數和", level: "高中", driveId: "1yE12VdICrQKtfKYq7TwKaOjKuuRNGqib", unit: "series", publishAt: "2026-10-28T19:07:00+08:00" },
+  { series: "學測一眼懂 #28", title: "濾光片每片剩 80%，疊幾片才低於 10%？", topic: "指數衰減與取 log 解不等式：log r 是負數，除過去要變號", level: "高中", driveId: "16Q8UBbM9TQy_Td01cDqZZHZCg643LVJU", unit: "gsat-log", publishAt: "2026-10-27T19:07:00+08:00" },
   { series: "學測數A 長片", title: "三角函數 一次複習（sin 210° 是正還是負？）", topic: "特殊角、廣義角符號、平方關係、正弦與餘弦定理、面積、疊合最大值", level: "高中", driveId: "1eaPs155DBk5KbDjvMPUWHN0hhf9rAgjx", unit: "trig", publishAt: "2026-10-25T15:53:00+08:00" },
   { series: "畫圖一眼懂 #27", title: "|x − 3| < 2 怎麼解？數線一秒看懂", topic: "絕對值不等式就是距離：小於夾中間、大於往兩邊", level: "高中", driveId: "1Gwcn1UBU5nwBn3iUXdj8kXvdPikvW7zv", unit: "abs-ineq", publishAt: "2026-10-26T19:07:00+08:00" },
   { series: "學測一眼懂 #26", title: "每個人都加 10 分，標準差變多少？", topic: "標準差：加常數不變、乘 a 變 |a| 倍", level: "高中", driveId: "1dHMCCWgeDL5JsTmHZUgGBVQH6MPnd06H", unit: "stats", publishAt: "2026-10-25T19:07:00+08:00" },
