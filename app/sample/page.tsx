@@ -22,6 +22,7 @@ import {
   type SampleTrack,
 } from "@/lib/leads";
 import { getDb } from "@/lib/db";
+import { packsForGrade, trialActive, trialEndLabel, trialToken, isTrialLead } from "@/lib/trial";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote } from "@/lib/config";
 
@@ -74,6 +75,16 @@ export default async function SamplePage({
   const pack = SAMPLES[track];
   const leadId = jar.get(LEAD_ID_COOKIE)?.value ?? "";
   const canQuickSubscribe = unlocked && Boolean(leadId) && !parent;
+  // 7 天完整試用：TRIAL_START 之後留信箱、年級有對應試用包的人才有。
+  let trial: { end: string; active: boolean; token: string; packs: ReturnType<typeof packsForGrade> } | undefined;
+  if (unlocked && leadId) {
+    const lrow = (await (await getDb()).prepare("SELECT id, grade, created_at FROM leads WHERE id = ?").get(leadId)) as
+      | { id: string; grade: string; created_at: string }
+      | undefined;
+    if (lrow && isTrialLead(lrow)) {
+      trial = { end: trialEndLabel(lrow.created_at), active: trialActive(lrow), token: trialToken(lrow.id), packs: packsForGrade(lrow.grade) };
+    }
+  }
   const tradeParam = one(sp.trade).slice(0, 40);
   let order: { id: string; plan: string; amount: number; display_name: string; email: string } | undefined;
   if (tradeParam && jar.get(LEAD_TRADE_COOKIE)?.value === tradeParam) {
@@ -144,6 +155,30 @@ export default async function SamplePage({
                     ))}
                   。
                 </p>
+                {trial ? (
+                  <div className="card" style={{ marginTop: 20 }}>
+                    <p className="kicker">7 天完整試用 · {trial.active ? `${trial.end}晚上 11:59 關閉` : `已在 ${trial.end}關閉`}</p>
+                    {trial.active ? (
+                      <>
+                        <h2 className="display" style={{ fontSize: 22, margin: "4px 0 8px" }}>完整一週題本，依孩子年級</h2>
+                        <p className="muted" style={{ margin: "0 0 12px" }}>每份都是 15 題（基礎、常考、進階）＋家長解答。連結也寄到你的信箱了，請在關閉前下載或列印。</p>
+                        <div className="sample-downloads">
+                          {trial.packs.flatMap((p) =>
+                            (["student", "parent"] as const).map((k) => (
+                              <a key={`${p.id}-${k}`} className="dl-card" href={`/trial/${trial!.token}/${p.id}-${k}.pdf`} target="_blank" rel="noopener">
+                                <span className="kicker">PDF · {k === "student" ? p.studentPages : p.parentPages} 頁 · {p.label}</span>
+                                <strong className="display">{k === "student" ? "學生題本" : "家長解答"}</strong>
+                                <span className="muted">{p.unit}</span>
+                              </a>
+                            )),
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <p className="muted" style={{ margin: "4px 0 0" }}>完整試用已經結束。下面的公開試閱還是可以看；想每週練，往下看訂閱方式。</p>
+                    )}
+                  </div>
+                ) : null}
                 <div className="sample-downloads">
                   <SamplePdfLink className="dl-card" href={pack.studentPdf} download={pack.studentName} target={`${track}-student`} src={src}>
                     <span className="kicker">PDF · {pack.studentPages} 頁</span>

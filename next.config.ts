@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/": ["./data/NotoSansCJKtc-Regular.ttf"],
+    // 7 天試用 PDF 不放 public/，由 /trial/[token]/[file] 檢查日期後才送出。
+    "/trial/[token]/[file]": ["./trial-packs/*.pdf"],
   },
   // /practice 已併入 /units：舊網址（含 DM 裡的連結與 ?src=）永久轉址。public/practice/*.pdf 檔案照常可開。
   async redirects() {

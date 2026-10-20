@@ -5,9 +5,11 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { getDb } from "@/lib/db";
 import { uid } from "@/lib/ids";
-import { mailConfigured, sendLeadAlert } from "@/lib/mail";
+import { mailConfigured, sendFollowupEmail, sendLeadAlert } from "@/lib/mail";
 import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLES, LEAD_TRACK_COOKIE, LEAD_TRADE_COOKIE, cleanTrack, trackForGrade } from "@/lib/leads";
 import { seatsRemaining } from "@/lib/db";
+import { buildTrialDelivery, isTestAddress } from "@/lib/followup";
+import { isTrialLead, TRIAL_D0_KIND } from "@/lib/trial";
 import { GRADE_OPTIONS, SITE } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
 
@@ -50,6 +52,29 @@ export async function submitSampleLead(formData: FormData) {
          ON CONFLICT(email) DO UPDATE SET hits = hits + 1, last_seen_at = excluded.last_seen_at`,
       )
       .run(uid("lead"), email, grade, role, src, utm, now, now);
+    const fresh = (await db.prepare("SELECT id, created_at FROM leads WHERE email = ?").get(email)) as
+      | { id: string; created_at: string }
+      | undefined;
+    if (fresh && mailConfigured() && isTrialLead({ created_at: fresh.created_at, grade }) && !isTestAddress(email)) {
+      // 7 天試用送達信：只在第一次留信箱時寄，記在 lead_followups（trial_d0），重送表單不會再寄。
+      after(async () => {
+        await db
+          .prepare(`INSERT INTO lead_followups (email, kind, status, sent_at, error) VALUES (?, ?, 'sending', ?, '') ON CONFLICT(email, kind) DO NOTHING`)
+          .run(email, TRIAL_D0_KIND, now);
+        const claim = (await db.prepare("SELECT status, sent_at FROM lead_followups WHERE email = ? AND kind = ?").get(email, TRIAL_D0_KIND)) as
+          | { status: string; sent_at: string }
+          | undefined;
+        if (!claim || claim.status !== "sending" || claim.sent_at !== now) return;
+        try {
+          const mail = buildTrialDelivery({ id: fresh.id, role, grade, created_at: fresh.created_at });
+          await sendFollowupEmail(email, mail.subject, mail.text);
+          await db.prepare("UPDATE lead_followups SET status = 'sent' WHERE email = ? AND kind = ?").run(email, TRIAL_D0_KIND);
+        } catch (err) {
+          console.error("trial delivery failed", err);
+          await db.prepare("UPDATE lead_followups SET status = 'failed', error = ? WHERE email = ? AND kind = ?").run(String(err).slice(0, 300), email, TRIAL_D0_KIND);
+        }
+      });
+    }
     if (mailConfigured()) {
       after(async () => {
         try {
