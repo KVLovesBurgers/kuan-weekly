@@ -10,7 +10,7 @@ export async function submitQuiz(input: {
   email: string;
   answers: Record<string, number>;
   src?: string;
-}): Promise<{ ok: true; result: QuizResult } | { ok: false; error: string }> {
+}): Promise<{ ok: true; result: QuizResult; saved: boolean } | { ok: false; error: string }> {
   const subject = cleanSubject(input.subject);
   if (!subject) return { ok: false, error: "請先選擇科目。" };
   const email = String(input.email ?? "").trim().toLowerCase();
@@ -26,6 +26,7 @@ export async function submitQuiz(input: {
   const src = cleanSrc(input.src);
   const tag = `quiz_subject=${subject}&quiz_score=${result.score}/${result.total}`;
 
+  let saved = false;
   try {
     const db = await getDb();
     const now = new Date().toISOString();
@@ -47,8 +48,10 @@ export async function submitQuiz(input: {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .run(uid("quiz"), email, subject, result.score, result.total, JSON.stringify(answers), result.weak.join("、"), src, now);
+    saved = true;
+    console.log("quiz save ok", subject);
   } catch (e) {
     console.error("quiz save failed", e);
   }
-  return { ok: true, result };
+  return { ok: true, result, saved };
 }

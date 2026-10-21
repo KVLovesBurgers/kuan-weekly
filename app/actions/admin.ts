@@ -129,3 +129,14 @@ export async function deleteLead(formData: FormData) {
   revalidatePath("/admin");
   redirect("/admin");
 }
+
+export async function deleteQuizResults(formData: FormData) {
+  await requireAdmin();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (email) {
+    const db = await getDb();
+    await db.prepare("DELETE FROM quiz_results WHERE email = ?").run(email);
+  }
+  revalidatePath("/admin");
+  redirect("/admin");
+}

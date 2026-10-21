@@ -13,6 +13,7 @@ export function QuizClient({ sets, src }: { sets: Record<QuizSubject, PublicQues
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [result, setResult] = useState<QuizResult | null>(null);
+  const [saved, setSaved] = useState(false);
   const [pending, start] = useTransition();
   useEffect(() => { const t = setTimeout(() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }), 0); return () => clearTimeout(t); }, [subject, result]);
 
@@ -46,7 +47,7 @@ export function QuizClient({ sets, src }: { sets: Record<QuizSubject, PublicQues
   const qs = sets[subject];
   const answered = qs.filter((q) => answers[q.id]).length;
 
-  if (result) return <QuizResultView result={result} onRetry={() => setSubject("")} />;
+  if (result) return <QuizResultView result={result} saved={saved} onRetry={() => setSubject("")} />;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +57,7 @@ export function QuizClient({ sets, src }: { sets: Record<QuizSubject, PublicQues
       const r = await submitQuiz({ subject, email, answers, src });
       if (!r.ok) { setError(r.error); return; }
       try { track("quiz_submit", { subject, score: r.result.score, src: src || "direct" }); } catch {}
+      setSaved(r.saved);
       setResult(r.result);
     });
   };
@@ -95,9 +97,9 @@ export function QuizClient({ sets, src }: { sets: Record<QuizSubject, PublicQues
   );
 }
 
-function QuizResultView({ result, onRetry }: { result: QuizResult; onRetry: () => void }) {
+function QuizResultView({ result, saved, onRetry }: { result: QuizResult; saved: boolean; onRetry: () => void }) {
   return (
-    <section className="quiz-result">
+    <section className="quiz-result" data-saved={saved ? "1" : "0"}>
       <p className="eyebrow">學測{result.subject}小卷・結果</p>
       <h1 className="quiz-title">{result.score} / {result.total} 題答對</h1>
       <div className="card quiz-units">

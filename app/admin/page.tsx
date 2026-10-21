@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdmin } from "@/lib/auth";
-import { adminLogout, activateChild, createWeek, deleteLead } from "@/app/actions/admin";
+import { adminLogout, activateChild, createWeek, deleteLead, deleteQuizResults } from "@/app/actions/admin";
 import { getDb, paidSeatCount, seatsRemaining, type ChildRow, type FeedbackRow } from "@/lib/db";
 import { listWeeks, pdfsForWeek } from "@/lib/weeks";
 import { COMPLETION_OPTIONS, DIFFICULTY_OPTIONS, seatCap } from "@/lib/config";
@@ -40,6 +40,9 @@ export default async function AdminHome({
     hits: number;
     created_at: string;
   }[];
+  const quizRows = (await db
+    .prepare("SELECT email, subject, score, total, src, created_at FROM quiz_results ORDER BY created_at DESC LIMIT 200")
+    .all()) as { email: string; subject: string; score: number; total: number; src: string; created_at: string }[];
   const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
   const events = (await db
     .prepare(
@@ -217,6 +220,25 @@ export default async function AdminHome({
                   <input type="hidden" name="id" value={l.id} />
                   <button type="submit" className="u" style={{ background: "none", border: 0, padding: 0, cursor: "pointer", color: "inherit" }}>
                     刪除
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section style={{ marginTop: 40 }}>
+          <h2 className="display">線上小卷成績（/quiz）</h2>
+          {quizRows.length === 0 ? <p className="muted">目前沒有小卷成績。</p> : null}
+          <ul>
+            {quizRows.map((q, i) => (
+              <li key={`${q.email}-${q.created_at}-${i}`}>
+                {q.email} · {q.subject} · {Number(q.score)}/{Number(q.total)} · 來源 {q.src || "direct"} ·{" "}
+                {new Date(q.created_at).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })}{" "}
+                <form action={deleteQuizResults} style={{ display: "inline" }}>
+                  <input type="hidden" name="email" value={q.email} />
+                  <button type="submit" className="u" style={{ background: "none", border: 0, padding: 0, cursor: "pointer", color: "inherit" }}>
+                    刪除此信箱全部成績
                   </button>
                 </form>
               </li>
