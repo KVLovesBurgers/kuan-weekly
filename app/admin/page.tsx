@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdmin } from "@/lib/auth";
-import { adminLogout, activateChild, createWeek, deleteLead, deleteQuizResults } from "@/app/actions/admin";
+import { ConfirmDelete } from "@/components/ConfirmDelete";
+import { adminLogout, activateChild, createWeek, deleteLead, deleteQuizResults, deleteChild } from "@/app/actions/admin";
 import { getDb, paidSeatCount, seatsRemaining, type ChildRow, type FeedbackRow } from "@/lib/db";
 import { listWeeks, pdfsForWeek } from "@/lib/weeks";
 import { COMPLETION_OPTIONS, DIFFICULTY_OPTIONS, seatCap } from "@/lib/config";
@@ -174,6 +175,7 @@ export default async function AdminHome({
                         </button>
                       </form>
                     ) : null}
+                    <ConfirmDelete action={deleteChild} name="child_id" value={c.id} message={`確定要刪除「${c.display_name}」嗎？會一併刪除這個孩子的待匯款紀錄與回饋，無法復原。`} />
                   </td>
                 </tr>
               ))}

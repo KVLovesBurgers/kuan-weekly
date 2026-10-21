@@ -268,7 +268,6 @@ async function seed(db: KuanDb) {
 
   const now = new Date().toISOString();
   const parentId = "parent_demo";
-  const childId = "child_demo";
   const weekId = "week_demo_01";
 
   await db.prepare("INSERT INTO parents (id, email, created_at) VALUES (?, ?, ?)").run(
@@ -276,22 +275,7 @@ async function seed(db: KuanDb) {
     DEMO_PARENT_EMAIL,
     now,
   );
-  await db
-    .prepare(
-      `INSERT INTO children
-        (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 1, 'demo', NULL, ?)`,
-    )
-    .run(
-      childId,
-      parentId,
-      "示範孩子",
-      "小五",
-      "分數應用",
-      "跟上段考",
-      "應用題列式",
-      now,
-    );
+  // 示範孩子已不再自動建立（後台可刪除，避免刪了又長回來）。
   await db
     .prepare(
       `INSERT INTO weeks (id, week_label, title, synopsis, published, published_at, created_at)

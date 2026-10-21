@@ -140,3 +140,19 @@ export async function deleteQuizResults(formData: FormData) {
   revalidatePath("/admin");
   redirect("/admin");
 }
+
+/** 刪除單一孩子：連同該孩子的待匯款紀錄與回饋一起刪；不動家長帳號與其他孩子。 */
+export async function deleteChild(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("child_id") ?? "").trim();
+  if (id) {
+    const db = await getDb();
+    await db.prepare("DELETE FROM checkout_attempts WHERE child_id = ? AND status = 'pending'").run(id);
+    await db.prepare("DELETE FROM feedback WHERE child_id = ?").run(id);
+    await db.prepare("DELETE FROM children WHERE id = ?").run(id);
+  }
+  revalidateTag("seats");
+  revalidatePath("/admin");
+  revalidatePath("/");
+  redirect("/admin");
+}
