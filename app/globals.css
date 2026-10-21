@@ -1,3 +1,6 @@
+/* 上下標與角括號：Noto TC 沒有這些字形，用小型補字檔，避免落到系統字型。 */
+@font-face { font-family: "KW Math"; src: url(/fonts/kw-supsub.woff2) format("woff2"); font-weight: 100 900; font-display: swap; unicode-range: U+2070-209F; }
+@font-face { font-family: "KW Math"; src: url(/fonts/kw-angle.woff2) format("woff2"); font-display: swap; unicode-range: U+27E8-27E9; }
 
 :root {
   --ink: #0f1419;
@@ -15,8 +18,8 @@
   --shadow-border: 0 0 0 1px #ddd6c8;
   --shadow-hover: 0 0 0 1px #c9c0ae;
   --radius: 12px;
-  --display: var(--font-serif), "Noto Serif TC", "Songti TC", serif;
-  --sans: var(--font-sans), "Noto Sans TC", "PingFang TC", sans-serif;
+  --display: "KW Math", var(--font-serif), "Noto Serif TC", "Songti TC", serif;
+  --sans: "KW Math", var(--font-sans), "Noto Sans TC", "PingFang TC", sans-serif;
 }
 
 * { box-sizing: border-box; }
