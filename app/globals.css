@@ -558,3 +558,4 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .quiz-ans { font-size: 15px; line-height: 1.8; margin: 0 0 8px; }
 .quiz-exp { font-size: 15px; line-height: 1.8; color: var(--ink-soft); margin: 0; background: var(--paper); padding: 10px 12px; border-radius: 8px; }
 .quiz-cta-end { display: grid; gap: 10px; margin: 16px 0 8px; }
+picture { display: contents; }
