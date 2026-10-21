@@ -23,6 +23,9 @@ export function Header({
           <Link href="/units" className="hide-sm">
             練習題
           </Link>
+          <Link href="/quiz" className="hide-sm">
+            模擬測驗
+          </Link>
           <Link href="/#videos" className="hide-sm">
             教學影片
           </Link>

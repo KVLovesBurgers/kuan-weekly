@@ -156,6 +156,9 @@ export default async function HomePage() {
                 <a href="#pricing" className="u">看方案與匯款方式</a>
               </div>
             </div>
+            <p className="muted" style={{ marginTop: 16 }}>
+              高三準備學測？<Link href="/quiz" className="u">免費學測數學模擬測驗</Link>，數A、數B 各 10 題，交卷後看分數和弱點單元。
+            </p>
           </div>
         </section>
 

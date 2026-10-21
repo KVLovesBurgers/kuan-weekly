@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!u) return { title: "找不到這個單元｜Saber數學" };
   const n = unitSheets(u.slug).length + (hasLivePack(u) ? 1 : 0);
   const title = `${u.title} 免費練習題：${n} 份附詳解｜Saber數學`;
-  const description = `${u.level}${u.title} 免費練習題，共 ${n} 份：${u.topic}。每份都有題目和逐步詳解，免費下載。`;
+  const description = `${u.title.includes(u.level) ? "" : u.level}${u.title} 免費練習題，共 ${n} 份：${u.topic}。每份都有題目和逐步詳解，免費下載。`;
   return {
     title,
     description,

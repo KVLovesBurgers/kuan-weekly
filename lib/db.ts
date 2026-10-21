@@ -166,6 +166,18 @@ async function migrate(db: KuanDb) {
       created_at TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS quiz_results (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      score INTEGER NOT NULL,
+      total INTEGER NOT NULL,
+      answers TEXT NOT NULL DEFAULT '',
+      weak_units TEXT NOT NULL DEFAULT '',
+      src TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS leads (
       id TEXT PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,

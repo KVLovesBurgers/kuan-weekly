@@ -33,6 +33,9 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
           <Link href="/sample" onClick={close}>
             領題本試閱
           </Link>
+          <Link href="/quiz" onClick={close}>
+            免費學測數學模擬測驗
+          </Link>
           <Link href="/#videos" onClick={close}>
             看老師怎麼教
           </Link>
