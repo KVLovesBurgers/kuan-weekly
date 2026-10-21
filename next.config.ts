@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         source: "/:file(og\\.png|samples/.*\\.(?:webp|png))",
         headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400" }],
       },
+      {
+        // 練習題 PDF：直接由站上提供，CDN 快取 7 天。
+        source: "/:dir(sheets|fonts)/:file*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400" }],
+      },
     ];
   },
 };

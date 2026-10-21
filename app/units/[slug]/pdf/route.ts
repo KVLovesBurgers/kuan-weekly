@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { getDb } from "@/lib/db";
 import { uid } from "@/lib/ids";
 import { cleanSrc } from "@/lib/leads";
 import { driveUrl } from "@/lib/practice-sheets";
+import { LOCAL_SHEETS } from "@/lib/sheet-files";
 import { findUnitPack, hasLivePack, unitPdf, unitSheets } from "@/lib/unit-packs";
 
 export const runtime = "nodejs";
@@ -24,20 +25,23 @@ export async function GET(req: Request, ctx: { params: Promise<{ slug: string }>
   if (sheetId) {
     const s = unitSheets(u.slug).find((x) => x.driveId === sheetId);
     if (!s) return new NextResponse("找不到這份練習題", { status: 404 });
-    dest = driveUrl(s.driveId);
+    dest = LOCAL_SHEETS.has(s.driveId) ? new URL(`/sheets/${s.driveId}.pdf`, req.url).toString() : driveUrl(s.driveId);
     target = `${u.slug}:${s.series.replace(/\s+/g, "")}`.slice(0, 80);
   } else {
     if (!hasLivePack(u)) return NextResponse.redirect(new URL(`/units/${u.slug}`, req.url), 302);
     dest = new URL(unitPdf(u.slug), req.url).toString();
     target = u.slug;
   }
-  try {
-    const db = await getDb();
-    await db
-      .prepare("INSERT INTO site_events (id, kind, target, source, created_at) VALUES (?, ?, ?, ?, ?)")
-      .run(uid("ev"), "unit_pdf", target, src, new Date().toISOString());
-  } catch (err) {
-    console.error("unit pdf track failed", err);
-  }
+  // 記錄放到回應之後，轉址不等資料庫。
+  after(async () => {
+    try {
+      const db = await getDb();
+      await db
+        .prepare("INSERT INTO site_events (id, kind, target, source, created_at) VALUES (?, ?, ?, ?, ?)")
+        .run(uid("ev"), "unit_pdf", target, src, new Date().toISOString());
+    } catch (err) {
+      console.error("unit pdf track failed", err);
+    }
+  });
   return NextResponse.redirect(dest, 302);
 }
