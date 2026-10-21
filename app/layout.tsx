@@ -1,15 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { SITE, SOCIAL } from "@/lib/config";
 import { Analytics } from "@vercel/analytics/next";
 import { AnalyticsEvents } from "@/components/AnalyticsEvents";
 import { ZhValidation } from "@/components/ZhValidation";
+import { LateFonts } from "@/components/LateFonts";
 
-// 自架字型（next/font）：拿掉 fonts.googleapis.com 的阻塞式 CSS，改用可變字重、同網域載入。
-// 字型拆三份：內文 400（public/fonts，全站用字，唯一 preload）、粗體 500–700（只含粗體出現過的字）、標題襯線（只含標題用字）。
+// 字型拆三份：內文 400（public/fonts，全站用字，唯一 preload）、粗體 500–700（只含粗體出現過的字）、標題襯線（只含標題用字）。後兩份由 LateFonts 在 load 之後才載。
 // 內文兩份的 @font-face 在 globals.css；子集外的字會逐字落到後面的系統字型。
-const serif = localFont({ src: "./fonts/noto-serif-tc-head.woff2", weight: "400 700", display: "swap", preload: false, variable: "--font-serif", fallback: ["Noto Serif TC", "PMingLiU", "serif"] });
 
 const title = "寬數週練｜國中數學・高中數學每週練習題本｜吳寬老師";
 const description =
@@ -100,7 +98,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant-TW" className={serif.variable}>
+    <html lang="zh-Hant-TW">
       <head>
         <link rel="preload" href="/fonts/noto-sans-tc-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -110,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <AnalyticsEvents />
         <ZhValidation />
+        <LateFonts />
       </body>
     </html>
   );
