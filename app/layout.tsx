@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
 import { SITE, SOCIAL } from "@/lib/config";
+import { Analytics } from "@vercel/analytics/next";
+import { AnalyticsEvents } from "@/components/AnalyticsEvents";
 
 // 自架字型（next/font）：拿掉 fonts.googleapis.com 的阻塞式 CSS，改用可變字重、同網域載入。
 const sans = Noto_Sans_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-sans" });
@@ -100,7 +102,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <AnalyticsEvents />
+      </body>
     </html>
   );
 }
