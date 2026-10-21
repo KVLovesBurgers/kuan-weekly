@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SITE, SOCIAL } from "@/lib/config";
 import { Analytics } from "@vercel/analytics/next";
 import { AnalyticsEvents } from "@/components/AnalyticsEvents";
 
 // 自架字型（next/font）：拿掉 fonts.googleapis.com 的阻塞式 CSS，改用可變字重、同網域載入。
-const sans = Noto_Sans_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-sans" });
-const serif = Noto_Serif_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-serif" });
+// 只含站上用到的字（約 900 字）的子集，取代 Google 字型的數十個 unicode-range 切片。
+const sans = localFont({ src: "./fonts/noto-sans-tc-sub.woff2", weight: "400 900", display: "swap", preload: true, variable: "--font-sans", fallback: ["PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "sans-serif"] });
+const serif = localFont({ src: "./fonts/noto-serif-tc-sub.woff2", weight: "400 900", display: "swap", preload: false, variable: "--font-serif", fallback: ["Noto Serif TC", "PMingLiU", "serif"] });
 
 const title = "寬數週練｜國中數學・高中數學每週練習題本｜吳寬老師";
 const description =

@@ -7,7 +7,14 @@ import type { PublicQuestion, QuizResult, QuizSubject } from "@/lib/quiz";
 
 const IG_DM = "https://ig.me/m/saber_math";
 
-export function QuizClient({ sets, src }: { sets: Record<QuizSubject, PublicQuestion[]>; src: string }) {
+function readSrc(): string {
+  if (typeof window === "undefined") return "";
+  const v = new URLSearchParams(window.location.search).get("src") || "";
+  return v.replace(/[^a-zA-Z0-9_\-.]/g, "").slice(0, 40);
+}
+
+export function QuizClient({ sets }: { sets: Record<QuizSubject, PublicQuestion[]> }) {
+  const src = readSrc();
   const [subject, setSubject] = useState<QuizSubject | "">("");
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [email, setEmail] = useState("");
