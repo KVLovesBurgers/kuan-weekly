@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { scoreMock, unlockMock, type MockUnlock } from "@/app/actions/mock";
 import { currentOrFirstTouch } from "@/lib/first-touch";
 import { track } from "@/lib/track-client";
+import { PaidNext } from "@/components/PaidNext";
 import type { MockAnswer, MockPhase, MockScore, MockSubject, MockType } from "@/lib/mock";
 
 export type MockQView = { id: string; no: number; type: MockType; points: number; unit: string; stem: string; options: string[] | null; format: string | null; cells: number; group: string | null };
@@ -155,6 +156,7 @@ export function MockClient({ sets, phase, minutes, openLabel }: { sets: MockSetV
           <ul>{score.units.map((u) => <li key={u.unit} className={u.got / u.full < 0.6 ? "weak" : ""}><span>{u.unit}</span><span>{u.got} / {u.full}</span></li>)}</ul>
           <p className="quiz-weak">{score.weak.length ? <>得分率低於六成的單元：<strong>{score.weak.join("、")}</strong>。建議先從這些單元複習。</> : "每個單元得分率都在六成以上，維持手感，多練後段難題。"}</p>
         </div>
+        <PaidNext track="gsat" label={`學測${set.label}`} weak={score.weak} src="mock-result" />
         {!unlocked ? (
           <form className="quiz-submit card" onSubmit={onUnlock} id="unlock">
             <h2 className="diag-h" style={{ margin: 0 }}>看每題詳解與弱點分析</h2>
