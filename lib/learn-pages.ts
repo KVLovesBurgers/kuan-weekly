@@ -252,6 +252,161 @@ export const LEARN_PAGES: LearnPage[] = [
       ],
     },
   },
+  {
+    slug: "difference-of-squares",
+    keyword: "平方差公式",
+    title: "平方差公式詳解：99×101 心算、因式分解與連乘，5 題由淺到深｜Saber數學",
+    h1: "平方差公式詳解：從 99×101 心算到因式分解",
+    description: "平方差公式 a²−b²=(a+b)(a−b) 怎麼用？99×101 三秒心算、51²−49²、因式分解和連乘化簡，5 題國中程度題目附逐步詳解與常見錯誤。",
+    level: "國中",
+    teaches: "平方差公式、乘法公式心算、因式分解",
+    short: { id: "8PU6JzNelwo", title: "99 × 101 心算 3 秒：平方差畫圖就懂｜畫圖一眼懂 #21" },
+    related: [
+      { href: "/units/jh-mult", label: "乘法公式：免費練習題附詳解" },
+      { href: "/diag?src=learn-diffsq", label: "免費段考弱點檢測：8 題找出最弱的單元" },
+      { href: "/learn/similar-triangles", label: "會考數學相似形詳解" },
+    ],
+    updated: "2026-10-23",
+    lesson: {
+      intro: "平方差公式是 $a^2-b^2=(a+b)(a-b)$。畫圖來看：邊長 $a$ 的正方形挖掉邊長 $b$ 的小正方形，剩下的部分剪開拼起來，剛好是長 $a+b$、寬 $a-b$ 的長方形。反過來用，兩個數「一個比整數多一點、一個少一點」相乘時，就能直接心算。下面 5 題由淺到深。",
+      problems: [
+        {
+          title: "99×101 三秒心算",
+          question: "不用直式，計算 $99\\times 101$。",
+          steps: [
+            "兩個數都離 $100$ 差 $1$：$99=100-1$，$101=100+1$。",
+            "套平方差公式：$(100-1)(100+1)=100^2-1^2$。",
+            "$=10000-1=9999$。",
+          ],
+          answer: "$9999$",
+        },
+        {
+          title: "差距不是 1 的情況",
+          question: "計算 $98\\times 102$ 與 $47\\times 53$。",
+          steps: [
+            "$98\\times 102=(100-2)(100+2)=100^2-2^2=10000-4=9996$。",
+            "$47\\times 53=(50-3)(50+3)=50^2-3^2=2500-9=2491$。",
+          ],
+          answer: "$9996$，$2491$",
+        },
+        {
+          title: "反過來用：兩個平方相減",
+          question: "計算 $51^2-49^2$。",
+          steps: [
+            "直接平方再相減很慢，改用公式：$51^2-49^2=(51+49)(51-49)$。",
+            "$=100\\times 2=200$。",
+          ],
+          answer: "$200$",
+        },
+        {
+          title: "因式分解",
+          question: "因式分解 $4x^2-25$ 與 $x^4-16$。",
+          steps: [
+            "$4x^2=(2x)^2$，$25=5^2$，所以 $4x^2-25=(2x+5)(2x-5)$。",
+            "$x^4-16=(x^2)^2-4^2=(x^2+4)(x^2-4)$。",
+            "$x^2-4$ 還能再分解：$x^2-4=(x+2)(x-2)$。",
+            "所以 $x^4-16=(x^2+4)(x+2)(x-2)$。",
+          ],
+          answer: "$(2x+5)(2x-5)$，$(x^2+4)(x+2)(x-2)$",
+        },
+        {
+          title: "連乘化簡",
+          question: "計算 $\\left(1-\\dfrac{1}{2^2}\\right)\\left(1-\\dfrac{1}{3^2}\\right)\\left(1-\\dfrac{1}{4^2}\\right)\\cdots\\left(1-\\dfrac{1}{10^2}\\right)$。",
+          steps: [
+            "每一項都是平方差：$1-\\dfrac{1}{n^2}=\\left(1-\\dfrac{1}{n}\\right)\\left(1+\\dfrac{1}{n}\\right)=\\dfrac{n-1}{n}\\times\\dfrac{n+1}{n}$。",
+            "把所有 $\\dfrac{n-1}{n}$ 乘起來：$\\dfrac{1}{2}\\times\\dfrac{2}{3}\\times\\cdots\\times\\dfrac{9}{10}=\\dfrac{1}{10}$。",
+            "把所有 $\\dfrac{n+1}{n}$ 乘起來：$\\dfrac{3}{2}\\times\\dfrac{4}{3}\\times\\cdots\\times\\dfrac{11}{10}=\\dfrac{11}{2}$。",
+            "相乘：$\\dfrac{1}{10}\\times\\dfrac{11}{2}=\\dfrac{11}{20}$。",
+          ],
+          answer: "$\\dfrac{11}{20}$",
+        },
+      ],
+      mistakes: [
+        "把 $(a-b)^2$ 和 $a^2-b^2$ 當成一樣。$(a-b)^2=a^2-2ab+b^2$，中間多一項 $-2ab$。",
+        "$4x^2-25$ 寫成 $(4x+5)(4x-5)$。要先把 $4x^2$ 寫成 $(2x)^2$，括號裡放的是 $2x$。",
+        "因式分解沒有分解到底。$x^4-16$ 分成 $(x^2+4)(x^2-4)$ 之後，$x^2-4$ 還能再分解。",
+        "$99\\times 101$ 算成 $100^2+1$。平方差公式中間是減號，結果是 $100^2-1$。",
+      ],
+    },
+  },
+  {
+    slug: "sin-30-degrees",
+    keyword: "sin30 為什麼是 1/2",
+    title: "sin30° 為什麼是 1/2？特殊角三角函數 5 題詳解（30°、45°、60°）｜Saber數學",
+    h1: "sin30° 為什麼是 1/2：特殊角三角函數 5 題詳解",
+    description: "sin30° 等於 1/2 不用背：正三角形切一半就看得出來。再推出 cos30°、tan30°，以及 30°、45°、60° 的直角三角形應用題，5 題由淺到深附逐步詳解。",
+    level: "高中",
+    teaches: "特殊角三角函數、30-60-90 直角三角形、45-45-90 直角三角形",
+    short: { id: "NTzCS0CHC-U", title: "sin30° 為什麼剛好是 1/2？｜畫圖一眼懂 #9" },
+    related: [
+      { href: "/units/trig", label: "三角函數：免費練習題附詳解" },
+      { href: "/diag?src=learn-sin30", label: "免費段考弱點檢測：找出最弱的單元" },
+      { href: "/learn/vector-dot-product", label: "向量內積詳解" },
+    ],
+    updated: "2026-10-23",
+    lesson: {
+      intro: "$\\sin\\theta$ 是直角三角形中「對邊 ÷ 斜邊」。把邊長 $2$ 的正三角形從頂點往底邊切一半，會得到一個 $30^\\circ$、$60^\\circ$、$90^\\circ$ 的直角三角形：斜邊 $2$，$30^\\circ$ 的對邊是底邊的一半 $1$。所以 $\\sin 30^\\circ=\\dfrac{1}{2}$，不用背。下面 5 題由淺到深。",
+      problems: [
+        {
+          title: "正三角形切一半",
+          question: "邊長 $2$ 的正三角形，從一個頂點作底邊的垂線。利用切出來的直角三角形求 $\\sin 30^\\circ$。",
+          steps: [
+            "正三角形每個角都是 $60^\\circ$，垂線把頂角平分成兩個 $30^\\circ$，也把底邊平分成 $1$ 和 $1$。",
+            "切出的直角三角形中，$30^\\circ$ 角的對邊是 $1$，斜邊是 $2$。",
+            "$\\sin 30^\\circ=\\dfrac{\\text{對邊}}{\\text{斜邊}}=\\dfrac{1}{2}$。",
+          ],
+          answer: "$\\dfrac{1}{2}$",
+        },
+        {
+          title: "同一個三角形求 cos30° 與 tan30°",
+          question: "承上題，求 $\\cos 30^\\circ$ 與 $\\tan 30^\\circ$。",
+          steps: [
+            "垂線長由畢氏定理：$\\sqrt{2^2-1^2}=\\sqrt{3}$，它是 $30^\\circ$ 角的鄰邊。",
+            "$\\cos 30^\\circ=\\dfrac{\\text{鄰邊}}{\\text{斜邊}}=\\dfrac{\\sqrt{3}}{2}$。",
+            "$\\tan 30^\\circ=\\dfrac{\\text{對邊}}{\\text{鄰邊}}=\\dfrac{1}{\\sqrt{3}}=\\dfrac{\\sqrt{3}}{3}$。",
+          ],
+          answer: "$\\cos 30^\\circ=\\dfrac{\\sqrt{3}}{2}$，$\\tan 30^\\circ=\\dfrac{\\sqrt{3}}{3}$",
+        },
+        {
+          title: "已知斜邊求兩股",
+          question: "直角三角形中有一個角是 $30^\\circ$，斜邊長 $10$。求 $30^\\circ$ 角的對邊與鄰邊。",
+          steps: [
+            "對邊 $=10\\times\\sin 30^\\circ=10\\times\\dfrac{1}{2}=5$。",
+            "鄰邊 $=10\\times\\cos 30^\\circ=10\\times\\dfrac{\\sqrt{3}}{2}=5\\sqrt{3}$。",
+            "檢查：$5^2+(5\\sqrt{3})^2=25+75=100=10^2$。",
+          ],
+          answer: "對邊 $5$，鄰邊 $5\\sqrt{3}$",
+        },
+        {
+          title: "特殊角混合計算",
+          question: "計算 $\\sin 30^\\circ\\cos 60^\\circ+\\cos 30^\\circ\\sin 60^\\circ$。",
+          steps: [
+            "$\\sin 30^\\circ=\\cos 60^\\circ=\\dfrac{1}{2}$，$\\cos 30^\\circ=\\sin 60^\\circ=\\dfrac{\\sqrt{3}}{2}$。",
+            "原式 $=\\dfrac{1}{2}\\times\\dfrac{1}{2}+\\dfrac{\\sqrt{3}}{2}\\times\\dfrac{\\sqrt{3}}{2}=\\dfrac{1}{4}+\\dfrac{3}{4}=1$。",
+            "這也剛好是和角公式 $\\sin(30^\\circ+60^\\circ)=\\sin 90^\\circ=1$。",
+          ],
+          answer: "$1$",
+        },
+        {
+          title: "作高切成兩個特殊三角形",
+          question: "$\\triangle ABC$ 中，$\\angle B=30^\\circ$，$\\angle C=45^\\circ$，$\\overline{AB}=8$。求 $\\overline{BC}$。",
+          steps: [
+            "從 $A$ 作 $\\overline{BC}$ 的垂線，垂足為 $D$，把三角形切成兩個直角三角形。",
+            "在 $\\triangle ABD$ 中：$\\overline{AD}=8\\sin 30^\\circ=4$，$\\overline{BD}=8\\cos 30^\\circ=4\\sqrt{3}$。",
+            "在 $\\triangle ACD$ 中 $\\angle C=45^\\circ$，是等腰直角三角形，所以 $\\overline{CD}=\\overline{AD}=4$。",
+            "$\\overline{BC}=\\overline{BD}+\\overline{CD}=4\\sqrt{3}+4$。",
+          ],
+          answer: "$4+4\\sqrt{3}$",
+        },
+      ],
+      mistakes: [
+        "$\\sin 30^\\circ$ 和 $\\cos 30^\\circ$ 記反。畫出正三角形切一半，$30^\\circ$ 角對面的是短邊 $1$，所以 $\\sin 30^\\circ$ 比較小。",
+        "對邊、鄰邊認錯。對邊是角正對面的邊，鄰邊是夾這個角、但不是斜邊的那一邊。",
+        "$\\tan 30^\\circ$ 寫成 $\\sqrt{3}$。$\\sqrt{3}$ 是 $\\tan 60^\\circ$，$\\tan 30^\\circ=\\dfrac{\\sqrt{3}}{3}$。",
+        "以為 $\\sin 60^\\circ=2\\sin 30^\\circ$。角度變兩倍，正弦值不會變兩倍：$\\sin 60^\\circ=\\dfrac{\\sqrt{3}}{2}\\neq 1$。",
+      ],
+    },
+  },
 ];
 
 export const findLearnPage = (slug: string) => LEARN_PAGES.find((p) => p.slug === slug);

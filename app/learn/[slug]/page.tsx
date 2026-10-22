@@ -20,7 +20,7 @@ function plain(s: string): string {
   return t
     .replace(/\\overrightarrow\{([^}]*)\}/g, "向量$1").replace(/\\vec\s*([a-z])/g, "向量$1").replace(/\\overline\{([^}]*)\}/g, "$1")
     .replace(/\\text\{([^}]*)\}/g, "$1").replace(/\\mid/g, "|").replace(/\\cap/g, "∩").replace(/\\perp/g, "⊥").replace(/\\parallel/g, "∥")
-    .replace(/\\sim/g, "∼").replace(/\\triangle\s*/g, "△").replace(/\\angle\s*/g, "∠").replace(/\^\\circ/g, "°").replace(/\\cos/g, "cos")
+    .replace(/\\sim/g, "∼").replace(/\\triangle\s*/g, "△").replace(/\\angle\s*/g, "∠").replace(/\^\\circ/g, "°").replace(/\\cos/g, "cos").replace(/\\sin/g, "sin").replace(/\\tan/g, "tan").replace(/\\cdots/g, "…").replace(/\\neq/g, "≠")
     .replace(/\\theta/g, "θ").replace(/\\times/g, "×").replace(/\\cdot/g, "·").replace(/\\%/g, "%")
     .replace(/\\(left|right|,|\s)/g, "").replace(/[$\\{}]/g, "");
 }
