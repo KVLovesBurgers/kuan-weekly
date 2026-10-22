@@ -1,14 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { cleanSrc } from "@/lib/leads";
+import { currentOrFirstTouch } from "@/lib/first-touch";
 
-/** /units 是靜態頁，src 追蹤參數在瀏覽器端讀：/sample?src=unit-<slug>-<src>。 */
+/** 單元頁往試閱頁：有原來源（網址 src 或 first-touch）就沿用，沒有才用 unit-<slug>。 */
 export function UnitTrialLink({ base, track }: { base: string; track?: string }) {
-  const src = cleanSrc(useSearchParams().get("src"));
-  const s = (src ? `${base}-${src}` : base).slice(0, 40);
-  const href = `/sample?${track ? `track=${track}&` : ""}src=${s}`;
+  const [src, setSrc] = useState(base);
+  useEffect(() => {
+    setSrc(currentOrFirstTouch() || base);
+  }, [base]);
+  const href = `/sample?${track ? `track=${track}&` : ""}src=${encodeURIComponent(src.slice(0, 40))}`;
   return (
     <Link href={href} className="practice-cta-link">
       免費試閱一週題本

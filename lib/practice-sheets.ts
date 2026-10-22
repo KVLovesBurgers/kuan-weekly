@@ -9,13 +9,15 @@ export type PracticeSheet = {
   topic: string;
   level: "國中" | "高中" | "SAT";
   driveId: string;
+  /** 有填就直接開這個網址（站內 PDF），不走 Drive。 */
+  url?: string;
   /** 所屬單元（lib/unit-packs.ts 的 slug）；/units 依此分組。沒填的歸到「其他」。 */
   unit?: string;
   publishAt: string;
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
-  { series: "學測真題 #1", title: "等腰三角形算出 3 個，答案只有 2 個（115 學測數A 第6題）", topic: "坐標平面上的等腰三角形：三種等腰情況、點到直線距離、中垂線，最後檢查三點共線", level: "高中", driveId: "1m45Ln5tgxuwP_jyUcU-Fy7wkQ8Ui5I4P", publishAt: "2026-10-22T17:30:00+08:00" },
+  { series: "學測真題 #1", title: "等腰三角形算出 3 個，答案只有 2 個（115 學測數A 第6題）", topic: "坐標平面上的等腰三角形：三種等腰情況、點到直線距離、中垂線，最後檢查三點共線", level: "高中", driveId: "1m45Ln5tgxuwP_jyUcU-Fy7wkQ8Ui5I4P", url: "https://kuan-weekly.vercel.app/pdf/gsat-real1-practice.pdf", publishAt: "2026-10-22T17:30:00+08:00" },
   { series: "畫圖一眼懂 #29", title: "1＋3＋5＋…＋19 等於多少？拼正方形就知道", topic: "奇數和＝n²、偶數和、大正方形減小正方形、等差級數和", level: "高中", driveId: "1yE12VdICrQKtfKYq7TwKaOjKuuRNGqib", unit: "series", publishAt: "2026-10-28T20:30:00+08:00" },
   { series: "學測一眼懂 #28", title: "濾光片每片剩 80%，疊幾片才低於 10%？", topic: "指數衰減與取 log 解不等式：log r 是負數，除過去要變號", level: "高中", driveId: "16Q8UBbM9TQy_Td01cDqZZHZCg643LVJU", unit: "gsat-log", publishAt: "2026-10-27T20:30:00+08:00" },
   { series: "學測數A 長片", title: "三角函數 一次複習（sin 210° 是正還是負？）", topic: "特殊角、廣義角符號、平方關係、正弦與餘弦定理、面積、疊合最大值", level: "高中", driveId: "1eaPs155DBk5KbDjvMPUWHN0hhf9rAgjx", unit: "trig", publishAt: "2026-10-25T15:53:00+08:00" },

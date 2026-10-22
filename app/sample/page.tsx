@@ -24,6 +24,7 @@ import {
 import { getDb } from "@/lib/db";
 import { packsForGrade, trialActive, trialEndLabel, trialToken, isTrialLead } from "@/lib/trial";
 import { cachedSeatsRemaining } from "@/lib/seats";
+import { FirstTouchSrcFill } from "@/components/FirstTouch";
 import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -216,7 +217,8 @@ export default async function SamplePage({
                     {error}
                   </p>
                 ) : null}
-                <input type="hidden" name="src" value={src} />
+                <input type="hidden" name="src" value={src || cleanSrc(jar.get("kw_ft_src")?.value)} />
+                <FirstTouchSrcFill />
                 <input type="hidden" name="track" value={track} />
                 {Object.entries(utm).map(([k, v]) => (v ? <input key={k} type="hidden" name={k} value={v} /> : null))}
                 <label htmlFor="lead_email">電子信箱（必填）</label>

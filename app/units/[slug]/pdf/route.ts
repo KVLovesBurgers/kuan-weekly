@@ -25,7 +25,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ slug: string }>
   if (sheetId) {
     const s = unitSheets(u.slug).find((x) => x.driveId === sheetId);
     if (!s) return new NextResponse("找不到這份練習題", { status: 404 });
-    dest = LOCAL_SHEETS.has(s.driveId) ? new URL(`/sheets/${s.driveId}.pdf`, req.url).toString() : driveUrl(s.driveId);
+    dest = s.url ? s.url : LOCAL_SHEETS.has(s.driveId) ? new URL(`/sheets/${s.driveId}.pdf`, req.url).toString() : driveUrl(s.driveId);
     target = `${u.slug}:${s.series.replace(/\s+/g, "")}`.slice(0, 80);
   } else {
     if (!hasLivePack(u)) return NextResponse.redirect(new URL(`/units/${u.slug}`, req.url), 302);

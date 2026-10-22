@@ -3,13 +3,14 @@
 import { useEffect, useState, useTransition } from "react";
 import { track } from "@vercel/analytics";
 import { submitQuiz } from "@/app/actions/quiz";
+import { currentOrFirstTouch } from "@/lib/first-touch";
 import type { PublicQuestion, QuizResult, QuizSubject } from "@/lib/quiz";
 
 const IG_DM = "https://ig.me/m/saber_math";
 
 function readSrc(): string {
   if (typeof window === "undefined") return "";
-  const v = new URLSearchParams(window.location.search).get("src") || "";
+  const v = currentOrFirstTouch();
   return v.replace(/[^a-zA-Z0-9_\-.]/g, "").slice(0, 40);
 }
 
@@ -142,6 +143,9 @@ function QuizResultView({ result, saved, onRetry }: { result: QuizResult; saved:
         <a className="btn btn-ink" href={IG_DM} target="_blank" rel="noopener noreferrer">私訊 IG 拿猜題卷試閱</a>
         <button type="button" className="btn btn-paper" onClick={onRetry}>再做另一科</button>
       </div>
+      <p className="muted" style={{ marginTop: 16 }}>
+        想每週固定練一份有詳解的題目，可以先<a className="u" href="/sample?track=gsat">免費下載一週題本試閱</a>。
+      </p>
     </section>
   );
 }

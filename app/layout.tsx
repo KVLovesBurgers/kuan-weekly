@@ -5,6 +5,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { AnalyticsEvents } from "@/components/AnalyticsEvents";
 import { ZhValidation } from "@/components/ZhValidation";
 import { LateFonts } from "@/components/LateFonts";
+import { Suspense } from "react";
+import { FirstTouch } from "@/components/FirstTouch";
 
 // 字型拆三份：內文 400（public/fonts，全站用字，唯一 preload）、粗體 500–700（只含粗體出現過的字）、標題襯線（只含標題用字）。後兩份由 LateFonts 在 load 之後才載。
 // 內文兩份的 @font-face 在 globals.css；子集外的字會逐字落到後面的系統字型。
@@ -15,6 +17,7 @@ const description =
 
 export const metadata: Metadata = {
   title,
+  verification: { google: "SOkVAhLs7t2aSY_ar60dISeEnJbcfYg4mHM8b8gUIeQ" },
   description,
   keywords: [
     "國中數學",
@@ -88,6 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>
+        <Suspense fallback={null}><FirstTouch /></Suspense>
         {children}
         <Analytics />
         <AnalyticsEvents />
