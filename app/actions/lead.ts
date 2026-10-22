@@ -8,7 +8,7 @@ import { uid } from "@/lib/ids";
 import { mailConfigured, sendFollowupEmail, sendLeadAlert } from "@/lib/mail";
 import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLES, LEAD_TRACK_COOKIE, LEAD_TRADE_COOKIE, cleanTrack, trackForGrade } from "@/lib/leads";
 import { seatsRemaining } from "@/lib/db";
-import { buildScopeDelivery, buildTrialDelivery, isTestAddress } from "@/lib/followup";
+import { buildScopeDelivery, buildTrialDelivery, isTestAddress, TRIAL_APPLY_KIND } from "@/lib/followup";
 import { isTrialLead, SCOPE_GRADES, SCOPE_OPTIONS, scopeKind, scopeMailAllowed, TRIAL_D0_KIND } from "@/lib/trial";
 import { GRADE_OPTIONS, SITE } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
@@ -35,6 +35,10 @@ export async function submitSampleLead(formData: FormData) {
   const db = await getDb();
   const now = new Date().toISOString();
   const existing = await db.prepare("SELECT id FROM leads WHERE email = ?").get(email);
+  // 記下「申請過試用」，試用跟進信 cron 依此判斷（只做過 /mock 的人不寄）。
+  await db
+    .prepare(`INSERT INTO lead_followups (email, kind, status, sent_at, error) VALUES (?, ?, 'granted', ?, '') ON CONFLICT(email, kind) DO NOTHING`)
+    .run(email, TRIAL_APPLY_KIND, now);
   if (existing) {
     await db
       .prepare(
