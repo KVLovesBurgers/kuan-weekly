@@ -71,22 +71,6 @@ const jsonLd = {
     jobTitle: "數學老師",
     alumniOf: "國立陽明交通大學 應用數學系",
   },
-  makesOffer: [
-    {
-      "@type": "Offer",
-      name: "寬數週練｜按月",
-      price: SITE.monthlyPrice,
-      priceCurrency: "TWD",
-      url: `${SITE.url}/#pricing`,
-    },
-    {
-      "@type": "Offer",
-      name: "寬數週練｜按年",
-      price: SITE.yearlyPrice,
-      priceCurrency: "TWD",
-      url: `${SITE.url}/#pricing`,
-    },
-  ],
   sameAs: [SOCIAL.instagramUrl, SOCIAL.facebookUrl, SOCIAL.youtubeChannelUrl],
 };
 

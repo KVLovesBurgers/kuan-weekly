@@ -178,7 +178,7 @@ export default async function SamplePage({
                         </div>
                       </>
                     ) : (
-                      <p className="muted" style={{ margin: "4px 0 0" }}>完整試用已經結束。下面的公開試閱還是可以看；想每週練，往下看訂閱方式。</p>
+                      <p className="muted" style={{ margin: "4px 0 0" }}>完整試用已經結束。下面的公開試閱還是可以看。</p>
                     )}
                   </div>
                 ) : null}
@@ -203,14 +203,7 @@ export default async function SamplePage({
                     <li>錯的題目看該題的步驟拆解，請孩子講給你聽，講不出來的那一步就是卡住的地方。</li>
                     <li>每題附常見錯誤，對照看孩子是觀念不懂還是粗心，下週題本會針對這裡加練。</li>
                   </ol>
-                  <p className="muted" style={{ margin: "12px 0 0", fontSize: 14 }}>
-                    方案：{SITE.currency}
-                    {money(SITE.monthlyPrice)} /月，或年繳 {SITE.currency}
-                    {money(SITE.yearlyPrice)}，每位孩子計價。付款方式是銀行匯款：登記後會看到匯款帳號，匯款後把轉帳證明寄到 {BANK_TRANSFER.proofEmail}，確認入帳約 1 個工作天開通。
-                  </p>
-                  <p style={{ margin: "8px 0 0" }}>
-                    <a href="#subscribe" className="u">往下看訂閱與匯款步驟</a>
-                  </p>
+
                 </div>
               </>
             ) : (
@@ -291,6 +284,23 @@ export default async function SamplePage({
             </figure>
           </div>
 
+          {unlocked && !order ? (
+            <section id="subscribe" className="card next-step" style={{ marginTop: 36, scrollMarginTop: 80 }} aria-labelledby="next-step-title">
+              <div style={{ width: "100%" }}>
+                <p className="kicker">看完試閱之後</p>
+                <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 8px" }}>
+                  免費寄這週的週練題本
+                </h2>
+                <p style={{ margin: "0 0 12px" }}>回信告訴我孩子的年級和這次段考範圍，我免費寄這週的週練題本給您。</p>
+                <a
+                  className="btn btn-ink"
+                  href={`mailto:${SITE.contactEmail}?subject=${encodeURIComponent("寬數週練｜索取本週題本")}&body=${encodeURIComponent("老師您好，\n\n孩子年級：\n這次段考範圍：\n")}`}
+                >
+                  回信告訴老師
+                </a>
+              </div>
+            </section>
+          ) : (
           <section id="subscribe" className="card next-step" style={{ marginTop: 36, scrollMarginTop: 80 }} aria-labelledby="next-step-title">
             {order ? (
               <div style={{ width: "100%" }}>
@@ -409,6 +419,7 @@ export default async function SamplePage({
               </>
             )}
           </section>
+          )}
 
           <div className="card" style={{ marginTop: 20 }}>
             <h2 className="display" style={{ fontSize: 22, margin: "0 0 8px" }}>

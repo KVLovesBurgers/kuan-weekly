@@ -32,6 +32,29 @@ function CtaPair({ full }: { full: boolean }) {
   );
 }
 
+const offersLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: SITE.name,
+  url: SITE.url,
+  makesOffer: [
+    {
+      "@type": "Offer",
+      name: "寬數週練｜按月",
+      price: SITE.monthlyPrice,
+      priceCurrency: "TWD",
+      url: `${SITE.url}/#pricing`,
+    },
+    {
+      "@type": "Offer",
+      name: "寬數週練｜按年",
+      price: SITE.yearlyPrice,
+      priceCurrency: "TWD",
+      url: `${SITE.url}/#pricing`,
+    },
+  ],
+};
+
 export default async function HomePage() {
   const remaining = await cachedSeatsRemaining();
   const full = remaining <= 0;
@@ -41,6 +64,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offersLd) }} />
       <Header />
       <main id="main">
         <Suspense fallback={null}>
