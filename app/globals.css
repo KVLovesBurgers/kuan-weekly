@@ -607,3 +607,8 @@ picture { display: contents; }
 .quiz-stem .katex-display, .mock-group .katex-display { overflow-x: auto; overflow-y: hidden; }
 .quiz-stem, .quiz-opt, .mock-optlist li { overflow-wrap: anywhere; }
 .nobr { white-space: nowrap; }
+
+/* PaidNext（/diag、/mock 結果頁下一步） */
+.paid-next { margin-top: 20px; display: grid; gap: 10px; border: 2px solid var(--ink); }
+.paid-next-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.paid-next-btns .btn { min-height: 48px; flex: 1 1 200px; justify-content: center; gap: 8px; display: inline-flex; align-items: center; }
