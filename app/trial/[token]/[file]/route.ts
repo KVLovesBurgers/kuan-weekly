@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
 import { getDb } from "@/lib/db";
+import { diagGrantKind } from "@/lib/diag";
 import { packsForGrade, scopeKind, trialActive, trialEndLabel, verifyTrialToken } from "@/lib/trial";
 
 export const runtime = "nodejs";
@@ -30,6 +31,11 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string;
     .prepare("SELECT 1 AS ok FROM lead_followups f JOIN leads l ON l.email = f.email WHERE l.id = ? AND f.kind = ? AND f.status = 'sent'")
     .get(leadId, scopeKind(m[1]));
   if (scoped) return sendPdf(m[1], m[2]);
+  // 段考弱點檢測留信箱開通的免費一週（不寄信，頁面直接給連結）。
+  const diag = await db
+    .prepare("SELECT 1 AS ok FROM lead_followups f JOIN leads l ON l.email = f.email WHERE l.id = ? AND f.kind = ? AND f.status = 'granted'")
+    .get(leadId, diagGrantKind(m[1]));
+  if (diag) return sendPdf(m[1], m[2]);
   if (!packsForGrade(lead.grade).some((p) => p.id === m[1])) return page("連結無效", "<p>這份不在你的試用範圍內。</p>", 404);
   if (!trialActive(lead)) {
     return page(

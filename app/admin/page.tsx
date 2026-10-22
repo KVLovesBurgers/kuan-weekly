@@ -47,7 +47,7 @@ export default async function AdminHome({
     .all()) as { email: string; subject: string; score: number; total: number; src: string; created_at: string }[];
   const fDays = sp.fdays === "28" ? 28 : 7;
   const funnel = await funnelBySrc(db, fDays);
-  const fTot = funnel.reduce((t, r) => ({ qi: t.qi + r.quizIn, ql: t.ql + r.quizLead, si: t.si + r.sampleIn, sl: t.sl + r.sampleLead }), { qi: 0, ql: 0, si: 0, sl: 0 });
+  const fTot = funnel.reduce((t, r) => ({ qi: t.qi + r.quizIn, ql: t.ql + r.quizLead, si: t.si + r.sampleIn, sl: t.sl + r.sampleLead, di: t.di + r.diagIn, dl: t.dl + r.diagLead }), { qi: 0, ql: 0, si: 0, sl: 0, di: 0, dl: 0 });
   const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
   const events = (await db
     .prepare(
@@ -205,25 +205,25 @@ export default async function AdminHome({
           <p className="muted">
             期間：{fDays === 7 ? <strong>7 天</strong> : <Link href="/admin?fdays=7#funnel">7 天</Link>}　｜　{fDays === 28 ? <strong>28 天</strong> : <Link href="/admin?fdays=28#funnel">28 天</Link>}
           </p>
-          <p className="muted" style={{ fontSize: 14 }}>進入＝頁面瀏覽次數（匿名，重新整理會重複算）。留資料＝/quiz 交卷留信箱（同信箱算一次）、/sample 第一次留信箱。已排除測試信箱與測試來源（test、box、demo、sample-track）。</p>
+          <p className="muted" style={{ fontSize: 14 }}>進入＝頁面瀏覽次數（匿名，重新整理會重複算）。留資料＝/quiz 交卷留信箱（同信箱算一次）、/sample 第一次留信箱、/diag 段考檢測留信箱（同信箱算一次）。已排除測試信箱與測試來源（test、box、demo、sample-track）。</p>
           <div style={{ overflowX: "auto" }}>
             <table className="table">
               <thead>
-                <tr><th>來源 src</th><th>/quiz 進入</th><th>/quiz 留資料</th><th>/quiz 轉換率</th><th>/sample 進入</th><th>/sample 留資料</th><th>/sample 轉換率</th></tr>
+                <tr><th>來源 src</th><th>/quiz 進入</th><th>/quiz 留資料</th><th>/quiz 轉換率</th><th>/sample 進入</th><th>/sample 留資料</th><th>/sample 轉換率</th><th>/diag 進入</th><th>/diag 留資料</th><th>/diag 轉換率</th></tr>
               </thead>
               <tbody>
                 {funnel.length === 0 ? (
-                  <tr><td colSpan={7} className="muted">這段期間還沒有資料。</td></tr>
+                  <tr><td colSpan={10} className="muted">這段期間還沒有資料。</td></tr>
                 ) : (
                   funnel.map((r) => (
                     <tr key={r.src}>
                       <td>{r.src}</td><td>{r.quizIn}</td><td>{r.quizLead}</td><td>{rate(r.quizLead, r.quizIn)}</td>
-                      <td>{r.sampleIn}</td><td>{r.sampleLead}</td><td>{rate(r.sampleLead, r.sampleIn)}</td>
+                      <td>{r.sampleIn}</td><td>{r.sampleLead}</td><td>{rate(r.sampleLead, r.sampleIn)}</td><td>{r.diagIn}</td><td>{r.diagLead}</td><td>{rate(r.diagLead, r.diagIn)}</td>
                     </tr>
                   ))
                 )}
                 <tr style={{ fontWeight: 700 }}>
-                  <td>合計</td><td>{fTot.qi}</td><td>{fTot.ql}</td><td>{rate(fTot.ql, fTot.qi)}</td><td>{fTot.si}</td><td>{fTot.sl}</td><td>{rate(fTot.sl, fTot.si)}</td>
+                  <td>合計</td><td>{fTot.qi}</td><td>{fTot.ql}</td><td>{rate(fTot.ql, fTot.qi)}</td><td>{fTot.si}</td><td>{fTot.sl}</td><td>{rate(fTot.sl, fTot.si)}</td><td>{fTot.di}</td><td>{fTot.dl}</td><td>{rate(fTot.dl, fTot.di)}</td>
                 </tr>
               </tbody>
             </table>
@@ -237,7 +237,7 @@ export default async function AdminHome({
           <ul>
             {events.map((e) => (
               <li key={`${e.kind}-${e.target}-${e.source}`}>
-                {({ unit_view: "單元包頁瀏覽", units_view: "單元包列表瀏覽", unit_pdf: "單元包 PDF 下載", sample_pdf: "試閱 PDF 下載", share_click: "傳給爸媽看", quiz_view: "小卷頁進入", sample_view: "試閱頁進入" } as Record<string, string>)[e.kind] ?? e.kind} · {e.target || "-"} · 來源 {e.source || "direct"} · {Number(e.n)} 次
+                {({ unit_view: "單元包頁瀏覽", units_view: "單元包列表瀏覽", unit_pdf: "單元包 PDF 下載", sample_pdf: "試閱 PDF 下載", share_click: "傳給爸媽看", quiz_view: "小卷頁進入", sample_view: "試閱頁進入", diag_view: "段考檢測頁進入", diag_start: "段考檢測開始作答", diag_submit: "段考檢測交卷" } as Record<string, string>)[e.kind] ?? e.kind} · {e.target || "-"} · 來源 {e.source || "direct"} · {Number(e.n)} 次
               </li>
             ))}
           </ul>

@@ -573,3 +573,15 @@ picture { display: contents; }
 .katex { font-size: 1.05em; }
 .quiz-recs { margin-top: 12px; } .quiz-recs ul { padding-left: 1.2em; } .quiz-recs li { margin: 6px 0; }
 .scope-form { display: grid; gap: 12px; } .scope-form label { display: grid; gap: 4px; font-size: 15px; } .scope-form select, .scope-form input { font-size: 16px; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.2); }
+/* 段考弱點檢測 /diag */
+.diag-h { font-size: 18px; margin: 20px 0 0; }
+.diag-progress { height: 4px; background: var(--line); border-radius: 2px; margin: 10px 0 14px; overflow: hidden; }
+.diag-progress span { display: block; height: 100%; background: var(--ink); transition: width .2s; }
+.diag-nav { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin: 16px 0; }
+.diag-nav .btn { padding: 14px; font-size: 17px; }
+.diag-nav .btn:disabled { opacity: .4; }
+.diag-role { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.diag-pack p { margin: 0 0 8px; }
+.diag-pack-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.diag-pack-btns .btn { text-align: center; padding: 12px 8px; }
+.quiz-opt .katex { font-size: 1.05em; }
