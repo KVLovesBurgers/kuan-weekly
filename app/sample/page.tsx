@@ -5,7 +5,8 @@ import { Footer } from "@/components/Footer";
 import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
 import { ShareToParents } from "@/components/ShareToParents";
-import { SamplePdfLink } from "@/components/Tracking";
+import { SamplePdfLink, TrackView } from "@/components/Tracking";
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { getParent } from "@/lib/auth";
 import { startSampleCheckout, submitSampleLead, submitScopeChoice } from "@/app/actions/lead";
@@ -121,6 +122,12 @@ export default async function SamplePage({
   return (
     <>
       <Header parentEmail={parent?.email} />
+      {/* 只算進入：表單送出後的回跳（ok／error／trade／scope／lead）不重複計數 */}
+      {!one(sp.ok) && !error && !tradeParam && !scope && !one(sp.lead) && (
+        <Suspense fallback={null}>
+          <TrackView kind="sample_view" />
+        </Suspense>
+      )}
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 880 }}>
           <p className="kicker">題本試閱 · 7 天完整試用</p>

@@ -6,7 +6,7 @@ import { cleanSrc } from "@/lib/leads";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const KINDS = new Set(["unit_view", "units_view", "unit_pdf", "sample_pdf", "share_click"]);
+const KINDS = new Set(["unit_view", "units_view", "unit_pdf", "sample_pdf", "share_click", "quiz_view", "sample_view"]);
 
 /** 匿名來源統計：只記事件種類、對象與 src，不記個資。 */
 export async function POST(req: Request) {

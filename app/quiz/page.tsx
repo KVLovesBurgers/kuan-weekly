@@ -3,6 +3,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { QuizClient } from "@/components/QuizClient";
 import { publicQuestions } from "@/lib/quiz";
+import { Suspense } from "react";
+import { TrackView } from "@/components/Tracking";
 
 export const metadata: Metadata = {
   title: "免費學測數學線上小卷｜數A・數B 各 10 題｜寬數週練",
@@ -29,6 +31,9 @@ export default function QuizPage() {
   return (
     <>
       <Header />
+      <Suspense fallback={null}>
+        <TrackView kind="quiz_view" />
+      </Suspense>
       <main id="main" className="section">
         <div className="wrap quiz-wrap">
           <QuizClient sets={{ 數A: publicQuestions("數A"), 數B: publicQuestions("數B") }} />

@@ -5,6 +5,7 @@ import { ConfirmDelete } from "@/components/ConfirmDelete";
 import { adminLogout, activateChild, createWeek, deleteLead, deleteQuizResults, deleteChild } from "@/app/actions/admin";
 import { getDb, paidSeatCount, seatsRemaining, type ChildRow, type FeedbackRow } from "@/lib/db";
 import { listWeeks, pdfsForWeek } from "@/lib/weeks";
+import { funnelBySrc, rate } from "@/lib/funnel";
 import { COMPLETION_OPTIONS, DIFFICULTY_OPTIONS, seatCap } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
@@ -44,6 +45,9 @@ export default async function AdminHome({
   const quizRows = (await db
     .prepare("SELECT email, subject, score, total, src, created_at FROM quiz_results ORDER BY created_at DESC LIMIT 200")
     .all()) as { email: string; subject: string; score: number; total: number; src: string; created_at: string }[];
+  const fDays = sp.fdays === "28" ? 28 : 7;
+  const funnel = await funnelBySrc(db, fDays);
+  const fTot = funnel.reduce((t, r) => ({ qi: t.qi + r.quizIn, ql: t.ql + r.quizLead, si: t.si + r.sampleIn, sl: t.sl + r.sampleLead }), { qi: 0, ql: 0, si: 0, sl: 0 });
   const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
   const events = (await db
     .prepare(
@@ -196,6 +200,36 @@ export default async function AdminHome({
           </ul>
         </section>
 
+        <section style={{ marginTop: 40 }} id="funnel">
+          <h2 className="display">漏斗統計（依 ?src= 來源，最近 {fDays} 天）</h2>
+          <p className="muted">
+            期間：{fDays === 7 ? <strong>7 天</strong> : <Link href="/admin?fdays=7#funnel">7 天</Link>}　｜　{fDays === 28 ? <strong>28 天</strong> : <Link href="/admin?fdays=28#funnel">28 天</Link>}
+          </p>
+          <p className="muted" style={{ fontSize: 14 }}>進入＝頁面瀏覽次數（匿名，重新整理會重複算）。留資料＝/quiz 交卷留信箱（同信箱算一次）、/sample 第一次留信箱。已排除測試信箱與測試來源（test、box、demo、sample-track）。</p>
+          <div style={{ overflowX: "auto" }}>
+            <table className="table">
+              <thead>
+                <tr><th>來源 src</th><th>/quiz 進入</th><th>/quiz 留資料</th><th>/quiz 轉換率</th><th>/sample 進入</th><th>/sample 留資料</th><th>/sample 轉換率</th></tr>
+              </thead>
+              <tbody>
+                {funnel.length === 0 ? (
+                  <tr><td colSpan={7} className="muted">這段期間還沒有資料。</td></tr>
+                ) : (
+                  funnel.map((r) => (
+                    <tr key={r.src}>
+                      <td>{r.src}</td><td>{r.quizIn}</td><td>{r.quizLead}</td><td>{rate(r.quizLead, r.quizIn)}</td>
+                      <td>{r.sampleIn}</td><td>{r.sampleLead}</td><td>{rate(r.sampleLead, r.sampleIn)}</td>
+                    </tr>
+                  ))
+                )}
+                <tr style={{ fontWeight: 700 }}>
+                  <td>合計</td><td>{fTot.qi}</td><td>{fTot.ql}</td><td>{rate(fTot.ql, fTot.qi)}</td><td>{fTot.si}</td><td>{fTot.sl}</td><td>{rate(fTot.sl, fTot.si)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <section style={{ marginTop: 40 }}>
           <h2 className="display">來源統計（最近 30 天）</h2>
           <p className="muted">試閱留信箱：{leadSrc.length ? leadSrc.map((r) => `${r.source || "direct"} ${Number(r.n)}`).join("、") : "無"}</p>
@@ -203,7 +237,7 @@ export default async function AdminHome({
           <ul>
             {events.map((e) => (
               <li key={`${e.kind}-${e.target}-${e.source}`}>
-                {({ unit_view: "單元包頁瀏覽", units_view: "單元包列表瀏覽", unit_pdf: "單元包 PDF 下載", sample_pdf: "試閱 PDF 下載", share_click: "傳給爸媽看" } as Record<string, string>)[e.kind] ?? e.kind} · {e.target || "-"} · 來源 {e.source || "direct"} · {Number(e.n)} 次
+                {({ unit_view: "單元包頁瀏覽", units_view: "單元包列表瀏覽", unit_pdf: "單元包 PDF 下載", sample_pdf: "試閱 PDF 下載", share_click: "傳給爸媽看", quiz_view: "小卷頁進入", sample_view: "試閱頁進入" } as Record<string, string>)[e.kind] ?? e.kind} · {e.target || "-"} · 來源 {e.source || "direct"} · {Number(e.n)} 次
               </li>
             ))}
           </ul>
