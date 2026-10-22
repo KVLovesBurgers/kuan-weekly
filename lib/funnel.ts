@@ -5,7 +5,7 @@ export function isTestSrc(src: string) {
   return /(^|[-_])(test|boxtest|box|demo|sample-track|qa)([-_]|$)/.test(src) || /test/.test(src);
 }
 
-export type FunnelRow = { src: string; quizIn: number; quizLead: number; sampleIn: number; sampleLead: number; diagIn: number; diagLead: number };
+export type FunnelRow = { src: string; quizIn: number; quizLead: number; sampleIn: number; sampleLead: number; diagIn: number; diagLead: number; mockIn: number; mockLead: number };
 
 type Db = { prepare: (sql: string) => { all: (...a: unknown[]) => Promise<unknown[]> | unknown[] } };
 
@@ -18,15 +18,15 @@ type Db = { prepare: (sql: string) => { all: (...a: unknown[]) => Promise<unknow
 export async function funnelBySrc(db: Db, days: number, now = Date.now()): Promise<FunnelRow[]> {
   const since = new Date(now - days * 86400000).toISOString();
   const views = (await db
-    .prepare("SELECT kind, source, COUNT(*) AS n FROM site_events WHERE kind IN ('quiz_view','sample_view','diag_view') AND created_at >= ? GROUP BY kind, source")
+    .prepare("SELECT kind, source, COUNT(*) AS n FROM site_events WHERE kind IN ('quiz_view','sample_view','diag_view','mock_view') AND created_at >= ? GROUP BY kind, source")
     .all(since)) as { kind: string; source: string; n: number }[];
   const quiz = (await db.prepare("SELECT email, src, subject FROM quiz_results WHERE created_at >= ?").all(since)) as { email: string; src: string; subject: string }[];
-  const leads = (await db.prepare("SELECT email, source FROM leads WHERE created_at >= ? AND source <> 'quiz' AND utm NOT LIKE 'diag=%'").all(since)) as { email: string; source: string }[];
+  const leads = (await db.prepare("SELECT email, source FROM leads WHERE created_at >= ? AND source <> 'quiz' AND utm NOT LIKE 'diag=%' AND utm NOT LIKE 'mock=%'").all(since)) as { email: string; source: string }[];
 
   const rows = new Map<string, FunnelRow>();
   const row = (src: string) => {
     const k = src || "direct";
-    if (!rows.has(k)) rows.set(k, { src: k, quizIn: 0, quizLead: 0, sampleIn: 0, sampleLead: 0, diagIn: 0, diagLead: 0 });
+    if (!rows.has(k)) rows.set(k, { src: k, quizIn: 0, quizLead: 0, sampleIn: 0, sampleLead: 0, diagIn: 0, diagLead: 0, mockIn: 0, mockLead: 0 });
     return rows.get(k)!;
   };
   for (const v of views) {
@@ -34,12 +34,20 @@ export async function funnelBySrc(db: Db, days: number, now = Date.now()): Promi
     const r = row(v.source);
     if (v.kind === "quiz_view") r.quizIn += Number(v.n);
     else if (v.kind === "diag_view") r.diagIn += Number(v.n);
+    else if (v.kind === "mock_view") r.mockIn += Number(v.n);
     else r.sampleIn += Number(v.n);
   }
   const seenQuiz = new Set<string>();
   const seenDiag = new Set<string>();
+  const seenMock = new Set<string>();
   for (const q of quiz) {
     const e = q.email.trim().toLowerCase();
+    if (String(q.subject).startsWith("mock-")) {
+      if (isTestAddress(e) || isTestSrc(q.src) || seenMock.has(e)) continue;
+      seenMock.add(e);
+      row(q.src).mockLead++;
+      continue;
+    }
     const isDiag = String(q.subject).startsWith("diag-");
     const seen = isDiag ? seenDiag : seenQuiz;
     if (isTestAddress(e) || isTestSrc(q.src) || seen.has(e)) continue;

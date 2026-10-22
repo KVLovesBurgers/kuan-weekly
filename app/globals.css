@@ -585,3 +585,24 @@ picture { display: contents; }
 .diag-pack-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .diag-pack-btns .btn { text-align: center; padding: 12px 8px; }
 .quiz-opt .katex { font-size: 1.05em; }
+/* /mock 學測模擬考 */
+.mock-when { padding: 14px 16px; margin: 16px 0; }
+.mock-when p { margin: 0 0 4px; }
+.mock-rules { color: var(--muted); font-size: 14px; line-height: 1.8; padding-left: 1.2em; }
+.mock-timer { font-variant-numeric: tabular-nums; }
+.mock-timer.warn { color: var(--danger); }
+.mock-nav { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin: 10px 0 14px; }
+.mock-nav button { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-raised); font-size: 15px; cursor: pointer; color: var(--ink); }
+.mock-nav button.done { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.mock-nav button.cur { box-shadow: 0 0 0 2px var(--steel-deep); }
+.mock-group { background: var(--paper); border-radius: 8px; padding: 10px 12px; font-size: 15px; line-height: 1.8; margin: 0 0 10px; }
+.mock-fill { display: grid; gap: 8px; }
+.mock-cells { display: flex; flex-wrap: wrap; gap: 8px; }
+.mock-cells label { display: grid; justify-items: center; gap: 2px; font-size: 12px; color: var(--muted); }
+.mock-cells input { width: 48px; height: 52px; text-align: center; font-size: 22px; border: 1px solid var(--line); border-radius: 10px; padding: 0; }
+.mock-level { font-size: 18px; margin: 0 0 8px; }
+.mock-level .quiz-note { display: block; }
+.mock-optlist { list-style: none; padding: 0; margin: 0 0 8px; font-size: 15px; line-height: 1.8; }
+.mock-early { width: 100%; margin: 0 0 16px; }
+.quiz-stem .katex-display, .mock-group .katex-display { overflow-x: auto; overflow-y: hidden; }
+.quiz-stem, .quiz-opt, .mock-optlist li { overflow-wrap: anywhere; }
