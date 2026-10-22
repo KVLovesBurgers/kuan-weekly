@@ -1,5 +1,6 @@
 "use client";
 
+import { PaidNext } from "@/components/PaidNext";
 import { useEffect, useState, useTransition } from "react";
 import { scoreDiag, unlockDiag, type DiagUnlock } from "@/app/actions/diag";
 import { currentOrFirstTouch } from "@/lib/first-touch";
@@ -136,6 +137,8 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
             </div>
           ) : null}
         </div>
+
+        <PaidNext track={set.level === "高中" ? "gsat" : "jh"} label={set.label} weak={score.weak} src="diag-result" />
 
         {!unlocked ? (
           <form className="quiz-submit card" onSubmit={onUnlock} id="unlock">
