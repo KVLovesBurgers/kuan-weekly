@@ -1,4 +1,5 @@
 import type { Lesson } from "@/lib/unit-lessons";
+import { LEARN_PAGES_3 } from "@/lib/learn-pages-3";
 
 /** 關鍵字詳解頁（/learn/<slug>）：每頁對準一個搜尋關鍵字，詳解直接放在網頁上。 */
 export type LearnPage = {
@@ -264,6 +265,8 @@ export const LEARN_PAGES: LearnPage[] = [
     related: [
       { href: "/units/jh-mult", label: "乘法公式：免費練習題附詳解" },
       { href: "/diag?src=learn-diffsq", label: "免費段考弱點檢測：8 題找出最弱的單元" },
+      { href: "https://www.youtube.com/shorts/ktSZbvUoT7s", label: "延伸短片：平方差為什麼是 a²−b²？挖一角拼長方形" },
+      { href: "/learn/perfect-square-formula", label: "(a+b)² 和的平方詳解" },
       { href: "/learn/similar-triangles", label: "會考數學相似形詳解" },
     ],
     updated: "2026-10-23",
@@ -407,6 +410,7 @@ export const LEARN_PAGES: LearnPage[] = [
       ],
     },
   },
+  ...LEARN_PAGES_3,
 ];
 
 export const findLearnPage = (slug: string) => LEARN_PAGES.find((p) => p.slug === slug);

@@ -21,6 +21,7 @@ function plain(s: string): string {
     .replace(/\\overrightarrow\{([^}]*)\}/g, "向量$1").replace(/\\vec\s*([a-z])/g, "向量$1").replace(/\\overline\{([^}]*)\}/g, "$1")
     .replace(/\\text\{([^}]*)\}/g, "$1").replace(/\\mid/g, "|").replace(/\\cap/g, "∩").replace(/\\perp/g, "⊥").replace(/\\parallel/g, "∥")
     .replace(/\\sim/g, "∼").replace(/\\triangle\s*/g, "△").replace(/\\angle\s*/g, "∠").replace(/\^\\circ/g, "°").replace(/\\cos/g, "cos").replace(/\\sin/g, "sin").replace(/\\tan/g, "tan").replace(/\\cdots/g, "…").replace(/\\neq/g, "≠")
+    .replace(/\\overset\{\\frown\}\{([^}]*)\}/g, "弧$1").replace(/\\log/g, "log").replace(/\\pi/g, "π").replace(/\\div/g, "÷").replace(/\\pm/g, "±").replace(/\\dots/g, "…").replace(/\\approx/g, "≈").replace(/\\alpha/g, "α").replace(/\\beta/g, "β").replace(/\\Delta\s*/g, "Δ").replace(/\\to/g, "→").replace(/\\le(?![a-z])/g, "≤")
     .replace(/\\theta/g, "θ").replace(/\\times/g, "×").replace(/\\cdot/g, "·").replace(/\\%/g, "%")
     .replace(/\\(left|right|,|\s)/g, "").replace(/[$\\{}]/g, "");
 }
@@ -98,7 +99,7 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
       <Header />
       <main id="main" className="section practice-page">
         <div className="wrap" style={{ maxWidth: 760 }}>
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/√/g, "根號").replace(/</g, "\\u003c") }} />
           <nav className="kicker" aria-label="breadcrumb">
             <Link href="/">寬數週練</Link> / <Link href="/units">單元詳解</Link>
           </nav>
