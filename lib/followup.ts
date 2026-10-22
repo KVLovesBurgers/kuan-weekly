@@ -62,6 +62,23 @@ const MIN_AGE_MS = 24 * 60 * 60 * 1000;
 const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 export const FOLLOWUP_BATCH_LIMIT = 40;
 
+/** /sample 留信箱＝申請試用；記在 lead_followups（kind＝trial_apply），讓先做模擬考、後來才申請試用的人也算。 */
+export const TRIAL_APPLY_KIND = "trial_apply";
+
+/**
+ * 「申請過試用」才收試用跟進信（trial_d1／trial_d6）。以下任一成立即算：
+ * 1. 名單不是由 /mock 建立（/sample、/quiz、/diag 等原本流程建立的名單，行為不變）；
+ *    /mock 建立名單時 leads.created_at 與該筆 mock- 成績的 created_at 相同，用這點辨認。
+ * 2. 有任何非模擬考的作答紀錄（/quiz、/diag）。
+ * 3. 之後在 /sample 申請過試用（lead_followups.kind＝trial_apply）。
+ * 只留模擬考 Email 的人三項都不成立，不寄。
+ */
+export const APPLIED_TRIAL_SQL = `(
+           NOT EXISTS (SELECT 1 FROM quiz_results qm WHERE qm.email = l.email AND qm.subject LIKE 'mock-%' AND qm.created_at = l.created_at)
+           OR EXISTS (SELECT 1 FROM quiz_results qo WHERE qo.email = l.email AND qo.subject NOT LIKE 'mock-%')
+           OR EXISTS (SELECT 1 FROM lead_followups fa WHERE fa.email = l.email AND fa.kind = '${TRIAL_APPLY_KIND}')
+         )`;
+
 /** 測試／自家／示範信箱一律不寄。 */
 export function isTestAddress(email: string) {
   const e = email.trim().toLowerCase();
@@ -84,6 +101,7 @@ export async function eligibleFollowupLeads(db: KuanDb, now = new Date()) {
     .prepare(
       `SELECT l.email AS email, l.created_at AS created_at, l.role AS role, l.grade AS grade FROM leads l
        WHERE l.created_at <= ? AND l.created_at >= ?
+         AND ${APPLIED_TRIAL_SQL}
          AND NOT EXISTS (SELECT 1 FROM lead_followups f WHERE f.email = l.email AND f.kind = ? AND f.status <> 'failed')
          AND NOT EXISTS (SELECT 1 FROM email_optouts o WHERE o.email = l.email)
          AND NOT EXISTS (
@@ -164,6 +182,7 @@ export async function eligibleTrialReminders(db: KuanDb, now = new Date()) {
     .prepare(
       `SELECT l.id AS id, l.email AS email, l.created_at AS created_at, l.role AS role, l.grade AS grade FROM leads l
        WHERE l.created_at >= ?
+         AND ${APPLIED_TRIAL_SQL}
          AND NOT EXISTS (SELECT 1 FROM lead_followups f WHERE f.email = l.email AND f.kind = ? AND f.status <> 'failed')
          AND NOT EXISTS (SELECT 1 FROM email_optouts o WHERE o.email = l.email)
          AND NOT EXISTS (
