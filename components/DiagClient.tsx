@@ -127,7 +127,7 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
             ))}
           </ul>
           <p className="quiz-weak">
-            {score.weak.length ? <>弱點單元：<strong>{score.weak.join("、")}</strong>。段考前建議先從這幾個單元補起。</> : "每個單元都答對了，段考前維持練習手感就好。"}
+            {score.weak.length ? <>弱點單元：<strong>{score.weak.join("、")}</strong>。段考前建議先從{score.weak.length === 1 ? "這個" : "這幾個"}單元補起。</> : "每個單元都答對了，段考前維持練習手感就好。"}
           </p>
           {recs.length ? (
             <div className="quiz-recs">
@@ -206,7 +206,7 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
       <div className="quiz-bar">
         <button type="button" className="quiz-back" onClick={() => setSetId("")}>換年級</button>
         <strong>{set.label}段考檢測</strong>
-        <span>{answered}/{qs.length}</span>
+        <span>已答 {answered}/{qs.length}</span>
       </div>
       <div className="diag-progress" aria-hidden><span style={{ width: `${((idx + 1) / qs.length) * 100}%` }} /></div>
       <div className="quiz-q card" key={q.id}>
