@@ -11,6 +11,9 @@ import { TrackView } from "@/components/Tracking";
 import { PackCard, SheetCard } from "@/components/UnitSheets";
 import { UnitLesson, plain } from "@/components/UnitLesson";
 import { UNIT_LESSONS } from "@/lib/unit-lessons";
+import { LEARN_PAGES } from "@/lib/learn-pages";
+
+const UNIT_LEARN: Record<string, string> = { prob: "conditional-probability", vector: "vector-dot-product", "jh-circle": "similar-triangles" };
 import "katex/dist/katex.min.css";
 
 export const revalidate = 60;
@@ -107,6 +110,14 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
 
           <ShareToParents path={`/units/${u.slug}`} topic={u.title} />
 
+          {UNIT_LEARN[u.slug] && (() => {
+            const lp = LEARN_PAGES.find((x) => x.slug === UNIT_LEARN[u.slug]);
+            return lp ? (
+              <p style={{ marginTop: 24 }}>
+                延伸詳解：<Link href={`/learn/${lp.slug}`} className="practice-cta-link">{lp.h1}</Link>
+              </p>
+            ) : null;
+          })()}
           <p className="muted" style={{ marginTop: 24, fontSize: 14 }}>
             其他單元的練習題都在 <Link href="/units" className="practice-cta-link">免費練習題・單元包</Link>。
           </p>
