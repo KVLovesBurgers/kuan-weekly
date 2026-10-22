@@ -6,6 +6,17 @@ import { submitQuiz } from "@/app/actions/quiz";
 import { currentOrFirstTouch } from "@/lib/first-touch";
 import type { PublicQuestion, QuizResult, QuizSubject } from "@/lib/quiz";
 
+/** 小卷單元 → 單元詳解頁。 */
+const QUIZ_UNIT_PAGE: Record<string, { slug: string; name: string }> = {
+  指數對數: { slug: "gsat-log", name: "指數與對數" },
+  排列組合: { slug: "prob", name: "排列組合與機率" },
+  機率: { slug: "prob", name: "排列組合與機率" },
+  三角: { slug: "trig", name: "三角函數" },
+  向量: { slug: "vector", name: "向量" },
+  數列: { slug: "series", name: "數列與級數" },
+  直線與圓: { slug: "circle-eq", name: "圓方程式" },
+};
+
 const IG_DM = "https://ig.me/m/saber_math";
 
 function readSrc(): string {
@@ -123,6 +134,21 @@ function QuizResultView({ result, saved, onRetry }: { result: QuizResult; saved:
         <p className="quiz-weak">
           {result.weak.length ? <>弱點單元：<strong>{result.weak.join("、")}</strong>，建議先從這幾個單元補起。</> : "這次每個單元都答對了，可以挑戰完整一回。"}
         </p>
+        {(() => {
+          const recs = [...new Map(result.weak.map((w) => QUIZ_UNIT_PAGE[w]).filter(Boolean).map((r) => [r.slug, r] as const)).values()];
+          return recs.length ? (
+            <div className="quiz-recs">
+              <p>先看這幾個單元的詳解：</p>
+              <ul>
+                {recs.map((r) => (
+                  <li key={r.slug}>
+                    <a className="u" href={`/units/${r.slug}?src=quiz-result`}>{r.name}：題目與完整詳解</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null;
+        })()}
       </div>
       <div className="card quiz-cta">
         <p>想練完整一回，私訊 IG @saber_math 留言「猜題卷」拿第 1 回選擇題試閱。</p>

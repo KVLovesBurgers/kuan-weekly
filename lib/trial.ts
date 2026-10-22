@@ -71,3 +71,20 @@ export function verifyTrialToken(tok: string) {
 export function trialUrl(base: string, leadId: string, packId: string, kind: "student" | "parent") {
   return `${base}/trial/${trialToken(leadId)}/${packId}-${kind}.pdf`;
 }
+
+/** /sample 留資料後選年級＋範圍：有對應週練包就自動寄（學生版＋家長版），沒有就交給老師手動回。 */
+export const SCOPE_GRADES = ["國一", "國二", "國三", "高一", "高二", "高三", "其他"] as const;
+export const SCOPE_OPTIONS: { value: string; label: string; grade: string; pack?: string }[] = [
+  { value: "g7_frac", label: "國一：因數倍數與分數運算", grade: "國一", pack: "g7_frac" },
+  { value: "g9_circle", label: "國三：圓", grade: "國三", pack: "g9_circle" },
+  { value: "g9_similar", label: "國三：相似形", grade: "國三", pack: "g9_similar" },
+  { value: "g12_log_A", label: "高三學測：指數與對數", grade: "高三", pack: "g12_log_A" },
+  { value: "g12_prob_B", label: "高三學測：排列組合與機率", grade: "高三", pack: "g12_prob_B" },
+  { value: "other", label: "其他範圍（老師親自回信）", grade: "" },
+];
+export const scopeKind = (packId: string) => `scope_${packId}`;
+/** 預覽版只能寄到自己的測試信箱；正式站不寄測試信箱。 */
+export function scopeMailAllowed(email: string, isTest: boolean) {
+  const prod = process.env.VERCEL_ENV === "production";
+  return prod ? !isTest : /^jjredick365\+[a-z0-9-]*test[a-z0-9-]*@gmail\.com$/i.test(email);
+}

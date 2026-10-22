@@ -9,6 +9,9 @@ import { UNIT_PACKS, findUnitPack, hasLivePack, unitOg, unitSheets } from "@/lib
 import { ShareToParents } from "@/components/ShareToParents";
 import { TrackView } from "@/components/Tracking";
 import { PackCard, SheetCard } from "@/components/UnitSheets";
+import { UnitLesson, plain } from "@/components/UnitLesson";
+import { UNIT_LESSONS } from "@/lib/unit-lessons";
+import "katex/dist/katex.min.css";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -22,8 +25,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const u = findUnitPack(slug);
   if (!u) return { title: "找不到這個單元｜Saber數學" };
   const n = unitSheets(u.slug).length + (hasLivePack(u) ? 1 : 0);
-  const title = `${u.title} 免費練習題：${n} 份附詳解｜Saber數學`;
-  const description = `${u.title.includes(u.level) ? "" : u.level}${u.title} 免費練習題，共 ${n} 份：${u.topic}。每份都有題目和逐步詳解，免費下載。`;
+  const L = UNIT_LESSONS[u.slug];
+  const title = L ? `學測${u.title} 5 題完整詳解與常見錯誤｜Saber數學` : `${u.title} 免費練習題：${n} 份附詳解｜Saber數學`;
+  const description = L ? `學測${u.title}：${u.topic}。5 題由淺到深的題目，網頁上直接看逐步詳解和常見錯誤，另附 PDF 免費下載。` : `${u.title.includes(u.level) ? "" : u.level}${u.title} 免費練習題，共 ${n} 份：${u.topic}。每份都有題目和逐步詳解，免費下載。`;
   return {
     title,
     description,
@@ -47,6 +51,33 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
   if (!u) notFound();
   const sheets = unitSheets(u.slug);
   const pack = hasLivePack(u);
+  const lesson = UNIT_LESSONS[u.slug];
+  const ld = lesson
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "LearningResource",
+          name: `學測${u.title} 5 題完整詳解`,
+          description: lesson.intro,
+          inLanguage: "zh-TW",
+          educationalLevel: "高中",
+          learningResourceType: "練習題與詳解",
+          teaches: u.topic,
+          isAccessibleForFree: true,
+          url: `https://kuan-weekly.vercel.app/units/${u.slug}`,
+          provider: { "@type": "Person", name: "吳寬" },
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: lesson.problems.map((p) => ({
+            "@type": "Question",
+            name: plain(p.question),
+            acceptedAnswer: { "@type": "Answer", text: `${plain(p.steps.join(" "))} 答案：${plain(p.answer)}` },
+          })),
+        },
+      ]
+    : null;
 
   return (
     <>
@@ -64,6 +95,9 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
             {u.topic}。共 {sheets.length + (pack ? 1 : 0)} 份，每份都有題目和逐步詳解，先自己寫再對答案。
           </p>
 
+          {ld && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }} />}
+          {lesson && <UnitLesson lesson={lesson} slug={u.slug} />}
+          {lesson && <h2 className="lesson-pdf-h">PDF 下載</h2>}
           <ul className="practice-list">
             {pack && <PackCard u={u} />}
             {sheets.map((s) => (

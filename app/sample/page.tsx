@@ -8,7 +8,7 @@ import { ShareToParents } from "@/components/ShareToParents";
 import { SamplePdfLink } from "@/components/Tracking";
 import { cookies } from "next/headers";
 import { getParent } from "@/lib/auth";
-import { startSampleCheckout, submitSampleLead } from "@/app/actions/lead";
+import { startSampleCheckout, submitSampleLead, submitScopeChoice } from "@/app/actions/lead";
 import {
   cleanSrc,
   cleanTrack,
@@ -22,7 +22,7 @@ import {
   type SampleTrack,
 } from "@/lib/leads";
 import { getDb } from "@/lib/db";
-import { packsForGrade, trialActive, trialEndLabel, trialToken, isTrialLead } from "@/lib/trial";
+import { SCOPE_GRADES, SCOPE_OPTIONS, packsForGrade, trialActive, trialEndLabel, trialToken, isTrialLead } from "@/lib/trial";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { FirstTouchSrcFill } from "@/components/FirstTouch";
 import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote } from "@/lib/config";
@@ -64,6 +64,19 @@ export default async function SamplePage({
     utm_campaign: cleanUtm(one(sp.utm_campaign)),
   };
   const error = one(sp.error).slice(0, 80);
+  const scope = one(sp.scope);
+  const scopeMsg =
+    scope === "sent"
+      ? "已寄出，請到信箱收信。沒看到的話請看一下垃圾郵件匣。"
+      : scope === "manual"
+        ? "收到了，老師會親自回信給您這個範圍的題本。"
+        : scope === "preview"
+          ? "這是預覽版，不會寄信給任何人。正式站選完會自動寄出。"
+          : scope === "fail"
+            ? "寄送時出了點問題，請稍後再按一次，或直接寫信給老師。"
+            : scope === "err"
+              ? "請選年級和範圍。"
+              : "";
   const parent = await getParent();
   const jar = await cookies();
   const unlocked = jar.get(LEAD_COOKIE)?.value === "1" || Boolean(parent);
@@ -293,13 +306,38 @@ export default async function SamplePage({
                 <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 8px" }}>
                   免費寄這週的週練題本
                 </h2>
-                <p style={{ margin: "0 0 12px" }}>回信告訴我孩子的年級和這次段考範圍，我免費寄這週的週練題本給您。</p>
-                <a
-                  className="btn btn-ink"
-                  href={`mailto:${SITE.contactEmail}?subject=${encodeURIComponent("寬數週練｜索取本週題本")}&body=${encodeURIComponent("老師您好，\n\n孩子年級：\n這次段考範圍：\n")}`}
-                >
-                  回信告訴老師
-                </a>
+                {scopeMsg ? (
+                  <p role="status" style={{ margin: "0 0 12px", fontWeight: 600 }}>{scopeMsg}</p>
+                ) : (
+                  <p style={{ margin: "0 0 12px" }}>選孩子的年級和這次段考範圍，有對應的週練包會馬上寄到您留的信箱，學生題本和家長解答都有。</p>
+                )}
+                {scope !== "sent" && scope !== "manual" && (
+                  <form action={submitScopeChoice} className="form scope-form">
+                    <label>
+                      年級
+                      <select name="scope_grade" required defaultValue="">
+                        <option value="" disabled>請選擇</option>
+                        {SCOPE_GRADES.map((g) => (
+                          <option key={g} value={g}>{g}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      段考／學測範圍
+                      <select name="scope" required defaultValue="">
+                        <option value="" disabled>請選擇</option>
+                        {SCOPE_OPTIONS.map((o) => (
+                          <option key={o.value} value={o.value}>{o.label}</option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      補充（選填，例如學校進度）
+                      <input name="scope_note" maxLength={200} />
+                    </label>
+                    <button type="submit" className="btn btn-ink">寄免費第一週</button>
+                  </form>
+                )}
               </div>
             </section>
           ) : (

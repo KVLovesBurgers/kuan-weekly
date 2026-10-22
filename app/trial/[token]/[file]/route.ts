@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
 import { getDb } from "@/lib/db";
-import { packsForGrade, trialActive, trialEndLabel, verifyTrialToken } from "@/lib/trial";
+import { packsForGrade, scopeKind, trialActive, trialEndLabel, verifyTrialToken } from "@/lib/trial";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,6 +25,11 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string;
     | { id: string; grade: string; created_at: string }
     | undefined;
   if (!lead) return page("連結無效", "<p>找不到這份試用。</p>", 404);
+  // 選範圍寄出的免費第一週：有寄送紀錄就直接給檔案。
+  const scoped = await db
+    .prepare("SELECT 1 AS ok FROM lead_followups f JOIN leads l ON l.email = f.email WHERE l.id = ? AND f.kind = ? AND f.status = 'sent'")
+    .get(leadId, scopeKind(m[1]));
+  if (scoped) return sendPdf(m[1], m[2]);
   if (!packsForGrade(lead.grade).some((p) => p.id === m[1])) return page("連結無效", "<p>這份不在你的試用範圍內。</p>", 404);
   if (!trialActive(lead)) {
     return page(
@@ -33,6 +38,11 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string;
       410,
     );
   }
+  return sendPdf(m[1], m[2]);
+}
+
+function sendPdf(pack: string, kind: string) {
+  const m = [ "", pack, kind ];
   const abs = path.join(process.cwd(), "trial-packs", `${m[1]}-${m[2]}.pdf`);
   if (!fs.existsSync(abs)) return page("檔案準備中", "<p>請稍後再試。</p>", 404);
   return new NextResponse(fs.readFileSync(abs), {

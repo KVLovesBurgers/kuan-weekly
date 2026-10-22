@@ -1,5 +1,5 @@
 import type { KuanDb } from "./db";
-import { isTrialLead, packsForGrade, trialEndLabel, trialEndsAt, trialUrl, TRIAL_D6_KIND } from "./trial";
+import { isTrialLead, packsForGrade, trialEndLabel, trialEndsAt, trialUrl, TRIAL_D6_KIND, TRIAL_PACKS } from "./trial";
 
 export const FOLLOWUP_KIND = "trial_d1";
 export const FOLLOWUP_SUBJECT = "試閱寫完了嗎？3 步看出孩子卡在哪";
@@ -183,4 +183,35 @@ export async function eligibleTrialReminders(db: KuanDb, now = new Date()) {
     const day6Start = end + 1000 - 2 * 86400000; // 第 6 天台北 00:00
     return now.getTime() >= day6Start && now.getTime() < end;
   });
+}
+
+/** 選範圍後自動寄的免費第一週週練包。不放價格、匯款；每個連結單獨一行。 */
+export function buildScopeDelivery(lead: { id: string; role?: string }, packId: string, base = SITE_BASE) {
+  const p = TRIAL_PACKS[packId];
+  const student = lead.role === "學生";
+  const subject = `寬數週練免費第一週：${p.label}${p.unit.replace(/（.*）/, "")}`;
+  const text = `${student ? "你好" : "您好"}，我是吳寬老師。
+
+這是您選的範圍「${p.label}・${p.unit}」免費第一週週練包：學生題本＋家長解答（每題步驟和常見錯誤）。
+
+學生題本
+${trialUrl(base, lead.id, p.id, "student")}
+
+家長解答
+${trialUrl(base, lead.id, p.id, "parent")}
+
+怎麼用最有效：
+1. 先${student ? "自己" : "讓孩子自己"}寫學生題本，不要先看解答。
+2. 寫完打開家長解答，第一頁是答案速查，先對對錯。
+3. 錯的題目看步驟拆解${student ? "，講給家長或自己聽一遍" : "，請孩子講給您聽"}；講不出來的那一步，就是卡住的地方。
+
+寫完或卡住，直接回這封信告訴我題號就好。
+
+吳寬老師
+寬數週練
+${SITE_BASE}
+
+（不想再收到這類信，回信告訴我即可）
+`;
+  return { subject, text };
 }

@@ -558,3 +558,18 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .quiz-exp { font-size: 15px; line-height: 1.8; color: var(--ink-soft); margin: 0; background: var(--paper); padding: 10px 12px; border-radius: 8px; }
 .quiz-cta-end { display: grid; gap: 10px; margin: 16px 0 8px; }
 picture { display: contents; }
+
+/* 單元頁網頁詳解 */
+.lesson { margin-top: 20px; }
+.lesson-q { margin-top: 20px; padding: 16px; border: 1px solid rgba(0,0,0,.12); border-radius: 12px; overflow-x: auto; }
+.lesson-q h2 { font-size: 18px; margin: 0 0 8px; }
+.lesson-q p, .lesson-q li { line-height: 1.8; font-size: 16px; }
+.lesson-q ol, .lesson-q ul { padding-left: 1.3em; margin: 6px 0; }
+.lesson-label { font-weight: 700; margin: 12px 0 0; }
+.lesson-ans { font-weight: 700; margin-top: 8px; }
+.lesson-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+.lesson-btns .btn { flex: 1 1 140px; text-align: center; }
+.lesson-pdf-h { font-size: 18px; margin-top: 28px; }
+.katex { font-size: 1.05em; }
+.quiz-recs { margin-top: 12px; } .quiz-recs ul { padding-left: 1.2em; } .quiz-recs li { margin: 6px 0; }
+.scope-form { display: grid; gap: 12px; } .scope-form label { display: grid; gap: 4px; font-size: 15px; } .scope-form select, .scope-form input { font-size: 16px; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.2); }

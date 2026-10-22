@@ -8,8 +8,8 @@ import { uid } from "@/lib/ids";
 import { mailConfigured, sendFollowupEmail, sendLeadAlert } from "@/lib/mail";
 import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLES, LEAD_TRACK_COOKIE, LEAD_TRADE_COOKIE, cleanTrack, trackForGrade } from "@/lib/leads";
 import { seatsRemaining } from "@/lib/db";
-import { buildTrialDelivery, isTestAddress } from "@/lib/followup";
-import { isTrialLead, TRIAL_D0_KIND } from "@/lib/trial";
+import { buildScopeDelivery, buildTrialDelivery, isTestAddress } from "@/lib/followup";
+import { isTrialLead, SCOPE_GRADES, SCOPE_OPTIONS, scopeKind, scopeMailAllowed, TRIAL_D0_KIND } from "@/lib/trial";
 import { GRADE_OPTIONS, SITE } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
 
@@ -165,4 +165,58 @@ export async function startSampleCheckout(formData: FormData) {
     maxAge: 60 * 60 * 24 * 30,
   });
   redirect(`/sample?trade=${encodeURIComponent(tradeNo)}#subscribe`);
+}
+
+/** 試閱留資料後：選年級＋範圍。有對應週練包就寄學生版＋家長版；沒有就通知老師手動回。 */
+export async function submitScopeChoice(formData: FormData) {
+  const jar = await cookies();
+  const leadId = jar.get(LEAD_ID_COOKIE)?.value ?? "";
+  const gradeRaw = String(formData.get("scope_grade") ?? "");
+  const grade = (SCOPE_GRADES as readonly string[]).includes(gradeRaw) ? gradeRaw : "";
+  const opt = SCOPE_OPTIONS.find((o) => o.value === String(formData.get("scope") ?? ""));
+  const note = String(formData.get("scope_note") ?? "").trim().slice(0, 200);
+  const back = (q: string) => redirect(`/sample?${q}#subscribe`);
+  if (!grade || !opt) back("scope=err");
+  const db = await getDb();
+  const lead = leadId
+    ? ((await db.prepare("SELECT id, email, role FROM leads WHERE id = ?").get(leadId)) as { id: string; email: string; role: string } | undefined)
+    : undefined;
+  if (!lead) redirect("/sample?error=" + encodeURIComponent("請先留下信箱領試閱。") + "#get");
+  const now = new Date().toISOString();
+  const pack = opt!.pack && opt!.grade === grade ? opt!.pack : "";
+  const allowed = scopeMailAllowed(lead.email, isTestAddress(lead.email));
+  if (pack && mailConfigured() && allowed) {
+    const kind = scopeKind(pack);
+    await db.prepare(`INSERT INTO lead_followups (email, kind, status, sent_at, error) VALUES (?, ?, 'sending', ?, '') ON CONFLICT(email, kind) DO NOTHING`).run(lead.email, kind, now);
+    const claim = (await db.prepare("SELECT status, sent_at FROM lead_followups WHERE email = ? AND kind = ?").get(lead.email, kind)) as { status: string; sent_at: string } | undefined;
+    if (claim && claim.status === "sending" && claim.sent_at === now) {
+      try {
+        // 先標 sent 再寄，信裡的連結一打開就能用；寄失敗再改回 failed。
+        await db.prepare("UPDATE lead_followups SET status = 'sent' WHERE email = ? AND kind = ?").run(lead.email, kind);
+        const base = process.env.VERCEL_ENV === "production" || !process.env.VERCEL_URL ? SITE.url : `https://${process.env.VERCEL_URL}`;
+        const mail = buildScopeDelivery(lead, pack, base);
+        await sendFollowupEmail(lead.email, mail.subject, mail.text);
+      } catch (err) {
+        console.error("scope delivery failed", err);
+        await db.prepare("UPDATE lead_followups SET status = 'failed', error = ? WHERE email = ? AND kind = ?").run(String(err).slice(0, 300), lead.email, kind);
+        back("scope=fail");
+      }
+    }
+    back(`scope=sent&pack=${pack}`);
+  }
+  // 沒有對應範圍（或預覽版的非測試信箱）：通知老師手動回。
+  if (mailConfigured() && !pack && (allowed || process.env.VERCEL_ENV === "production")) {
+    after(async () => {
+      try {
+        await sendFollowupEmail(
+          SITE.contactEmail,
+          `寬數週練｜待手動回覆：${grade} ${opt!.label}`,
+          `信箱：${lead.email}\n年級：${grade}\n選擇：${opt!.label}\n補充：${note || "（無）"}\n時間（台北）：${new Date(now).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })}`,
+        );
+      } catch (err) {
+        console.error("scope manual alert failed", err);
+      }
+    });
+  }
+  back(pack && (!allowed || !mailConfigured()) && process.env.VERCEL_ENV !== "production" ? "scope=preview" : "scope=manual");
 }

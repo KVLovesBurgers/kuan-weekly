@@ -13,6 +13,7 @@
     "@libsql/client": "^0.18.0",
     "@pdf-lib/fontkit": "^1.0.0",
     "@vercel/analytics": "^2.0.1",
+    "katex": "^0.16.47",
     "next": "^15.5.2",
     "nodemailer": "^9.1.1",
     "pdf-lib": "^1.17.1",
@@ -20,6 +21,7 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@types/katex": "^0.16.8",
     "@types/node": "^22.18.0",
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.1.12",
