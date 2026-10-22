@@ -82,9 +82,12 @@ export const SCOPE_OPTIONS: { value: string; label: string; grade: string; pack?
   { value: "g12_prob_B", label: "高三學測：排列組合與機率", grade: "高三", pack: "g12_prob_B" },
   { value: "other", label: "其他範圍（老師親自回信）", grade: "" },
 ];
+/** 正式站唯一可收自動寄信的測試信箱（使用者自己的）。 */
+export const SCOPE_PROD_TEST_EMAIL = "jjredick365+scopetest@gmail.com";
 export const scopeKind = (packId: string) => `scope_${packId}`;
 /** 預覽版只能寄到自己的測試信箱；正式站不寄測試信箱。 */
 export function scopeMailAllowed(email: string, isTest: boolean) {
   const prod = process.env.VERCEL_ENV === "production";
+  if (email.toLowerCase() === SCOPE_PROD_TEST_EMAIL) return true;
   return prod ? !isTest : /^jjredick365\+[a-z0-9-]*test[a-z0-9-]*@gmail\.com$/i.test(email);
 }

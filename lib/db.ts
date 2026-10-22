@@ -107,6 +107,15 @@ async function openDb(): Promise<KuanDb> {
   await migrate(db);
   // 上線驗證用的測試名單（jjredick365+leadtest@…）一律清掉，不留在試閱名單。
   await db.prepare("DELETE FROM leads WHERE email LIKE 'jjredick365+leadtest@%'").run();
+  // 試閱自動寄信的正式站測試信箱（jjredick365+scopetest@…）：測完 20 分鐘後的下一次開啟就清掉名單與寄信紀錄。
+  {
+    const cut = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+    const old = await db.prepare("SELECT 1 AS x FROM leads WHERE email = 'jjredick365+scopetest@gmail.com' AND created_at < ?").get(cut);
+    if (old) {
+      await db.prepare("DELETE FROM lead_followups WHERE email = 'jjredick365+scopetest@gmail.com'").run();
+      await db.prepare("DELETE FROM leads WHERE email = 'jjredick365+scopetest@gmail.com'").run();
+    }
+  }
   await seed(db);
   return db;
 }

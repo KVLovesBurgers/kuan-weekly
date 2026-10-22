@@ -19,7 +19,7 @@ export function tex(s: string): string {
 export function plain(s: string): string {
   return s
     .replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g, "$1/$2")
-    .replace(/\\(left|right|big|,)/g, "")
+    .replace(/\\text\{([^}]*)\}/g, "$1").replace(/\\mid/g, "|").replace(/\\cup/g, "∪").replace(/\\cdots/g, "…").replace(/\\(left|right|big|,)/g, "")
     .replace(/\\log/g, "log").replace(/\\times/g, "×").replace(/\\le/g, "≤").replace(/\\approx/g, "≈").replace(/\\ldots/g, "…")
     .replace(/[$\\{}]/g, "");
 }
