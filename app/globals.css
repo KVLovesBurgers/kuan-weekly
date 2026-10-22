@@ -606,3 +606,4 @@ picture { display: contents; }
 .mock-early { width: 100%; margin: 0 0 16px; }
 .quiz-stem .katex-display, .mock-group .katex-display { overflow-x: auto; overflow-y: hidden; }
 .quiz-stem, .quiz-opt, .mock-optlist li { overflow-wrap: anywhere; }
+.nobr { white-space: nowrap; }

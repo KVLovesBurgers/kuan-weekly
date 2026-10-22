@@ -4,7 +4,7 @@ import { getDb } from "@/lib/db";
 import { uid } from "@/lib/ids";
 import { cleanSrc, LEAD_ROLES } from "@/lib/leads";
 import { cleanMockAnswers, cleanMockSubject, gradeMock, mockDetails, type MockDetail, type MockScore } from "@/lib/mock";
-import { tex } from "@/components/UnitLesson";
+import { mockTex as tex } from "@/lib/mock-tex";
 
 /** 交卷：回總分、估算級分、各題型與單元得分（不需信箱、不回詳解）。匿名記一筆 mock_submit。 */
 export async function scoreMock(input: { subject: string; answers: Record<string, unknown>; src?: string; timedOut?: boolean }): Promise<{ ok: true; score: MockScore } | { ok: false; error: string }> {

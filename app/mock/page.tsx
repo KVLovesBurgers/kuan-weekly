@@ -5,7 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TrackView } from "@/components/Tracking";
 import { MockClient, type MockSetView } from "@/components/MockClient";
-import { tex } from "@/components/UnitLesson";
+import { mockTex as tex } from "@/lib/mock-tex";
 import { MOCK_MINUTES, MOCK_SUBJECTS, mockPhase, mockQuestions } from "@/lib/mock";
 
 const TITLE = "學測數學免費線上模擬考｜數學A・數學B｜寬數週練";

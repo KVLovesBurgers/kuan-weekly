@@ -17,9 +17,10 @@ def fmt_digits(no,n): return "".join(B(c) for c in cells(no,n))
 
 # ======================= 數學A =======================
 S="A"
-x=log(3,2)
-add(S,1,"single",5,"指數與對數",1,"已知 $2^x=3$，試問 $4^{x+1}$ 的值為何？",4,
- "$4^{x+1}=4\\cdot(2^x)^2=4\\times9=36$。",isclose(4**(x+1),36),options=["$12$","$18$","$27$","$36$","$48$"])
+aa1,bb1,cc1=2**30,3**20,5**13
+add(S,1,"single",5,"指數與對數",2,"設 $a=2^{30}$、$b=3^{20}$、$c=5^{13}$。試問下列哪一個選項正確？（$\\log2\\approx0.3010$、$\\log3\\approx0.4771$）",5,
+ "取常用對數：$\\log a=30\\times0.3010=9.030$，$\\log b=20\\times0.4771=9.542$，$\\log c=13\\times(1-0.3010)=9.087$。所以 $a<c<b$。也可以直接看：$a\\approx1.07\\times10^9$、$c\\approx1.22\\times10^9$、$b\\approx3.49\\times10^9$。",
+ aa1<cc1<bb1,options=["$a<b<c$","$b<a<c$","$c<a<b$","$b<c<a$","$a<c<b$"])
 pairs=[(a,b) for a in range(1,7) for b in range(1,7) if a+b==8]; ev=[p for p in pairs if p[0]%2==0 or p[1]%2==0]
 add(S,2,"single",5,"條件機率",1,"同時擲兩顆公正骰子。已知兩顆點數和為 $8$，試問至少有一顆點數為偶數的機率為何？",3,
  "和為 $8$ 的情形有 $(2,6),(3,5),(4,4),(5,3),(6,2)$ 共 $5$ 種，等可能。其中含偶數的是 $(2,6),(4,4),(6,2)$ 共 $3$ 種，機率 $\\dfrac{3}{5}$。注意和為偶數時兩顆同奇同偶，所以「至少一顆偶數」就是「兩顆都偶數」。",
@@ -49,10 +50,10 @@ add(S,7,"multi",5,"數據分析",1,"一組數據 $x_1,x_2,\\dots,x_n$ 的算術�
  isclose(st.mean(ys),3*st.mean(xs)-5) and isclose(st.pstdev(ys),3*st.pstdev(xs)) and isclose(st.pvariance(ys),9*st.pvariance(xs)),
  options=["$y$ 的平均數為 $25$","$y$ 的標準差為 $6$","$y$ 的變異數為 $18$","$x$ 與 $y$ 的相關係數為 $1$","$z$ 的標準差為 $-2$"])
 a3=log(5,3)
-t=[1<a3<2, a3>1.5, 1/(2*a3)<1/3, isclose(3**(2*a3),25), isclose(log(45,15),(2+a3)/(1+a3))]
-add(S,8,"multi",5,"指數與對數",2,"設 $a=\\log_3 5$。試選出正確的選項。",[1,4,5],
- "(1) $3<5<9$，所以 $1<a<2$。(2) $3^{1.5}=3\\sqrt{3}\\approx5.196>5$，所以 $a<1.5$，錯。(3) $\\log_{25}3=\\dfrac{1}{2a}$，因為 $a<1.5$，$\\dfrac{1}{2a}>\\dfrac{1}{3}$，錯。(4) $3^{2a}=(3^a)^2=25$。(5) $\\log_{15}45=\\dfrac{\\log_3 45}{\\log_3 15}=\\dfrac{2+a}{1+a}$。",
- t==[True,False,False,True,True],options=["$1<a<2$","$a>1.5$","$\\log_{25}3<\\dfrac{1}{3}$","$3^{2a}=25$","$\\log_{15}45=\\dfrac{2+a}{1+a}$"])
+t=[1<a3<2, a3>1.4 and 3**7<5**5, 1/(2*a3)<1/3, isclose(3**(2*a3),25), isclose(log(45,15),(2+a3)/(1+a3))]
+add(S,8,"multi",5,"指數與對數",2,"設 $a=\\log_3 5$。試選出正確的選項。",[1,2,4,5],
+ "(1) $3<5<9$，所以 $1<a<2$。(2) $3^7=2187<3125=5^5$，所以 $3^{\\frac75}<5$，$a>\\dfrac75=1.4$。(3) $3^{1.5}=3\\sqrt3\\approx5.196>5$，所以 $a<1.5$；$\\log_{25}3=\\dfrac{1}{2a}$，因為 $a<1.5$，$\\dfrac{1}{2a}>\\dfrac{1}{3}$，錯。(4) $3^{2a}=(3^a)^2=25$。(5) $\\log_{15}45=\\dfrac{\\log_3 45}{\\log_3 15}=\\dfrac{2+a}{1+a}$。",
+ t==[True,True,False,True,True],options=["$1<a<2$","$a>1.4$","$\\log_{25}3<\\dfrac{1}{3}$","$3^{2a}=25$","$\\log_{15}45=\\dfrac{2+a}{1+a}$"])
 g=lambda x:2*sin(2*x-pi/3)+1
 import numpy as np
 X=np.linspace(0,pi/4,2001); inc=all(np.diff(2*np.sin(2*X-pi/3)+1)>0)
@@ -77,9 +78,10 @@ add(S,12,"multi",5,"多項式函數",3,"設 $k$ 為實數，$f(x)=x^3-3x+k$。�
  "$f'(x)=3x^2-3$，在 $x=-1$ 有極大值 $k+2$，在 $x=1$ 有極小值 $k-2$。(1) $k=0$：極大 $2>0$、極小 $-2<0$，三相異實根。(2) $k=2$：$x^3-3x+2=(x-1)^2(x+2)$，恰兩個相異實根。(3) $k=1$：$f(-2)=-1<0$、$f(-1)=3>0$、$f(1)=-1<0$、$f(2)=3>0$，三根分別在 $(-2,-1)$、$(-1,1)$、$(1,2)$。(4) $k=3$：$f(-2)=1>0$，又 $f(-3)=-15<0$，唯一實根在 $(-3,-2)$，錯。(5) 三根和 $0$、兩兩乘積和 $-3$，平方和 $0^2-2\\times(-3)=6$。",
  t==[True,True,True,False,True],options=["當 $k=0$ 時，$f(x)=0$ 有三個相異實根","當 $k=2$ 時，$f(x)=0$ 恰有兩個相異實根","當 $k=1$ 時，$f(x)=0$ 的三個實根都介於 $-2$ 與 $2$ 之間","當 $k=3$ 時，$f(x)=0$ 唯一的實根介於 $-2$ 與 $-1$ 之間","當 $-2<k<2$ 時，$f(x)=0$ 三個實根的平方和為 $6$"])
 # fill
-r=round((81/3)**(1/3)); s5=sum(3*r**i for i in range(5))
-add(S,13,"fill",5,"數列與級數",1,"等比數列 $\\langle a_n\\rangle$ 的各項都是實數，$a_1=3$、$a_4=81$。則 $a_1+a_2+a_3+a_4+a_5=$ "+fmt_digits(13,3)+"。",str(s5),
- "$r^3=27$，實數公比 $r=3$。和 $=\\dfrac{3(3^5-1)}{3-1}=363$。",s5==363 and 3*r**3==81,fmt=fmt_digits(13,3))
+r=-2; a1=-3; Sn=lambda n:sum(a1*r**k for k in range(n)); nmin=next(n for n in range(1,100) if abs(Sn(n))>1000)
+add(S,13,"fill",5,"數列與級數",2,"實數等比數列 $\\langle a_n\\rangle$ 滿足 $a_2=6$、$a_5=-48$，令 $S_n=a_1+a_2+\\cdots+a_n$。使 $|S_n|>1000$ 的最小正整數 $n=$ $"+fmt_digits(13,2)+"$ 。","%d"%nmin,
+ "$r^3=\\dfrac{-48}{6}=-8$，$r=-2$，$a_1=-3$。$S_n=\\dfrac{-3\\left(1-(-2)^n\\right)}{1-(-2)}=(-2)^n-1$。$n=9$ 時 $|S_9|=|-513|=513$；$n=10$ 時 $S_{10}=1023$。又 $n\\le9$ 時 $|S_n|\\le2^9+1=513$，所以最小的 $n=10$。",
+ nmin==10 and a1*r==6 and a1*r**4==-48 and all(Sn(n)==(-2)**n-1 for n in range(1,15)),fmt=fmt_digits(13,2))
 cx,cy,R=3,-2,5; dd=abs(cx-2*cy+3)/sqrt(5); ch=2*sqrt(R*R-dd*dd)
 fm14=B("14-1")+"\\sqrt{"+B("14-2")+"}"
 add(S,14,"fill",5,"直線與圓",1,"坐標平面上，直線 $x-2y+3=0$ 被圓 $x^2+y^2-6x+4y-12=0$ 所截的弦長為 $"+fm14+"$。（化成最簡根式）","25",
@@ -93,10 +95,10 @@ add(S,15,"fill",5,"三角函數",2,"設 $\\sin\\theta+\\cos\\theta=\\dfrac13$。
  "平方得 $1+2\\sin\\theta\\cos\\theta=\\dfrac19$，$\\sin\\theta\\cos\\theta=-\\dfrac49$。立方和公式：$\\sin^3\\theta+\\cos^3\\theta=(\\sin\\theta+\\cos\\theta)(1-\\sin\\theta\\cos\\theta)=\\dfrac13\\times\\dfrac{13}{9}=\\dfrac{13}{27}$。",
  cube==F(13,27) and len(ths)>0 and all(isclose(sin(t)**3+cos(t)**3,13/27,abs_tol=1e-4) for t in ths),fmt=fm15)
 cnt=sum(1 for c in itertools.combinations(range(1,31),3) if sum(c)%3==0)
-add(S,16,"fill",5,"排列組合",3,"從 $1,2,3,\\dots,30$ 中任取三個相異整數，使這三個數的和是 $3$ 的倍數。共有 "+fmt_digits(16,4)+" 種取法。",str(cnt),
+add(S,16,"fill",5,"排列組合",3,"從 $1,2,3,\\dots,30$ 中任取三個相異整數，使這三個數的和是 $3$ 的倍數。共有 $"+fmt_digits(16,4)+"$ 種取法。",str(cnt),
  "依除以 $3$ 的餘數分成三類，每類 $10$ 個數。和是 $3$ 的倍數：三個同類 $3\\times C^{10}_3=360$，或三類各取一個 $10^3=1000$。共 $1360$ 種。",cnt==1360,fmt=fmt_digits(16,4))
 obt=[(a,b,c) for a in range(1,25) for b in range(a,25) for c in range(b,25) if a+b+c==24 and a+b>c and a*a+b*b<c*c]
-add(S,17,"fill",5,"三角形的邊角關係",3,"三邊長都是正整數、周長為 $24$ 的鈍角三角形共有 "+fmt_digits(17,1)+" 種。（全等的三角形視為同一種）",str(len(obt)),
+add(S,17,"fill",5,"三角形的邊角關係",3,"三邊長都是正整數、周長為 $24$ 的鈍角三角形共有 $"+fmt_digits(17,1)+"$ 種。（全等的三角形視為同一種）",str(len(obt)),
  "設 $a\\le b\\le c$，$a+b+c=24$。三角形條件 $a+b>c$ 得 $c\\le11$；鈍角條件 $a^2+b^2<c^2$。逐一列出：$c=11$ 時 $a+b=13$，$(a,b)=(2,11),(3,10),(4,9),(5,8),(6,7)$，$a^2+b^2$ 依序為 $125,109,97,89,85$，小於 $121$ 的有 $4$ 種；$c=10$ 時 $a+b=14$，$(4,10),(5,9),(6,8),(7,7)$ 的 $a^2+b^2$ 為 $116,106,100,98$，小於 $100$ 的只有 $(7,7,10)$，$1$ 種（$(6,8,10)$ 是直角）；$c\\le9$ 時 $a+b\\ge15$，$a^2+b^2\\ge\\dfrac{225}{2}>81$，沒有鈍角。共 $5$ 種。",
  len(obt)==5,fmt=fmt_digits(17,1))
 # group 18-20
@@ -173,18 +175,21 @@ t=[allc[0]==8, all(allc[i+1]-allc[i]==15 for i in range(10)), len(com)==20, sum(
 add(S,12,"multi",5,"數列",3,"數列 $a_n=3n-1$、$b_n=5n-2$（$n$ 為正整數）。同時出現在兩個數列中的數稱為「共同項」。試選出正確的選項。",[1,2,3],
  "$a_n$ 除以 $3$ 餘 $2$，$b_n$ 除以 $5$ 餘 $3$，同時滿足的最小正整數是 $8$，之後每 $15$ 出現一次：$8,23,38,\\dots$。(3) $a_1$ 到 $a_{100}$ 是 $2$ 到 $299$，$b_1$ 到 $b_{60}$ 是 $3$ 到 $298$；$8+15k\\le298$ 得 $k\\le19$，共 $20$ 個。(4) $a_1+\\dots+a_{10}=3\\times55-10=155$，錯。(5) $2026+2=2028$ 不是 $5$ 的倍數，錯。",
  t==[True,True,True,False,False],options=["最小的共同項是 $8$","共同項由小到大排列成等差數列，公差為 $15$","$a_1$ 到 $a_{100}$ 與 $b_1$ 到 $b_{60}$ 之間的共同項恰有 $20$ 個","$a_1+a_2+\\dots+a_{10}=160$","$2026$ 是數列 $\\langle b_n\\rangle$ 的某一項"])
-add(S,13,"fill",5,"坐標幾何",1,"坐標平面上 $A(1,2)$、$B(7,10)$，則 $\\overline{AB}=$ "+fmt_digits(13,2)+"。","10",
- "$\\sqrt{6^2+8^2}=10$。",math.dist((1,2),(7,10))==10,fmt=fmt_digits(13,2))
-w=len(set(itertools.permutations("BANANA")))
-add(S,14,"fill",5,"排列組合",1,"將 $\\text{BANANA}$ 這 $6$ 個字母全部排成一列，共有 "+fmt_digits(14,2)+" 種排法。",str(w),
- "$\\dfrac{6!}{3!\\,2!}=60$（$3$ 個 A、$2$ 個 N 相同）。",w==60,fmt=fmt_digits(14,2))
+xs_=np.linspace(-20,30,500001); mn=min(np.hypot(xs_-1,2)+np.hypot(xs_-7,10))
+fm13=B("13-1")+"\\sqrt{"+B("13-2")+"}"
+add(S,13,"fill",5,"坐標幾何",2,"坐標平面上 $A(1,2)$、$B(7,10)$，點 $P$ 在 $x$ 軸上移動。則 $\\overline{PA}+\\overline{PB}$ 的最小值為 $"+fm13+"$。（化成最簡根式）","65",
+ "$A$、$B$ 在 $x$ 軸同側。把 $B$ 對 $x$ 軸鏡射得 $B'(7,-10)$，$\\overline{PB}=\\overline{PB'}$，所以 $\\overline{PA}+\\overline{PB}\\ge\\overline{AB'}=\\sqrt{6^2+12^2}=\\sqrt{180}=6\\sqrt5$，當 $P$ 在 $\\overline{AB'}$ 與 $x$ 軸的交點 $(2,0)$ 時成立。",
+ isclose(mn,6*sqrt(5),abs_tol=1e-6) and isclose(math.dist((2,0),(1,2))+math.dist((2,0),(7,10)),6*sqrt(5)),fmt=fm13)
+w=sum(1 for p in set(itertools.permutations("BANANA")) if "AA" not in "".join(p))
+add(S,14,"fill",5,"排列組合",2,"將 $\\text{BANANA}$ 這 $6$ 個字母全部排成一列，且任兩個 $\\text{A}$ 都不相鄰，共有 $"+fmt_digits(14,2)+"$ 種排法。",str(w),
+ "先排 $\\text{B}$、$\\text{N}$、$\\text{N}$：$\\dfrac{3!}{2!}=3$ 種。它們之間與兩端共有 $4$ 個空位，選 $3$ 個放 $\\text{A}$：$C^4_3=4$。共 $3\\times4=12$ 種。",w==12,fmt=fmt_digits(14,2))
 dg=sqrt(25+64-2*5*8*cos(2*pi/3))
 fm15="\\sqrt{"+B("15-1")+B("15-2")+B("15-3")+"}"
 add(S,15,"fill",5,"餘弦定理",2,"平行四邊形 $ABCD$ 中，$\\overline{AB}=8$、$\\overline{AD}=5$、$\\angle BAD=60^\\circ$。則較長的對角線長為 $"+fm15+"$。","129",
  "較長的對角線對著鈍角 $\\angle ABC=120^\\circ$：$\\overline{AC}^2=8^2+5^2-2\\times8\\times5\\cos120^\\circ=64+25+40=129$，$\\overline{AC}=\\sqrt{129}$。另一條 $\\overline{BD}^2=89-40=49$，$\\overline{BD}=7$ 較短。",
  isclose(dg,sqrt(129)) and sqrt(89-40)<dg,fmt=fm15)
 tick=[500]+[100]*3+[0]*6; E=F(sum(tick[i]+tick[j] for i,j in itertools.permutations(range(10),2)),90)
-add(S,16,"fill",5,"期望值",2,"摸彩箱中有 $10$ 張彩券：$1$ 張 $500$ 元、$3$ 張 $100$ 元，其餘 $6$ 張沒有獎金。從中隨機抽出 $2$ 張（不放回），獎金總和的期望值為 "+fmt_digits(16,3)+" 元。",str(E),
+add(S,16,"fill",5,"期望值",2,"摸彩箱中有 $10$ 張彩券：$1$ 張 $500$ 元、$3$ 張 $100$ 元，其餘 $6$ 張沒有獎金。從中隨機抽出 $2$ 張（不放回），獎金總和的期望值為 $"+fmt_digits(16,3)+"$ 元。",str(E),
  "每一張被抽中的機率都是 $\\dfrac{2}{10}$，期望值 $=\\dfrac{2}{10}\\times(500+300)=160$ 元。",E==160,fmt=fmt_digits(16,3))
 def paths(bad):
     dp={}
@@ -195,7 +200,7 @@ def paths(bad):
             else: dp[i,j]=dp.get((i-1,j),0)+dp.get((i,j-1),0)
     return dp[5,4]
 pp=paths({(2,2),(4,3)})
-add(S,17,"fill",5,"排列組合",3,"坐標平面上只能沿格線向右或向上走，每次走 $1$ 單位。從 $(0,0)$ 走到 $(5,4)$，且不經過 $(2,2)$ 也不經過 $(4,3)$ 的走法共有 "+fmt_digits(17,2)+" 種。",str(pp),
+add(S,17,"fill",5,"排列組合",3,"坐標平面上只能沿格線向右或向上走，每次走 $1$ 單位。從 $(0,0)$ 走到 $(5,4)$，且不經過 $(2,2)$ 也不經過 $(4,3)$ 的走法共有 $"+fmt_digits(17,2)+"$ 種。",str(pp),
  "全部 $C^9_4=126$。經過 $(2,2)$：$C^4_2\\times C^5_2=60$；經過 $(4,3)$：$C^7_3\\times C^2_1=70$；兩點都經過：$C^4_2\\times C^3_1\\times C^2_1=36$。不經過兩點：$126-60-70+36=32$。",
  pp==32 and paths(set())==126,fmt=fmt_digits(17,2))
 G="訊號覆蓋：坐標平面上（單位：公里），基地台位於原點 $O$，訊號覆蓋範圍是以 $O$ 為圓心、半徑 $5$ 的圓及其內部。一條筆直道路沿直線 $L:x+y=6$ 鋪設。"

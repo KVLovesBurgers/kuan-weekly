@@ -83,7 +83,7 @@ export async function eligibleFollowupLeads(db: KuanDb, now = new Date()) {
   const rows = (await db
     .prepare(
       `SELECT l.email AS email, l.created_at AS created_at, l.role AS role, l.grade AS grade FROM leads l
-       WHERE l.created_at <= ? AND l.created_at >= ?
+       WHERE l.created_at <= ? AND l.created_at >= ? AND l.utm NOT LIKE 'mock=%'
          AND NOT EXISTS (SELECT 1 FROM lead_followups f WHERE f.email = l.email AND f.kind = ? AND f.status <> 'failed')
          AND NOT EXISTS (SELECT 1 FROM email_optouts o WHERE o.email = l.email)
          AND NOT EXISTS (
@@ -163,7 +163,7 @@ export async function eligibleTrialReminders(db: KuanDb, now = new Date()) {
   const rows = (await db
     .prepare(
       `SELECT l.id AS id, l.email AS email, l.created_at AS created_at, l.role AS role, l.grade AS grade FROM leads l
-       WHERE l.created_at >= ?
+       WHERE l.created_at >= ? AND l.utm NOT LIKE 'mock=%'
          AND NOT EXISTS (SELECT 1 FROM lead_followups f WHERE f.email = l.email AND f.kind = ? AND f.status <> 'failed')
          AND NOT EXISTS (SELECT 1 FROM email_optouts o WHERE o.email = l.email)
          AND NOT EXISTS (

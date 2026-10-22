@@ -124,7 +124,7 @@ export function MockClient({ sets, phase, minutes, openLabel }: { sets: MockSetV
           <li>混合題組在學測有手寫非選擇題，線上版改成選填作答，配分不變。</li>
           <li>級分是依總分等距換算的估算，正式級分依當年考生成績換算。</li>
         </ul>
-        <p className="quiz-note">題目由吳寬老師（交大應數｜國中數學教師）新寫，每題答案都經過程式驗算。</p>
+        <p className="quiz-note">題目由吳寬老師新寫（交大應數畢業｜現任國中數學教師），每題答案都經過程式驗算。</p>
       </section>
     );
   }
