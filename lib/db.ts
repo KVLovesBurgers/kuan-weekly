@@ -107,6 +107,18 @@ async function openDb(): Promise<KuanDb> {
   await migrate(db);
   // 上線驗證用的測試名單（jjredick365+leadtest@…）一律清掉，不留在試閱名單。
   await db.prepare("DELETE FROM leads WHERE email LIKE 'jjredick365+leadtest@%'").run();
+  // 家教候補上線驗證用測試信箱（jjredick365+tutortest@…）：開啟時記下筆數後清掉 leads／waitlist／事件。
+  {
+    const t = "jjredick365+tutortest@%";
+    const l = (await db.prepare("SELECT COUNT(*) AS n FROM leads WHERE email LIKE ? AND source = 'tutor-waitlist'").get(t)) as { n: number } | undefined;
+    const w = (await db.prepare("SELECT COUNT(*) AS n FROM waitlist WHERE email LIKE ? AND note LIKE '【家教】%'").get(t)) as { n: number } | undefined;
+    if (Number(l?.n) || Number(w?.n)) {
+      console.log(`tutortest cleanup: leads=${l?.n} waitlist=${w?.n}`);
+      await db.prepare("DELETE FROM leads WHERE email LIKE ?").run(t);
+      await db.prepare("DELETE FROM waitlist WHERE email LIKE ?").run(t);
+      await db.prepare("DELETE FROM site_events WHERE kind = 'tutor_waitlist' AND source = 'prodtest'").run();
+    }
+  }
   // 試閱自動寄信的正式站測試信箱（jjredick365+scopetest@…）：測完 20 分鐘後的下一次開啟就清掉名單與寄信紀錄。
   {
     const cut = new Date(Date.now() - 20 * 60 * 1000).toISOString();
