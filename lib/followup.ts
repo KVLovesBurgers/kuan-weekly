@@ -3,7 +3,7 @@ import { isTrialLead, packsForGrade, trialEndLabel, trialEndsAt, trialUrl, TRIAL
 
 export const FOLLOWUP_KIND = "trial_d1";
 export const FOLLOWUP_SUBJECT = "試閱寫完了嗎？3 步看出孩子卡在哪";
-/** 2026-10-22 使用者核准：訂閱資訊改為免費寄本週題本的要求。使用者 2026-10-19 核准的原稿（/workspace/promo/trial-followup-draft.md 第 9–31 行）。2026-10-20 核准加入：開通時間提示（{{START_BY}}）與年級練習連結（{{UNIT_LINK}}），其餘不改。直接寄請用 buildFollowup()。 */
+/** 2026-10-22 使用者核准：訂閱資訊改為免費寄題本的要求（2026-10-24 起統一為「第一週」，避免被讀成每週免費）。使用者 2026-10-19 核准的原稿（/workspace/promo/trial-followup-draft.md 第 9–31 行）。2026-10-20 核准加入：開通時間提示（{{START_BY}}）與年級練習連結（{{UNIT_LINK}}），其餘不改。直接寄請用 buildFollowup()。 */
 export const FOLLOWUP_TEXT = `您好，我是吳寬老師。
 
 前幾天您領了寬數週練的題本試閱，想跟您分享怎麼用最有效：
@@ -14,7 +14,7 @@ export const FOLLOWUP_TEXT = `您好，我是吳寬老師。
 
 家長不用會數學，照著解答就能看出問題在觀念還是粗心。
 
-回信告訴我孩子的年級和這次段考範圍，我免費寄這週的週練題本給您。
+回信告訴我孩子的年級和這次段考範圍，我免費寄第一週的週練題本給您。
 {{UNIT_LINK}}
 還沒寫完也沒關係，有任何問題直接回這封信就好。
 
@@ -42,7 +42,7 @@ export function buildFollowup(lead: { role?: string; grade?: string }, now = new
 
 謝謝你下載寬數週練的試閱。先自己寫，不要先看解答；卡住的題目記下題號，直接回這封信問我就好。
 
-這封可以轉給家長看。請家長回信告訴我你的年級和這次段考範圍，我免費寄這週的週練題本。
+這封可以轉給家長看。請家長回信告訴我你的年級和這次段考範圍，我免費寄第一週的週練題本。
 
 吳寬老師
 寬數週練
@@ -163,7 +163,7 @@ export function buildTrialReminder(lead: { role?: string; grade?: string; create
 
 ${student ? "寫完了嗎？卡住的題號直接回信問我。" : "孩子寫完了嗎？哪一題卡住，回信告訴我題號，我幫您看是觀念還是粗心。"}
 
-${student ? "請家長回信告訴我你的年級和這次段考範圍，我免費寄這週的週練題本。" : "回信告訴我孩子的年級和這次段考範圍，我免費寄這週的週練題本給您。"}
+${student ? "請家長回信告訴我你的年級和這次段考範圍，我免費寄第一週的週練題本。" : "回信告訴我孩子的年級和這次段考範圍，我免費寄第一週的週練題本給您。"}
 
 ${student ? "這封可以轉給家長看。" : "這封也可以轉給家裡另一位家長看。"}
 

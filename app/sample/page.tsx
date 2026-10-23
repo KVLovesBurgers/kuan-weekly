@@ -314,12 +314,12 @@ export default async function SamplePage({
               <div style={{ width: "100%" }}>
                 <p className="kicker">看完試閱之後</p>
                 <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 8px" }}>
-                  領免費第一週的週練題本
+                  選範圍，寄題本到信箱
                 </h2>
                 {scopeMsg ? (
                   <p role="status" style={{ margin: "0 0 12px", fontWeight: 600 }}>{scopeMsg}</p>
                 ) : (
-                  <p style={{ margin: "0 0 12px" }}>選孩子的年級和這次段考範圍，有對應的週練包會馬上寄到您留的信箱，學生題本和家長解答都有。</p>
+                  <p style={{ margin: "0 0 12px" }}>選孩子的年級和這次段考範圍，有對應的週練包（國一、國三、高三）會馬上寄到您留的信箱，學生題本和家長解答都有。這和上方第一週免費是同一份題本，只是用信箱寄一份給您，不會再多一份；其他範圍由老師親自回信。</p>
                 )}
                 {scope !== "sent" && scope !== "manual" && (
                   <form action={submitScopeChoice} className="form scope-form">
@@ -345,7 +345,7 @@ export default async function SamplePage({
                       補充（選填，例如學校進度）
                       <input name="scope_note" maxLength={200} />
                     </label>
-                    <button type="submit" className="btn btn-ink">寄免費第一週</button>
+                    <button type="submit" className="btn btn-ink">寄到我的信箱</button>
                   </form>
                 )}
               </div>
