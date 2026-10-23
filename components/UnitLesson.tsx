@@ -21,6 +21,7 @@ export function plain(s: string): string {
     .replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g, "$1/$2")
     .replace(/\\text\{([^}]*)\}/g, "$1").replace(/\\mid/g, "|").replace(/\\cup/g, "∪").replace(/\\cdots/g, "…").replace(/\\(left|right|big|,)/g, "")
     .replace(/\\log/g, "log").replace(/\\times/g, "×").replace(/\\le/g, "≤").replace(/\\approx/g, "≈").replace(/\\ldots/g, "…")
+    .replace(/\\sqrt\{([^}]*)\}/g, "√$1").replace(/\\sigma/g, "σ").replace(/\\mu/g, "μ").replace(/\\ge/g, "≥").replace(/\\ /g, " ")
     .replace(/[$\\{}]/g, "");
 }
 
@@ -30,7 +31,7 @@ export function UnitLesson({ lesson, slug }: { lesson: Lesson; slug: string }) {
   const src = `unit-${slug === "gsat-log" ? "log" : slug}`;
   return (
     <section className="lesson">
-      <p className="muted">{lesson.intro}</p>
+      <p className="muted" dangerouslySetInnerHTML={{ __html: tex(lesson.intro) }} />
       {lesson.problems.map((p, i) => (
         <article key={i} className="lesson-q" id={`q${i + 1}`}>
           <h2>第 {i + 1} 題　{p.title}</h2>
@@ -56,6 +57,12 @@ export function UnitLesson({ lesson, slug }: { lesson: Lesson; slug: string }) {
           ))}
         </ul>
       </article>
+      {lesson.weekly && (
+        <article className="lesson-q">
+          <h2>寬數週練會怎麼練</h2>
+          <p>{lesson.weekly}</p>
+        </article>
+      )}
       <div className="lesson-btns">
         <Link className="btn btn-ink" href={`/quiz?src=${src}`}>做小卷</Link>
         <Link className="btn btn-steel" href={`/sample?src=${src}`}>免費試閱</Link>

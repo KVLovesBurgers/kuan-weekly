@@ -7,7 +7,7 @@ import { UnitTrialLink } from "@/components/UnitTrialLink";
 import { ShareToParents } from "@/components/ShareToParents";
 import { TrackView } from "@/components/Tracking";
 import { PackCard, SheetCard } from "@/components/UnitSheets";
-import { hasLivePack, liveUnitPacks, unitSheets } from "@/lib/unit-packs";
+import { hasLesson, hasLivePack, liveUnitPacks, unitSheets } from "@/lib/unit-packs";
 
 export const metadata: Metadata = {
   title: "免費練習題與單元包：依單元找題目，每題附詳解｜Saber數學",
@@ -53,7 +53,7 @@ export default function UnitsPage() {
             {units.map(({ u, sheets, pack }) => (
               <li key={u.slug}>
                 <a href={`#${u.slug}`}>
-                  {u.title}（{sheets.length + (pack ? 1 : 0)}）
+                  {u.title}（{sheets.length + (pack ? 1 : 0) || (hasLesson(u) ? "詳解" : 0)}）
                 </a>
               </li>
             ))}
@@ -74,12 +74,18 @@ export default function UnitsPage() {
                       </Link>
                     </div>
                     <p className="muted" style={{ margin: "6px 0 0", fontSize: 15 }}>{u.topic}</p>
-                    <ul className="practice-list" style={{ marginTop: 12 }}>
-                      {pack && <PackCard u={u} />}
-                      {sheets.map((s) => (
-                        <SheetCard key={s.driveId} unit={u.slug} s={s} />
-                      ))}
-                    </ul>
+                    {sheets.length + (pack ? 1 : 0) > 0 ? (
+                      <ul className="practice-list" style={{ marginTop: 12 }}>
+                        {pack && <PackCard u={u} />}
+                        {sheets.map((s) => (
+                          <SheetCard key={s.driveId} unit={u.slug} s={s} />
+                        ))}
+                      </ul>
+                    ) : (
+                      <p style={{ margin: "10px 0 0", fontSize: 15 }}>
+                        <Link href={`/units/${u.slug}`} className="practice-cta-link">看網頁上的題目與完整詳解</Link>
+                      </p>
+                    )}
                   </section>
                 ))}
               </div>

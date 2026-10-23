@@ -5,6 +5,7 @@
  * 舊網址 /practice 會 308 轉到 /units（next.config.ts）。
  */
 import { PRACTICE_SHEETS, type PracticeSheet } from "@/lib/practice-sheets";
+import { UNIT_LESSONS } from "@/lib/unit-lessons";
 
 export type UnitLevel = "國中" | "高中" | "SAT";
 
@@ -66,10 +67,13 @@ export function unitSheets(slug: string, now = new Date()): PracticeSheet[] {
 
 export const hasLivePack = (u: UnitPack, now = new Date()) => !!u.pack && isLive(u.pack.publishAt, now);
 
-/** 已公開的單元（有單元包或至少一份練習題），依原陣列順序。 */
+/** 單元頁上有完整詳解（lib/unit-lessons.ts）。 */
+export const hasLesson = (u: UnitPack) => !!UNIT_LESSONS[u.slug];
+
+/** 已公開的單元（有單元包、至少一份練習題，或網頁上有完整詳解），依原陣列順序。 */
 export function liveUnitPacks(now = new Date()) {
   const list = [...UNIT_PACKS, OTHER];
-  return list.filter((u) => hasLivePack(u, now) || unitSheets(u.slug, now).length > 0);
+  return list.filter((u) => hasLivePack(u, now) || unitSheets(u.slug, now).length > 0 || hasLesson(u));
 }
 
 export function findUnitPack(slug: string, now = new Date()) {
