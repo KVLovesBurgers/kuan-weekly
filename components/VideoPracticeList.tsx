@@ -103,7 +103,7 @@ export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; ki
               rel="noopener"
               onClick={() => track("unit_pdf", r.id, src())}
             >
-              開啟練習題（附詳解）
+              開啟練習題（附解答）
             </a>
           </li>
         ))}
