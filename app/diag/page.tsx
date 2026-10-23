@@ -9,7 +9,7 @@ import { tex } from "@/components/UnitLesson";
 import { DIAG_SETS, diagQuestions, hasDiagPacks } from "@/lib/diag";
 
 const TITLE = "免費段考弱點檢測｜第二次段考數學｜寬數週練";
-const DESC = "吳寬老師出題，對應 11/25-26 第二次段考範圍。國一、國二、國三、高一、高二、高三各一份，8 到 10 題單選，交卷馬上看分數和弱點單元。";
+const DESC = "吳寬老師出題，國中與高三對應 11/25-26 第二次段考範圍，高一、高二依 108 課綱章節。國一、國二、國三、高一、高二、高三各一份，8 到 10 題單選，交卷馬上看分數和弱點單元。";
 
 export const metadata: Metadata = {
   title: TITLE,

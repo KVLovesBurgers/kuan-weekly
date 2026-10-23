@@ -147,7 +147,9 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
           ) : null}
         </div>
 
-        <PaidNext track={set.id === "g12" ? "gsat" : "jh"} label={set.label} weak={score.weak} src="diag-result" />
+        {set.id === "g10" || set.id === "g11" ? null : (
+          <PaidNext track={set.id === "g12" ? "gsat" : "jh"} label={set.label} weak={score.weak} src="diag-result" />
+        )}
 
         {!unlocked ? (
           <form className="quiz-submit card" onSubmit={onUnlock} id="unlock">
