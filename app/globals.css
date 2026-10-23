@@ -668,3 +668,13 @@ picture { display: contents; }
 /* /sample 頁首入口：影片練習題（2026-10-24） */
 .sample-top-link { margin: 0 0 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; line-height: 1.5; background: color-mix(in srgb, var(--paper) 92%, #4f6075); }
 .sample-top-link a { display: block; padding: 10px 12px; min-height: 44px; box-sizing: border-box; }
+
+/* 依年級月費列表（2026-10-24） */
+.tier-list { list-style: none; margin: 8px 0; padding: 0; }
+.tier-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.tier-list li:last-child { border-bottom: 0; }
+.tier-name { font-weight: 600; }
+.tier-name small { font-weight: 400; color: var(--muted); font-size: 13px; }
+.tier-amount strong { font-family: var(--display); font-size: 26px; }
+.tier-amount { color: var(--muted); font-size: 14px; }
+.tier-list--compact .tier-amount strong { font-size: 20px; }

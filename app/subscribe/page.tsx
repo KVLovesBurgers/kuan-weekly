@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { startCheckout } from "@/app/actions/parent";
-import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel, money, PRICE_RULE } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel, PRICE_RULE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -69,13 +69,12 @@ export default async function SubscribePage({
             <textarea id="weak_topics" name="weak_topics" placeholder="例如：應用題列式、分數四則" />
             <label htmlFor="plan">方案*</label>
             <select id="plan" name="plan" required defaultValue="monthly">
-              <option value="monthly">
-                {`月繳 ${SITE.currency}${money(SITE.monthlyPrice)} /月`}
-              </option>
-              <option value="yearly">
-                {`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}
-              </option>
+              <option value="monthly">{PLAN_MONTHLY_LABEL}</option>
+              <option value="yearly">{PLAN_YEARLY_LABEL}</option>
             </select>
+            <p className="muted" style={{ fontSize: 13, margin: 0 }}>
+              月費依孩子年級計算，送出後的匯款頁會顯示確切金額。{YEARLY_NOTE}；高中與 SAT 目前只有月繳。
+            </p>
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>
               送出即表示已閱讀{" "}
               <Link href="/privacy" style={{ textDecoration: "underline" }}>

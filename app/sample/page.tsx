@@ -25,8 +25,9 @@ import {
 import { getDb } from "@/lib/db";
 import { SCOPE_GRADES, SCOPE_OPTIONS, packsForGrade, trialActive, trialEndLabel, trialToken, isTrialLead } from "@/lib/trial";
 import { cachedSeatsRemaining } from "@/lib/seats";
+import { TierPrices } from "@/components/TierPrices";
 import { FirstTouchSrcFill } from "@/components/FirstTouch";
-import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE, PAY_NOTE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE, FIRST_WEEK_CONTENT } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中、高中數學每週練習",
@@ -358,6 +359,7 @@ export default async function SamplePage({
                 <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 8px" }}>
                   匯款開通「{order.display_name}」的週練
                 </h2>
+                <p style={{ margin: "0 0 8px", fontWeight: 600 }}>{PAY_NOTE}</p>
                 <p className="price" style={{ margin: "0 0 8px" }}>
                   {SITE.currency}
                   {money(order.amount)}
@@ -390,8 +392,8 @@ export default async function SamplePage({
                   覺得適合，直接匯款訂閱
                 </h2>
                 <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
-                  {PRICE_RULE}，或年繳 {SITE.currency}
-                  {money(SITE.yearlyPrice)}。{seat.text}
+                  {PRICE_RULE}。{YEARLY_NOTE}（{SITE.currency}
+                  {money(SITE.yearlyPrice)} /年）。{seat.text}
                   {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。{startBy ? `${startBy}。` : ""}用剛剛留的信箱登記，不用再收登入信。
                 </p>
                 {error && one(sp.error).includes("孩子") ? (
@@ -412,8 +414,8 @@ export default async function SamplePage({
                   <input id="sub_target" name="exam_target" maxLength={200} placeholder="例如：學測數A、段考、SAT" />
                   <label htmlFor="sub_plan">方案*</label>
                   <select id="sub_plan" name="plan" required defaultValue="monthly">
-                    <option value="monthly">{`月繳 ${SITE.currency}${money(SITE.monthlyPrice)} /月`}</option>
-                    <option value="yearly">{`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}</option>
+                    <option value="monthly">{PLAN_MONTHLY_LABEL}</option>
+                    <option value="yearly">{PLAN_YEARLY_LABEL}</option>
                   </select>
                   <button className="btn btn-ink" type="submit">
                     看匯款帳號
@@ -430,15 +432,15 @@ export default async function SamplePage({
                   <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 4px" }}>
                     覺得適合，就為孩子訂閱週練
                   </h2>
-                  <p className="price">
-                    {SITE.currency}
-                    {money(SITE.monthlyPrice)}
-                    <small> /月 · 每位孩子</small>
+                  <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 600 }}>{FREE_WEEK_RULE}：</p>
+                  <TierPrices />
+                  <p className="muted" style={{ margin: "0 0 6px", fontSize: 14 }}>
+                    年繳目前只適用國中（{SITE.currency}
+                    {money(SITE.yearlyPrice)} /年）；高中與 SAT 目前只有月繳。
                   </p>
-                  <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 600 }}>{FREE_WEEK_RULE}。</p>
+                  <p className="muted" style={{ margin: "0 0 6px", fontSize: 14 }}>{FIRST_WEEK_CONTENT}</p>
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>
-                    或年繳 {SITE.currency}
-                    {money(SITE.yearlyPrice)}。{seat.text}
+                    {seat.text}
                     {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
                     {startBy ? `${startBy}。` : ""}
                   </p>
@@ -447,6 +449,7 @@ export default async function SamplePage({
                     <li>填孩子年級與應考目標</li>
                     <li>匯款後寄證明，約 1 個工作天開通</li>
                   </ol>
+                  <p className="muted" style={{ margin: "8px 0 0", fontSize: 14 }}>{PAY_NOTE}</p>
                 </div>
                 <div className="cta-row" style={{ marginTop: 0 }}>
                   {full ? (
