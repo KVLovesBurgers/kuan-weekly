@@ -50,6 +50,11 @@ export default function UnitsPage() {
             影片留言「練習」或單元名稱拿到的題目都在這裡，依單元整理，目前共 {units.length} 個單元、{total} 份。每份都有題目和逐步詳解，先自己寫再對答案。
           </p>
 
+          <p className="video-entry">
+            <strong>剛看完影片？</strong>
+            <Link href="/videos-practice" className="practice-cta-link">用影片編號或標題找那支影片的練習題</Link>
+          </p>
+
           <ul className="unit-jump" aria-label="單元">
             {units.map(({ u, sheets, pack }) => (
               <li key={u.slug}>

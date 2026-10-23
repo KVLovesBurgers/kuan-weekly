@@ -173,6 +173,7 @@ export default async function HomePage() {
                 <strong className="display">免費練習題</strong>
                 <span className="muted">依單元整理，卡在哪個單元就從那裡開始練，每份都有題目和逐步詳解。</span>
                 <Link href="/units" className="u">依單元找練習題</Link>
+                <Link href="/videos-practice" className="u">看完影片？用影片編號找題目</Link>
               </div>
               <div className="card">
                 <span className="path-no">第 2 步</span>
