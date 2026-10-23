@@ -75,7 +75,7 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
       <section className="quiz-intro">
         <p className="eyebrow">免費段考弱點檢測</p>
         <h1 className="quiz-title">第二次段考，先找出弱點單元</h1>
-        <p className="quiz-lead">對應 11/25-26 第二次段考範圍，8 到 10 題單選，由簡到難，大約 10 分鐘。交卷馬上看到分數和弱點單元；留下 Email 就能看每題詳解；國中與高三另可領對應範圍的免費一週週練。</p>
+        <p className="quiz-lead">國中與高三對應 11/25-26 第二次段考範圍，高一、高二依 108 課綱章節出題；8 到 10 題單選，由簡到難，大約 10 分鐘。交卷馬上看到分數和弱點單元；留下 Email 就能看每題詳解；國中與高三另可領對應範圍的免費一週週練。</p>
         <h2 className="diag-h">國中</h2>
         <div className="quiz-pick">
           {sets.filter((s) => s.level === "國中").map((s) => (
