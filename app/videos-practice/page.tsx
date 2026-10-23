@@ -11,12 +11,12 @@ import { liveUnitPacks } from "@/lib/unit-packs";
 import { KIND_ORDER, videoRows } from "@/lib/video-practice";
 
 export const metadata: Metadata = {
-  title: "影片練習題：用影片編號找題目，每份附詳解｜Saber數學",
-  description: "看完 Saber數學 的短影片，想再多練幾題？輸入影片編號或標題，就能開啟那支影片對應的練習題 PDF，每份都附逐步詳解。",
+  title: "影片練習題：用影片編號找題目，每份附解答｜Saber數學",
+  description: "看完 Saber數學 的短影片，想再多練幾題？輸入影片編號或標題，就能開啟那支影片對應的練習題 PDF，每份都附解答。",
   alternates: { canonical: "/videos-practice" },
   openGraph: {
     title: "影片練習題｜Saber數學",
-    description: "用影片編號或標題，找到那支影片對應的練習題。每份都附逐步詳解。",
+    description: "用影片編號或標題，找到那支影片對應的練習題。每份都附解答。",
     url: "/videos-practice",
     siteName: "Saber數學",
     locale: "zh_TW",
@@ -51,7 +51,7 @@ export default function VideosPracticePage() {
           <p className="kicker">Saber數學</p>
           <h1 className="display practice-title">影片練習題</h1>
           <p className="muted" style={{ marginTop: 8 }}>
-            看完影片想再多練幾題？找到影片編號（標題上的 # 數字）或標題，按「開啟練習題」就是那支影片的同類題目，每份都附逐步詳解。先自己寫寫看再對答案。
+            看完影片想再多練幾題？找到影片編號（標題上的 # 數字）或標題，按「開啟練習題」就是那支影片的同類題目，每份都附解答。先自己寫寫看再對答案。
           </p>
           <p style={{ margin: "10px 0 0", fontSize: 15 }}>
             想照單元系統地練？
