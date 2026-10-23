@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { UnitTrialLink } from "@/components/UnitTrialLink";
+import { DiagCta } from "@/components/DiagCta";
 import { UNIT_PACKS, findUnitPack, hasLivePack, unitOg, unitSheets } from "@/lib/unit-packs";
 import { ShareToParents } from "@/components/ShareToParents";
 import { TrackView } from "@/components/Tracking";
@@ -141,6 +142,7 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
               <UnitTrialLink base={`unit-${u.slug}`} track={u.track} />
             </Suspense>
           </div>
+          {u.track === "jh" && <DiagCta src="units-diag" />}
         </div>
       </main>
       <Footer />

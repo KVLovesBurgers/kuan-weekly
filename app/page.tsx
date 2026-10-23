@@ -7,6 +7,7 @@ import { Logo } from "@/components/Logo";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { InstagramIcon, SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
+import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { GSAT_DATE, gsatDaysLeft, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
@@ -153,6 +154,12 @@ export default async function HomePage() {
               <strong className="display">限 {seatCap()} 名</strong>
               <span className="sub">{seat.short === `限 ${seatCap()} 名` ? "依名額收，不超量" : seat.short}</span>
             </div>
+          </div>
+        </section>
+
+        <section className="diag-band" aria-label="免費段考弱點檢測">
+          <div className="wrap">
+            <DiagCta src="home-diag" variant="banner" />
           </div>
         </section>
 

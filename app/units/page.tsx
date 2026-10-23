@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { DiagCta } from "@/components/DiagCta";
 import { UnitTrialLink } from "@/components/UnitTrialLink";
 import { ShareToParents } from "@/components/ShareToParents";
 import { TrackView } from "@/components/Tracking";
@@ -95,6 +96,8 @@ export default function UnitsPage() {
           <p className="muted" style={{ marginTop: 28, fontSize: 14 }}>
             沒有你要的單元？在影片底下留言單元名稱，會排進下一批。新影片的練習題會在影片公開時一起加進來。
           </p>
+
+          <DiagCta src="units-diag" />
 
           <ShareToParents path="/units" />
 

@@ -612,3 +612,28 @@ picture { display: contents; }
 .paid-next { margin-top: 20px; display: grid; gap: 10px; border: 2px solid var(--ink); }
 .paid-next-btns { display: flex; flex-wrap: wrap; gap: 10px; }
 .paid-next-btns .btn { min-height: 48px; flex: 1 1 200px; justify-content: center; gap: 8px; display: inline-flex; align-items: center; }
+
+/* 段考弱點檢測入口 DiagCta（首頁、國中 learn／units 頁） */
+.diag-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 18px 20px;
+  margin: 28px 0 0;
+}
+.diag-cta-text { min-width: 0; flex: 1 1 auto; }
+.diag-cta .eyebrow { margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--steel, var(--muted)); }
+.diag-cta-h { font-family: var(--display); font-size: 20px; margin: 0 0 6px; }
+.diag-cta-p { margin: 0; font-size: 15px; color: var(--muted); }
+.diag-cta-btn { flex: 0 0 auto; text-align: center; white-space: nowrap; }
+.diag-cta--banner { margin: 0 auto; max-width: 1080px; }
+.diag-band { padding: 24px 0 0; }
+@media (max-width: 640px) {
+  .diag-cta { flex-direction: column; align-items: stretch; padding: 16px; }
+  .diag-cta-btn { width: 100%; padding: 14px 12px; }
+  .diag-cta-h { font-size: 18px; }
+}

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { tex } from "@/components/UnitLesson";
+import { DiagCta } from "@/components/DiagCta";
 import { LEARN_PAGES, findLearnPage } from "@/lib/learn-pages";
 import "katex/dist/katex.min.css";
 
@@ -159,6 +160,7 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
               <Link className="btn btn-ink" href={`/quiz?src=learn-${p.slug}`}>做小卷</Link>
               <Link className="btn btn-steel" href={`/sample?src=learn-${p.slug}`}>免費試閱</Link>
             </div>
+            {p.level === "國中" && <DiagCta src="learn-diag" />}
           </section>
         </div>
       </main>
