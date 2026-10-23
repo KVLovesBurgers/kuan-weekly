@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!u) return { title: "找不到這個單元｜Saber數學" };
   const n = unitSheets(u.slug).length + (hasLivePack(u) ? 1 : 0);
   const L = UNIT_LESSONS[u.slug];
-  const title = L ? `學測${u.title} ${L.problems.length} 題完整詳解與常見錯誤｜Saber數學` : `${u.title} 免費練習題：${n} 份附詳解｜Saber數學`;
-  const description = L ? `學測${u.title}：${u.topic}。${L.problems.length} 題由淺到深的題目，網頁上直接看逐步詳解和常見錯誤${n > 0 ? "，另附 PDF 免費下載" : ""}。` : `${u.title.includes(u.level) ? "" : u.level}${u.title} 免費練習題，共 ${n} 份：${u.topic}。每份都有題目和逐步詳解，免費下載。`;
+  const title = L ? `學測${u.title} ${L.problems.length} 題完整詳解與常見錯誤｜Saber數學` : `${u.title} 免費練習題：${n} 份附解答｜Saber數學`;
+  const description = L ? `學測${u.title}：${u.topic}。${L.problems.length} 題由淺到深的題目，網頁上直接看逐步詳解和常見錯誤${n > 0 ? "，另附 PDF 免費下載" : ""}。` : `${u.title.includes(u.level) ? "" : u.level}${u.title} 免費練習題，共 ${n} 份：${u.topic}。每份都有題目和解答，免費下載。`;
   return {
     title,
     description,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       siteName: "Saber數學",
       locale: "zh_TW",
       type: "website",
-      images: [{ url: unitOg(u.slug), width: 1200, height: 630, alt: `${u.title} 免費練習題附詳解` }],
+      images: [{ url: unitOg(u.slug), width: 1200, height: 630, alt: `${u.title} 免費練習題附解答` }],
     },
     twitter: { card: "summary_large_image", title, description, images: [unitOg(u.slug)] },
   };
@@ -98,7 +98,7 @@ export default async function UnitPage({ params }: { params: Promise<{ slug: str
           <p className="muted" style={{ marginTop: 8 }}>
             {u.topic}。
             {sheets.length + (pack ? 1 : 0) > 0
-              ? `共 ${sheets.length + (pack ? 1 : 0)} 份，每份都有題目和逐步詳解，先自己寫再對答案。`
+              ? `共 ${sheets.length + (pack ? 1 : 0)} 份，每份都有題目和解答，先自己寫再對答案。`
               : lesson
                 ? "下面的題目都附逐步詳解，先自己寫再對答案。"
                 : ""}

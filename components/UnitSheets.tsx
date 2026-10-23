@@ -21,12 +21,12 @@ export function SheetCard({ unit, s }: { unit: string; s: PracticeSheet }) {
       <Suspense
         fallback={
           <a className="btn btn-ink practice-btn" href={`/units/${unit}/pdf?sheet=${s.driveId}`} target="_blank" rel="noopener">
-            開啟練習題＋詳解
+            開啟練習題＋解答
           </a>
         }
       >
         <UnitPdfLink slug={unit} sheet={s.driveId} className="btn btn-ink practice-btn">
-          開啟練習題＋詳解
+          開啟練習題＋解答
         </UnitPdfLink>
       </Suspense>
     </li>

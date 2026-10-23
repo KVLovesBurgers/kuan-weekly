@@ -11,12 +11,12 @@ import { PackCard, SheetCard } from "@/components/UnitSheets";
 import { hasLesson, hasLivePack, liveUnitPacks, unitSheets } from "@/lib/unit-packs";
 
 export const metadata: Metadata = {
-  title: "免費練習題與單元包：依單元找題目，每題附詳解｜Saber數學",
-  description: "Saber數學 免費練習題，依單元整理：乘法公式、三角函數、指數與對數、向量、排列組合與機率、Digital SAT 等。每份都有題目和逐步詳解。",
+  title: "免費練習題與單元包：依單元找題目，每份附解答｜Saber數學",
+  description: "Saber數學 免費練習題，依單元整理：乘法公式、三角函數、指數與對數、向量、排列組合與機率、Digital SAT 等。每份都有題目和解答。",
   alternates: { canonical: "/units" },
   openGraph: {
     title: "免費練習題與單元包｜Saber數學",
-    description: "卡在哪個單元，就從那個單元開始練。每份都有題目和逐步詳解。",
+    description: "卡在哪個單元，就從那個單元開始練。每份都有題目和解答。",
     url: "/units",
     siteName: "Saber數學",
     locale: "zh_TW",
@@ -47,7 +47,7 @@ export default function UnitsPage() {
           <p className="kicker">Saber數學</p>
           <h1 className="display practice-title">免費練習題・單元包</h1>
           <p className="muted" style={{ marginTop: 8 }}>
-            影片留言「練習」或單元名稱拿到的題目都在這裡，依單元整理，目前共 {units.length} 個單元、{total} 份。每份都有題目和逐步詳解，先自己寫再對答案。
+            影片裡提到的練習題都在這裡，依單元整理，目前共 {units.length} 個單元、{total} 份。每份都有題目和解答，先自己寫再對答案。
           </p>
 
           <p className="video-entry">
