@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { startCheckout } from "@/app/actions/parent";
-import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel, money } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel, money, PRICE_RULE } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +31,9 @@ export default async function SubscribePage({
           <p className="muted">
             {seat.text}
             {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。送出後會看到匯款帳號；轉帳完成請把證明寄到老師信箱，確認後開通。
+          </p>
+          <p className="muted" style={{ marginTop: 4 }}>
+            {PRICE_RULE}。
           </p>
 
           <div className="banner" style={{ marginTop: 16 }}>

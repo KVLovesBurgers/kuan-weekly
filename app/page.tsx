@@ -9,7 +9,7 @@ import { InstagramIcon, SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
 import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
-import { GSAT_DATE, gsatDaysLeft, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { GSAT_DATE, gsatDaysLeft, PRICE_RULE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
@@ -106,7 +106,7 @@ export default async function HomePage() {
                   {SITE.currency}
                   {money(SITE.monthlyPrice)}
                 </strong>{" "}
-                /月・每位孩子
+                /月・每位孩子，第一週免費
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
@@ -329,7 +329,7 @@ export default async function HomePage() {
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
             <p className="muted">
-              一位孩子一份週練。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
+              一位孩子一份週練。{PRICE_RULE}。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
             </p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               <article className="card">
@@ -339,7 +339,7 @@ export default async function HomePage() {
                   {money(SITE.monthlyPrice)}
                   <small> /月 · 每名孩子</small>
                 </p>
-                <p className="muted">適合先試一個月。要停用請寄信 {SITE.contactEmail}。</p>
+                <p className="muted">第一週免費，從第二週起才開始計算一個月。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年</p>
@@ -429,6 +429,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
+                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。"],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],

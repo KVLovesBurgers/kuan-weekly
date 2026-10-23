@@ -127,10 +127,10 @@ export function buildTrialDelivery(lead: { id: string; role?: string; grade?: st
     .map((p) => `【${p.label}・${p.unit}】\n學生題本：${trialUrl(SITE_BASE, lead.id, p.id, "student")}\n家長解答：${trialUrl(SITE_BASE, lead.id, p.id, "parent")}`)
     .join("\n\n");
   const student = lead.role === "學生";
-  const subject = `寬數週練 7 天完整試用：${end}關閉`;
+  const subject = `寬數週練 第一週免費：${end}關閉`;
   const text = `${student ? "你好" : "您好"}，我是吳寬老師。
 
-這是寬數週練的 7 天完整試用，${packs.length > 1 ? `共 ${packs.length} 份，` : ""}每份都是完整的一週：學生題本 15 題（基礎、常考、進階三關）＋家長解答（每題步驟和常見錯誤）。
+這是寬數週練第一週免費的完整題本（7 天），${packs.length > 1 ? `共 ${packs.length} 份，` : ""}每份都是完整的一週：學生題本 15 題（基礎、常考、進階三關）＋家長解答（每題步驟和常見錯誤）。
 
 ${links}
 
@@ -156,10 +156,10 @@ ${SITE_BASE}
 export function buildTrialReminder(lead: { role?: string; grade?: string; created_at: string }, now = new Date()) {
   const end = trialEndLabel(lead.created_at);
   const student = lead.role === "學生";
-  const subject = `試用題本 ${end}關閉，寫完了嗎？`;
+  const subject = `第一週免費題本 ${end}關閉，寫完了嗎？`;
   const text = `${student ? "你好" : "您好"}，我是吳寬老師。
 
-提醒一下，7 天完整試用的下載連結會在 ${end}晚上 11:59 關閉，還沒下載的話請記得先存下來。
+提醒一下，第一週免費的下載連結會在 ${end}晚上 11:59 關閉，還沒下載的話請記得先存下來。
 
 ${student ? "寫完了嗎？卡住的題號直接回信問我。" : "孩子寫完了嗎？哪一題卡住，回信告訴我題號，我幫您看是觀念還是粗心。"}
 
@@ -171,7 +171,7 @@ ${student ? "這封可以轉給家長看。" : "這封也可以轉給家裡另�
 寬數週練
 ${SITE_BASE}
 
-（這是試用期間唯一一封提醒，之後不會再寄。不想收到，回信告訴我即可）
+（這是第一週免費期間唯一一封提醒，之後不會再寄。不想收到，回信告訴我即可）
 `;
   return { subject, text };
 }

@@ -664,3 +664,7 @@ picture { display: contents; }
   .vp-btn { width: auto; }
 }
 .video-entry { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--paper-raised); box-shadow: var(--shadow-border); font-size: 15px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+
+/* /sample 頁首入口：影片練習題（2026-10-24） */
+.sample-top-link { margin: 0 0 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; line-height: 1.5; background: color-mix(in srgb, var(--paper) 92%, #4f6075); }
+.sample-top-link a { display: block; padding: 10px 12px; min-height: 44px; box-sizing: border-box; }

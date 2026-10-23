@@ -26,11 +26,11 @@ import { getDb } from "@/lib/db";
 import { SCOPE_GRADES, SCOPE_OPTIONS, packsForGrade, trialActive, trialEndLabel, trialToken, isTrialLead } from "@/lib/trial";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { FirstTouchSrcFill } from "@/components/FirstTouch";
-import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "免費題本試閱｜寬數週練・國中數學每週練習",
-  description: "留下信箱，依孩子年級免費下載寬數週練試閱：國中段考、高中學測必錯題、SAT Math。吳寬老師出題，家長解答含步驟拆解。",
+  title: "免費題本試閱｜寬數週練・國中、高中數學每週練習",
+  description: "留下信箱，依孩子年級免費下載寬數週練試閱：國中段考、高中學測必錯題、SAT Math。吳寬老師出題，家長解答含步驟拆解。訂閱第一週免費。",
   alternates: { canonical: "/sample" },
   openGraph: {
     title: "免費題本試閱｜寬數週練",
@@ -130,15 +130,18 @@ export default async function SamplePage({
       )}
       <main id="main" className="section">
         <div className="wrap" style={{ maxWidth: 880 }}>
-          <p className="kicker">題本試閱 · 7 天完整試用</p>
+          <p className="sample-top-link">
+            <Link href="/videos-practice?src=sample-top" className="u">只想找影片的免費練習題？點這裡</Link>
+          </p>
+          <p className="kicker">題本試閱 · 第一週免費</p>
           <h1 className="display" style={{ fontSize: "clamp(32px, 5vw, 44px)", margin: "8px 0 12px" }}>
             領題本試閱
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
-            留下信箱並選孩子年級：<strong>國一、國二、國三、高三</strong>可以領 7 天完整試用，是完整的一週題本（學生題本 15 題＋家長解答，每題有步驟和常見錯誤）。國一、國二是第二次段考範圍；國三有圓和相似形兩份；高三有學測數A、數B 各一份。下載連結也會寄到信箱，從留信箱那天算起，第 7 天晚上 11:59 關閉。
+            留下信箱並選孩子年級：<strong>國一、國二、國三、高三</strong>可以領第一週免費的完整題本（7 天）：學生題本 15 題＋家長解答，每題有步驟和常見錯誤。國一、國二是第二次段考範圍；國三有圓和相似形兩份；高三有學測數A、數B 各一份。下載連結也會寄到信箱，從留信箱那天算起，第 7 天晚上 11:59 關閉。
           </p>
           <p className="muted" style={{ maxWidth: 620 }}>
-            <strong>高一、高二</strong>目前提供學測必錯 5 題試閱（對數、向量、條件機率、數列、餘弦定理）；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本，這兩種不會關閉。A4 可以直接列印給孩子寫。
+            <strong>高一、高二</strong>目前是學測必錯 5 題試閱（檔案標示為高三學測版，內容：對數、向量、條件機率、數列、餘弦定理），不是完整一週題本；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。這兩種試閱不會關閉。A4 可以直接列印給孩子寫。
           </p>
 
           <nav className="cta-row sample-tracks" aria-label="選擇試閱年級" style={{ marginTop: 16 }}>
@@ -181,7 +184,7 @@ export default async function SamplePage({
                 </p>
                 {trial ? (
                   <div className="card" style={{ marginTop: 20 }}>
-                    <p className="kicker">7 天完整試用 · {trial.active ? `${trial.end}晚上 11:59 關閉` : `已在 ${trial.end}關閉`}</p>
+                    <p className="kicker">第一週免費 · {trial.active ? `${trial.end}晚上 11:59 關閉` : `已在 ${trial.end}關閉`}</p>
                     {trial.active ? (
                       <>
                         <h2 className="display" style={{ fontSize: 22, margin: "4px 0 8px" }}>完整一週題本，依孩子年級</h2>
@@ -199,7 +202,7 @@ export default async function SamplePage({
                         </div>
                       </>
                     ) : (
-                      <p className="muted" style={{ margin: "4px 0 0" }}>完整試用已經結束。下面的公開試閱還是可以看。</p>
+                      <p className="muted" style={{ margin: "4px 0 0" }}>第一週免費的下載已經結束。下面的公開試閱還是可以看。</p>
                     )}
                   </div>
                 ) : null}
@@ -311,7 +314,7 @@ export default async function SamplePage({
               <div style={{ width: "100%" }}>
                 <p className="kicker">看完試閱之後</p>
                 <h2 id="next-step-title" className="display" style={{ fontSize: 24, margin: "4px 0 8px" }}>
-                  免費寄這週的週練題本
+                  領免費第一週的週練題本
                 </h2>
                 {scopeMsg ? (
                   <p role="status" style={{ margin: "0 0 12px", fontWeight: 600 }}>{scopeMsg}</p>
@@ -387,9 +390,8 @@ export default async function SamplePage({
                   覺得適合，直接匯款訂閱
                 </h2>
                 <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
-                  {SITE.currency}
-                  {money(SITE.monthlyPrice)} /月，或年繳 {SITE.currency}
-                  {money(SITE.yearlyPrice)}，每位孩子計價。{seat.text}
+                  {PRICE_RULE}，或年繳 {SITE.currency}
+                  {money(SITE.yearlyPrice)}。{seat.text}
                   {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。{startBy ? `${startBy}。` : ""}用剛剛留的信箱登記，不用再收登入信。
                 </p>
                 {error && one(sp.error).includes("孩子") ? (
@@ -433,6 +435,7 @@ export default async function SamplePage({
                     {money(SITE.monthlyPrice)}
                     <small> /月 · 每位孩子</small>
                   </p>
+                  <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 600 }}>{FREE_WEEK_RULE}。</p>
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>
                     或年繳 {SITE.currency}
                     {money(SITE.yearlyPrice)}。{seat.text}

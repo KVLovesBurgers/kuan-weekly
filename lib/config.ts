@@ -118,6 +118,10 @@ export function gsatDaysLeft(now = new Date()) {
 
 export const money = (n: number) => n.toLocaleString("en-US");
 
+/** 週練訂閱收費說法（2026-10-24 使用者決定）：第一週免費，從第二週起才開始計算一個月 NT$799（每位孩子）。全站統一用這兩句。 */
+export const FREE_WEEK_RULE = "第一週免費，從第二週起才開始計算一個月";
+export const PRICE_RULE = `${FREE_WEEK_RULE} ${SITE.currency}${money(SITE.monthlyPrice)}（每位孩子）`;
+
 export function seatCap() {
   const n = Number(process.env.SEAT_CAP ?? "20");
   return Number.isFinite(n) && n > 0 ? n : 20;
