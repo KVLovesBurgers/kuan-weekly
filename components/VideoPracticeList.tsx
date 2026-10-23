@@ -11,8 +11,9 @@ type Chip = { key: string; label: string };
  * 全部列都先在伺服器端輸出成 HTML，篩選只是顯示或隱藏，不載入任何額外套件。
  * 網址可帶 ?unit=<單元代號>、?kind=<系列>、?q=<搜尋字>，方便影片置頂留言直接指到某個單元。
  */
-export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; kinds: Chip[]; units: Chip[] }) {
+export function VideoPracticeList({ rows, kinds, units, grades }: { rows: VideoRow[]; kinds: Chip[]; units: Chip[]; grades: Chip[] }) {
   const [q, setQ] = useState("");
+  const [grade, setGrade] = useState("all");
   const [kind, setKind] = useState("all");
   const [unit, setUnit] = useState("all");
 
@@ -20,11 +21,13 @@ export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; ki
     const p = new URLSearchParams(window.location.search);
     const u = p.get("unit");
     const k = p.get("kind");
+    const g = p.get("grade");
     const s = p.get("q");
     if (u && units.some((x) => x.key === u)) setUnit(u);
+    if (g && grades.some((x) => x.key === g)) setGrade(g);
     if (k && kinds.some((x) => x.key === k)) setKind(k);
     if (s) setQ(s.slice(0, 30));
-  }, [kinds, units]);
+  }, [kinds, units, grades]);
 
   const src = () => new URLSearchParams(window.location.search).get("src")?.slice(0, 40) ?? "";
 
@@ -33,11 +36,11 @@ export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; ki
     () =>
       new Set(
         rows
-          .filter((r) => (kind === "all" || r.kind === kind) && (unit === "all" || r.unit === unit))
+          .filter((r) => (grade === "all" || r.grade === grade) && (kind === "all" || r.kind === kind) && (unit === "all" || r.unit === unit))
           .filter((r) => !needle || `${r.label} ${r.title} ${r.topic} ${r.unitTitle}`.toLowerCase().includes(needle))
           .map((r) => r.id),
       ),
-    [rows, kind, unit, needle],
+    [rows, grade, kind, unit, needle],
   );
 
   const chip = (c: Chip, cur: string, set: (k: string) => void) => (
@@ -67,6 +70,11 @@ export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; ki
             autoComplete="off"
           />
         </label>
+        <p className="vp-group">依年級</p>
+        <div className="vp-chips" role="group" aria-label="依年級篩選">
+          {chip({ key: "all", label: "全部年級" }, grade, setGrade)}
+          {grades.map((c) => chip(c, grade, setGrade))}
+        </div>
         <p className="vp-group">依系列</p>
         <div className="vp-chips" role="group" aria-label="依系列篩選">
           {chip({ key: "all", label: "全部" }, kind, setKind)}
@@ -93,7 +101,7 @@ export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; ki
             </div>
             <h3 className="display">{r.title}</h3>
             <p className="vp-tags">
-              <span className="badge">{r.level}</span>
+              <span className="badge">{r.grade}</span>
               <span className="badge vp-unit">{r.unitTitle}</span>
             </p>
             <a
@@ -113,7 +121,7 @@ export function VideoPracticeList({ rows, kinds, units }: { rows: VideoRow[]; ki
         <div className="card vp-empty">
           <p style={{ margin: 0 }}>找不到符合的影片。試試只輸入編號（例如 24），或按「全部」清掉篩選。</p>
           <p style={{ margin: "8px 0 0" }}>
-            <button type="button" className="vp-chip on" onClick={() => { setQ(""); setKind("all"); setUnit("all"); }}>
+            <button type="button" className="vp-chip on" onClick={() => { setQ(""); setGrade("all"); setKind("all"); setUnit("all"); }}>
               清除篩選
             </button>
           </p>

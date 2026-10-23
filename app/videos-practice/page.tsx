@@ -8,7 +8,7 @@ import { UnitTrialLink } from "@/components/UnitTrialLink";
 import { TrackView } from "@/components/Tracking";
 import { VideoPracticeList } from "@/components/VideoPracticeList";
 import { liveUnitPacks } from "@/lib/unit-packs";
-import { KIND_ORDER, videoRows } from "@/lib/video-practice";
+import { KIND_ORDER, videoRows, GRADE_ORDER } from "@/lib/video-practice";
 
 export const metadata: Metadata = {
   title: "影片練習題：用影片編號找題目，每份附解答｜Saber數學",
@@ -34,6 +34,9 @@ export default function VideosPracticePage() {
   const kinds = KIND_ORDER.map((k) => ({ key: k, n: rows.filter((r) => r.kind === k).length }))
     .filter((k) => k.n > 0)
     .map((k) => ({ key: k.key, label: `${k.key}（${k.n}）` }));
+  const grades = GRADE_ORDER.map((g) => ({ key: g, n: rows.filter((r) => r.grade === g).length }))
+    .filter((g) => g.n > 0)
+    .map((g) => ({ key: g.key, label: `${g.key}（${g.n}）` }));
   // 單元順序照 /units（liveUnitPacks 的順序），只列目前有影片練習題的單元。
   const units = liveUnitPacks(now)
     .map((u) => ({ key: u.slug, n: rows.filter((r) => r.unit === u.slug).length, title: u.title }))
@@ -58,7 +61,7 @@ export default function VideosPracticePage() {
             <Link href="/units" className="practice-cta-link">看依單元整理的完整清單</Link>
           </p>
 
-          <VideoPracticeList rows={rows} kinds={kinds} units={units} />
+          <VideoPracticeList rows={rows} kinds={kinds} units={units} grades={grades} />
 
           <p className="muted" style={{ marginTop: 28, fontSize: 14 }}>
             找不到影片？在影片底下留言編號或單元名稱，會排進下一批。新影片的練習題會在影片公開時一起加進來。

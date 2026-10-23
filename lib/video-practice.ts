@@ -17,6 +17,8 @@ export type VideoRow = {
   title: string;
   topic: string;
   level: PracticeSheet["level"];
+  /** 年級（108 課綱）：國二、國三、高一、高二、SAT；沒登記的新影片退回 level（國中／高中）。 */
+  grade: string;
   unit: string;
   unitTitle: string;
   date: string;
@@ -37,6 +39,41 @@ function kindOf(series: string): string {
 
 const PREFIX: Record<string, string> = { 畫圖一眼懂: "ey", 學測一眼懂: "ey", 學測真題: "gr", 段考必錯: "ex" };
 
+
+/**
+ * 年級對照（108 課綱），以 PDF 檔名代號（driveId 或 /pdf/ 檔名）為鍵。
+ * 新影片沒寫在這裡時，退回 level（國中／高中／SAT），之後再補一行即可。
+ */
+const GRADE: Record<string, string> = {
+  "1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f": "高二", // 畫圖一眼懂 #25 餘弦定理
+  "gsat-real2-practice": "高一", // 學測真題 #2 排列組合
+  "1YK2q2BYjLBBr-jlK4eL6R0X89FrjHMJI": "高二", // #24 向量內積
+  "gsat-real1-practice": "高一", // 學測真題 #1 坐標與距離
+  "1lnFhgWQX-a19d9CLPRoBW2fKX0elHIcv": "高一", // 排列組合長片
+  "1B4MBdG34wQMPdwygTln2yIxd3nye4XyC": "高一", // #23 圓方程式
+  "1t5M_odF6LCwlPCe_TQWxmG6aPrX3SvoI": "高一", // #22 排列組合
+  "1vrd_8ZaRW4me58-B8PVXILP09UdS_9f_": "SAT",
+  "1WCsZRivJ68te1jn7WFYIEFixHieVV0EI": "國二", // #21 乘法公式
+  "1trphOaYKfKLGBP5jPw7GNY3EMrVCiDyP": "SAT",
+  "1X9EMH_cbhLwf0zNNUr7yyCcA0H6DneaR": "高一", // #20 機率
+  "1UtEkfeHf-6oQMtNozJZMwXVhlQ04KMar": "國三", // 國三圓
+  "1eFQG9fg1DMlX6k-AaH4WEFzHN7kI0jqW": "高一", // #19 數列級數
+  "108wOij62LPGPzgTfqnVlnEFvuFAXg499": "高一", // #18 log
+  "1dNoiI1vesdR-uv9DhG6kmfZTdLgkP0wz": "高二", // #17 sin²+cos²
+  "1Fxs7EyRkUVDM4Q1rPVlgYY8CC1E21w8L": "高一", // 指數對數長片
+  "1GpDzykD27BaH7GcnPIWOYmXlFqoKKg1m": "高二", // #16 向量
+  "1Kgja9H0S8OxXVkiOhl-NEcpj-c-AjG2O": "高二", // #15 tan
+  "1vE3OG2B-EouAnME4dDHcb4nK5tPnR9ao": "國二", // 段考必錯 #6 乘法公式
+  "1hShrUHRkiwdeIpilMpr6YTrg7nCcKXzB": "高二", // 段考必錯 #5 sin 和角
+};
+
+export const GRADE_ORDER = ["國二", "國三", "高一", "高二", "SAT", "國中", "高中"];
+
+function gradeOf(s: PracticeSheet): string {
+  const key = s.driveId in GRADE ? s.driveId : (s.url?.match(/\/pdf\/([^/]+)\.pdf$/)?.[1] ?? "");
+  return GRADE[key] ?? (s.level === "SAT" ? "SAT" : s.level);
+}
+
 /** 把站內絕對網址轉成相對路徑；站外網址原樣保留。 */
 function pdfHref(s: PracticeSheet): string {
   if (s.url) return s.url.replace(/^https:\/\/kuan-weekly\.vercel\.app/, "");
@@ -56,6 +93,7 @@ export function videoRows(now = new Date()): VideoRow[] {
       title: s.title,
       topic: s.topic,
       level: s.level,
+      grade: gradeOf(s),
       unit,
       unitTitle: known.get(unit) ?? "其他",
       date: fmtDate(s.publishAt),
