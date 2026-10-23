@@ -70,7 +70,7 @@ export function VideoPracticeList({ rows, kinds, units, grades }: { rows: VideoR
             autoComplete="off"
           />
         </label>
-        <p className="vp-group">依年級</p>
+        <p className="vp-group">依年級（依 108 課綱）</p>
         <div className="vp-chips" role="group" aria-label="依年級篩選">
           {chip({ key: "all", label: "全部年級" }, grade, setGrade)}
           {grades.map((c) => chip(c, grade, setGrade))}

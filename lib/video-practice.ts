@@ -45,7 +45,7 @@ const PREFIX: Record<string, string> = { 畫圖一眼懂: "ey", 學測一眼懂:
  * 新影片沒寫在這裡時，退回 level（國中／高中／SAT），之後再補一行即可。
  */
 const GRADE: Record<string, string> = {
-  "1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f": "高二", // 畫圖一眼懂 #25 餘弦定理
+  "1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f": "高一", // 畫圖一眼懂 #25 餘弦定理
   "gsat-real2-practice": "高一", // 學測真題 #2 排列組合
   "1YK2q2BYjLBBr-jlK4eL6R0X89FrjHMJI": "高二", // #24 向量內積
   "gsat-real1-practice": "高一", // 學測真題 #1 坐標與距離
@@ -58,11 +58,11 @@ const GRADE: Record<string, string> = {
   "1X9EMH_cbhLwf0zNNUr7yyCcA0H6DneaR": "高一", // #20 機率
   "1UtEkfeHf-6oQMtNozJZMwXVhlQ04KMar": "國三", // 國三圓
   "1eFQG9fg1DMlX6k-AaH4WEFzHN7kI0jqW": "高一", // #19 數列級數
-  "108wOij62LPGPzgTfqnVlnEFvuFAXg499": "高一", // #18 log
-  "1dNoiI1vesdR-uv9DhG6kmfZTdLgkP0wz": "高二", // #17 sin²+cos²
-  "1Fxs7EyRkUVDM4Q1rPVlgYY8CC1E21w8L": "高一", // 指數對數長片
+  "108wOij62LPGPzgTfqnVlnEFvuFAXg499": "高二", // #18 log
+  "1dNoiI1vesdR-uv9DhG6kmfZTdLgkP0wz": "高一", // #17 sin²+cos²
+  "1Fxs7EyRkUVDM4Q1rPVlgYY8CC1E21w8L": "高二", // 指數對數長片
   "1GpDzykD27BaH7GcnPIWOYmXlFqoKKg1m": "高二", // #16 向量
-  "1Kgja9H0S8OxXVkiOhl-NEcpj-c-AjG2O": "高二", // #15 tan
+  "1Kgja9H0S8OxXVkiOhl-NEcpj-c-AjG2O": "高一", // #15 tan
   "1vE3OG2B-EouAnME4dDHcb4nK5tPnR9ao": "國二", // 段考必錯 #6 乘法公式
   "1hShrUHRkiwdeIpilMpr6YTrg7nCcKXzB": "高二", // 段考必錯 #5 sin 和角
 };
