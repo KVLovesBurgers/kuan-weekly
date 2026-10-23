@@ -12,6 +12,8 @@ export type DiagSetView = {
   level: "國中" | "高中";
   label: string;
   scope: string;
+  /** 有對應的免費一週週練包才為 true（高一、高二目前沒有）。 */
+  hasPacks: boolean;
   questions: { id: string; unit: string; stem: string; options: string[] }[];
 };
 
@@ -23,6 +25,12 @@ const UNIT_PAGE: Record<string, { slug: string; name: string }> = {
   圓內接四邊形: { slug: "jh-circle", name: "圓（國三）" },
   弧長與扇形: { slug: "jh-circle", name: "圓（國三）" },
   指數與對數: { slug: "gsat-log", name: "指數與對數" },
+  指數律與指數方程式: { slug: "gsat-log", name: "指數與對數" },
+  常用對數: { slug: "gsat-log", name: "指數與對數" },
+  圓方程式: { slug: "circle-eq", name: "圓方程式" },
+  圓與直線: { slug: "circle-eq", name: "圓方程式" },
+  和差角公式: { slug: "trig", name: "三角函數" },
+  疊合: { slug: "trig", name: "三角函數" },
   排列組合: { slug: "prob", name: "排列組合與機率" },
   機率: { slug: "prob", name: "排列組合與機率" },
 };
@@ -67,7 +75,7 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
       <section className="quiz-intro">
         <p className="eyebrow">免費段考弱點檢測</p>
         <h1 className="quiz-title">第二次段考，先找出弱點單元</h1>
-        <p className="quiz-lead">對應 11/25-26 第二次段考範圍，8 到 10 題單選，由簡到難，大約 10 分鐘。交卷馬上看到分數和弱點單元；留下 Email 就能看每題詳解，並拿到對應範圍的免費一週週練。</p>
+        <p className="quiz-lead">對應 11/25-26 第二次段考範圍，8 到 10 題單選，由簡到難，大約 10 分鐘。交卷馬上看到分數和弱點單元；留下 Email 就能看每題詳解；國中與高三另可領對應範圍的免費一週週練。</p>
         <h2 className="diag-h">國中</h2>
         <div className="quiz-pick">
           {sets.filter((s) => s.level === "國中").map((s) => (
@@ -77,6 +85,7 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
           ))}
         </div>
         <h2 className="diag-h">高中</h2>
+        <p className="quiz-note">高一、高二依 108 課綱章節出題，各校段考範圍不同，請以學校公告為準。</p>
         <div className="quiz-pick">
           {sets.filter((s) => s.level === "高中").map((s) => (
             <button key={s.id} type="button" className="btn btn-ink quiz-pick-btn" onClick={() => pick(s.id)}>
@@ -138,12 +147,14 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
           ) : null}
         </div>
 
-        <PaidNext track={set.level === "高中" ? "gsat" : "jh"} label={set.label} weak={score.weak} src="diag-result" />
+        <PaidNext track={set.id === "g12" ? "gsat" : "jh"} label={set.label} weak={score.weak} src="diag-result" />
 
         {!unlocked ? (
           <form className="quiz-submit card" onSubmit={onUnlock} id="unlock">
-            <h2 className="diag-h" style={{ margin: 0 }}>看每題詳解＋領免費一週週練</h2>
-            <p className="quiz-note" style={{ fontSize: 15 }}>留下 Email，馬上在這頁看到每題詳解，並拿到 {set.label} 第二次段考範圍的一週週練（學生題本＋家長解答）。</p>
+            <h2 className="diag-h" style={{ margin: 0 }}>{set.hasPacks ? "看每題詳解＋領免費一週週練" : "看每題詳解"}</h2>
+            <p className="quiz-note" style={{ fontSize: 15 }}>
+              {set.hasPacks ? <>留下 Email，馬上在這頁看到每題詳解，並拿到 {set.label} 第二次段考範圍的一週週練（學生題本＋家長解答）。</> : <>留下 Email，馬上在這頁看到每題詳解。</>}
+            </p>
             <div className="diag-role" role="radiogroup" aria-label="身分">
               {["家長", "學生"].map((r) => (
                 <label key={r} className={`quiz-opt${role === r ? " on" : ""}`}>
@@ -156,11 +167,11 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
             <input id="diag-email" type="email" required inputMode="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
             <p className="quiz-note">只用來寄寬數週練的練習資訊，不會給其他人。</p>
             {error && <p className="quiz-error" role="alert">{error}</p>}
-            <button type="submit" className="btn btn-ink quiz-go" disabled={pending}>{pending ? "處理中…" : "看詳解、領週練"}</button>
+            <button type="submit" className="btn btn-ink quiz-go" disabled={pending}>{pending ? "處理中…" : set.hasPacks ? "看詳解、領週練" : "看詳解"}</button>
           </form>
         ) : (
           <>
-            {unlocked.packs.length ? (
+            {!set.hasPacks ? null : unlocked.packs.length ? (
               <div className="card quiz-cta" id="week">
                 <h2 className="diag-h" style={{ margin: 0 }}>免費一週週練</h2>
                 {unlocked.packs.map((p) => (

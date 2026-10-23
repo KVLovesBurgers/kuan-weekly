@@ -6,10 +6,10 @@ import { Footer } from "@/components/Footer";
 import { TrackView } from "@/components/Tracking";
 import { DiagClient, type DiagSetView } from "@/components/DiagClient";
 import { tex } from "@/components/UnitLesson";
-import { DIAG_SETS, diagQuestions } from "@/lib/diag";
+import { DIAG_SETS, diagQuestions, hasDiagPacks } from "@/lib/diag";
 
 const TITLE = "免費段考弱點檢測｜第二次段考數學｜寬數週練";
-const DESC = "吳寬老師出題，對應 11/25-26 第二次段考範圍。國一、國二、國三、高三各一份，8 到 10 題單選，交卷馬上看分數和弱點單元。";
+const DESC = "吳寬老師出題，對應 11/25-26 第二次段考範圍。國一、國二、國三、高一、高二、高三各一份，8 到 10 題單選，交卷馬上看分數和弱點單元。";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -27,6 +27,7 @@ export default function DiagPage() {
     level: s.level,
     label: s.label,
     scope: s.scope,
+    hasPacks: hasDiagPacks(s.id),
     questions: diagQuestions(s.id).map((q) => ({ id: q.id, unit: q.unit, stem: tex(q.stem), options: q.options.map(tex) })),
   }));
   return (
