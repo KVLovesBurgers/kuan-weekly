@@ -33,11 +33,12 @@ function kindOf(series: string): string {
   if (series.includes("畫圖一眼懂")) return "畫圖一眼懂";
   if (series.includes("學測一眼懂")) return "學測一眼懂";
   if (series.includes("學測真題")) return "學測真題";
+  if (series.includes("學測陷阱題")) return "學測陷阱題";
   if (series.includes("段考必錯")) return "段考必錯";
   return "長片";
 }
 
-const PREFIX: Record<string, string> = { 畫圖一眼懂: "ey", 學測一眼懂: "ey", 學測真題: "gr", 段考必錯: "ex" };
+const PREFIX: Record<string, string> = { 畫圖一眼懂: "ey", 學測一眼懂: "ey", 學測真題: "gr", 學測陷阱題: "tr", 段考必錯: "ex" };
 
 
 /**
@@ -46,6 +47,7 @@ const PREFIX: Record<string, string> = { 畫圖一眼懂: "ey", 學測一眼懂:
  */
 const GRADE: Record<string, string> = {
   "1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f": "高一", // 畫圖一眼懂 #25 餘弦定理
+  "gsat-trap1-practice": "高一", // 學測陷阱題 #1 根式方程
   "gsat-real2-practice": "高一", // 學測真題 #2 排列組合
   "1YK2q2BYjLBBr-jlK4eL6R0X89FrjHMJI": "高二", // #24 向量內積
   "gsat-real1-practice": "高一", // 學測真題 #1 坐標與距離
@@ -102,4 +104,4 @@ export function videoRows(now = new Date()): VideoRow[] {
   });
 }
 
-export const KIND_ORDER = ["畫圖一眼懂", "學測一眼懂", "學測真題", "段考必錯", "長片"];
+export const KIND_ORDER = ["畫圖一眼懂", "學測一眼懂", "學測真題", "學測陷阱題", "段考必錯", "長片"];
