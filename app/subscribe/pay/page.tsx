@@ -4,7 +4,7 @@ import { getParent } from "@/lib/auth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getDb } from "@/lib/db";
-import { BANK_TRANSFER, SITE, PAY_NOTE, money } from "@/lib/config";
+import { BANK_TRANSFER, SITE, PAY_NOTE, START_NOTE, CLOSED_MSG, isSubscribeOpen, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -26,9 +26,10 @@ export default async function PayPage({
   if (!row) redirect("/subscribe");
   if (row.status === "paid") redirect("/dashboard");
 
-  const child = (await db.prepare("SELECT display_name FROM children WHERE id = ?").get(row.child_id)) as
-    | { display_name: string }
+  const child = (await db.prepare("SELECT display_name, grade FROM children WHERE id = ?").get(row.child_id)) as
+    | { display_name: string; grade: string }
     | undefined;
+  if (child && !isSubscribeOpen(child.grade)) redirect("/subscribe?error=" + encodeURIComponent(CLOSED_MSG));
   const planLabel = row.plan === "yearly" ? "年繳" : "月繳";
   const amount = Number(row.amount);
   const mailto = `mailto:${BANK_TRANSFER.proofEmail}?subject=${encodeURIComponent(
@@ -51,6 +52,7 @@ export default async function PayPage({
         <div className="card" style={{ marginTop: 20 }}>
           <p className="kicker">應付金額</p>
           <p style={{ margin: "8px 0 0", fontWeight: 600 }}>{PAY_NOTE}</p>
+          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>{START_NOTE}</p>
           <p className="price" style={{ margin: "8px 0 0" }}>
             {SITE.currency}
             {money(amount)}

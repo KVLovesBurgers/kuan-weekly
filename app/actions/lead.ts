@@ -10,7 +10,7 @@ import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLE
 import { seatsRemaining } from "@/lib/db";
 import { buildScopeDelivery, buildTrialDelivery, isTestAddress, TRIAL_APPLY_KIND } from "@/lib/followup";
 import { isTrialLead, SCOPE_GRADES, SCOPE_OPTIONS, scopeKind, scopeMailAllowed, TRIAL_D0_KIND } from "@/lib/trial";
-import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG } from "@/lib/config";
+import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, isSubscribeOpen, CLOSED_MSG } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
 
 export async function submitSampleLead(formData: FormData) {
@@ -131,8 +131,11 @@ export async function startSampleCheckout(formData: FormData) {
   if (!display_name || !grade) {
     redirect("/sample?error=" + encodeURIComponent("請填孩子稱呼與年級。") + "#subscribe");
   }
+  if (!isSubscribeOpen(grade)) {
+    redirect("/sample?error=" + encodeURIComponent("孩子的年級：" + CLOSED_MSG) + "#subscribe");
+  }
   if (plan === "yearly" && !yearlyAllowed(grade)) {
-    redirect("/sample?error=" + encodeURIComponent("孩子的年級是高中或 SAT：" + NO_YEARLY_MSG) + "#subscribe");
+    redirect("/sample?error=" + encodeURIComponent("孩子的年級：" + NO_YEARLY_MSG) + "#subscribe");
   }
   if ((await seatsRemaining(db)) <= 0) redirect("/waitlist");
 

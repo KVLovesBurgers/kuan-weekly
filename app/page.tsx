@@ -10,7 +10,7 @@ import { SampleImg } from "@/components/SampleImg";
 import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
-import { FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { CLOSED_TIERS, CLOSED_MSG, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
@@ -45,6 +45,7 @@ const offersLd = {
       name: `寬數週練｜按月｜${TIER_PRICES[k].label}（${TIER_PRICES[k].grades}）`,
       price: TIER_PRICES[k].monthly,
       priceCurrency: "TWD",
+      availability: CLOSED_TIERS.includes(k) ? "https://schema.org/PreOrder" : "https://schema.org/InStock",
       url: `${SITE.url}/#pricing`,
     })),
     {
@@ -105,13 +106,13 @@ export default async function HomePage() {
               <p className="hero-price">
                 <strong>
                   {SITE.currency}
-                  {money(SITE.monthlyPrice)}
+                  {money(MIN_MONTHLY)}
                 </strong>{" "}
                 /月起・每位孩子，第一週免費
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
-                <span className="nowrap">國中 {money(TIER_PRICES.junior.monthly)}・高中 {money(TIER_PRICES.senior.monthly)}・SAT {money(TIER_PRICES.sat.monthly)}</span>
+                <span className="nowrap">小學 {money(TIER_PRICES.elementary.monthly)}・國中 {money(TIER_PRICES.junior.monthly)}・高中 {money(TIER_PRICES.senior.monthly)}・SAT {money(TIER_PRICES.sat.monthly)}（高中、SAT 即將開放）</span>
               </p>
               <p className="seat-chip">
                 {seat.text}
@@ -326,7 +327,7 @@ export default async function HomePage() {
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
             <p className="muted">
-              一位孩子一份週練。{PRICE_RULE}。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
+              一位孩子一份週練。{PRICE_RULE}。{START_NOTE}{CLOSED_MSG}第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
             </p>
             <p className="muted" style={{ fontSize: 14 }}>{FIRST_WEEK_CONTENT}</p>
             <div className="grid-2" style={{ marginTop: 28 }}>
@@ -342,7 +343,7 @@ export default async function HomePage() {
                   {money(SITE.yearlyPrice)}
                   <small> /年 · 每名孩子</small>
                 </p>
-                <p className="muted">對準完整學年的每週進度。年繳目前只適用國中；高中與 SAT 目前只有月繳。</p>
+                <p className="muted">對準完整學年的每週進度。年繳目前只適用國中；小學、高中與 SAT 目前只有月繳。</p>
                 <p className="savings-note">
                   國中月繳一年 {SITE.currency}
                   {money(SITE.monthlyPrice * 12)} → 年繳 {SITE.currency}
@@ -376,7 +377,7 @@ export default async function HomePage() {
                 準備 Digital SAT？完整數學講義
               </h2>
               <p className="muted" style={{ margin: 0 }}>
-                21 章觀念練習本＋解答本＋2 套模考與附錄，題目全部原創，英文原題搭配中文詳解。電子 PDF，NT${money(SAT_BOOK.price)}。
+                21 章觀念練習本＋解答本＋2 套模考與附錄，題目全部原創，英文原題搭配中文詳解。電子 PDF，NT${money(SAT_BOOK.price)}。講義是另外販售的一次性商品，和 SAT 週練每月 NT${money(TIER_PRICES.sat.monthly)} 是分開的。
                 可以先<Link href="/sample?track=sat&src=home-sat#get">免費下載第 1 章試閱</Link>，或到 IG {SOCIAL.handle}、臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.satKeyword}」。
               </p>
             </div>
@@ -411,7 +412,7 @@ export default async function HomePage() {
                 ],
                 [
                   "會出 SAT 嗎？",
-                  "會。訂閱時年級選 SAT Math（週練月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週免費）：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
+                  "會。SAT 週練即將開放，目前先留信箱（開放後月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週免費）：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
                     money(SAT_BOOK.price) +
                     "），第 1 章可免費試閱，購買請私訊「" +
                     SOCIAL.satKeyword +
@@ -423,7 +424,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
-                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。" + YEARLY_NOTE + "；高中與 SAT 目前只有月繳。" + FIRST_WEEK_CONTENT],
+                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + CLOSED_MSG + FIRST_WEEK_CONTENT],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],

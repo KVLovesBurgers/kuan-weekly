@@ -1,3 +1,4 @@
+import { YearlyGuard } from "@/components/YearlyGuard";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
@@ -27,7 +28,8 @@ import { SCOPE_GRADES, SCOPE_OPTIONS, packsForGrade, trialActive, trialEndLabel,
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
 import { FirstTouchSrcFill } from "@/components/FirstTouch";
-import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE, PAY_NOTE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE, FIRST_WEEK_CONTENT } from "@/lib/config";
+import { SubscribeGradeOptions } from "@/components/GradeOptions";
+import { isSubscribeOpen, CLOSED_GRADES_LABEL, START_NOTE, BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE, PAY_NOTE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE, FIRST_WEEK_CONTENT } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中、高中數學每週練習",
@@ -102,17 +104,20 @@ export default async function SamplePage({
     }
   }
   const tradeParam = one(sp.trade).slice(0, 40);
-  let order: { id: string; plan: string; amount: number; display_name: string; email: string } | undefined;
+  let order: { id: string; plan: string; amount: number; display_name: string; email: string; grade: string } | undefined;
   if (tradeParam && jar.get(LEAD_TRADE_COOKIE)?.value === tradeParam) {
     const db = await getDb();
     order = (await db
       .prepare(
-        `SELECT c.id, c.plan, c.amount, ch.display_name, p.email FROM checkout_attempts c
+        `SELECT c.id, c.plan, c.amount, ch.display_name, ch.grade, p.email FROM checkout_attempts c
          JOIN children ch ON ch.id = c.child_id JOIN parents p ON p.id = c.parent_id WHERE c.id = ?`,
       )
       .get(tradeParam)) as typeof order;
+    // 未開放年級的舊訂單不顯示匯款資訊
+    if (order && !isSubscribeOpen(order.grade)) order = undefined;
   }
-  const leadGradeDefault = track === "sat" ? "SAT Math" : track === "gsat" ? "高三" : "國一";
+  // 高三、SAT 訂閱尚未開放，預設回國一（選項已停用）
+  const leadGradeDefault = "國一";
   const mailto = order
     ? `mailto:${BANK_TRANSFER.proofEmail}?subject=${encodeURIComponent(
         `寬數週練匯款證明｜${order.display_name}｜${order.id}`,
@@ -394,7 +399,7 @@ export default async function SamplePage({
                 <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
                   {PRICE_RULE}。{YEARLY_NOTE}（{SITE.currency}
                   {money(SITE.yearlyPrice)} /年）。{seat.text}
-                  {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。{startBy ? `${startBy}。` : ""}用剛剛留的信箱登記，不用再收登入信。
+                  {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。{startBy ? `${startBy}。` : ""}{START_NOTE}用剛剛留的信箱登記，不用再收登入信。
                 </p>
                 {error && one(sp.error).includes("孩子") ? (
                   <p className="banner warn" role="alert">
@@ -406,10 +411,11 @@ export default async function SamplePage({
                   <input id="sub_name" name="display_name" required maxLength={40} autoComplete="off" placeholder="例如：安安" />
                   <label htmlFor="sub_grade">年級*</label>
                   <select id="sub_grade" name="grade" required defaultValue={leadGradeDefault}>
-                    {GRADE_OPTIONS.map((g) => (
-                      <option key={g}>{g}</option>
-                    ))}
+                    <SubscribeGradeOptions />
                   </select>
+                  <p className="banner" style={{ margin: 0, fontSize: 14 }}>
+                    {CLOSED_GRADES_LABEL} 的週練即將開放，目前還不能訂閱。<Link href="/waitlist?src=sample" className="u">先留信箱</Link>，開放時第一個通知你。
+                  </p>
                   <label htmlFor="sub_target">應考目標</label>
                   <input id="sub_target" name="exam_target" maxLength={200} placeholder="例如：學測數A、段考、SAT" />
                   <label htmlFor="sub_plan">方案*</label>
@@ -417,6 +423,7 @@ export default async function SamplePage({
                     <option value="monthly">{PLAN_MONTHLY_LABEL}</option>
                     <option value="yearly">{PLAN_YEARLY_LABEL}</option>
                   </select>
+<YearlyGuard gradeId="sub_grade" planId="sub_plan" />
                   <button className="btn btn-ink" type="submit">
                     看匯款帳號
                   </button>
@@ -436,7 +443,7 @@ export default async function SamplePage({
                   <TierPrices />
                   <p className="muted" style={{ margin: "0 0 6px", fontSize: 14 }}>
                     年繳目前只適用國中（{SITE.currency}
-                    {money(SITE.yearlyPrice)} /年）；高中與 SAT 目前只有月繳。
+                    {money(SITE.yearlyPrice)} /年）；小學、高中與 SAT 目前只有月繳。
                   </p>
                   <p className="muted" style={{ margin: "0 0 6px", fontSize: 14 }}>{FIRST_WEEK_CONTENT}</p>
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>

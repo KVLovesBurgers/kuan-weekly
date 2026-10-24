@@ -1,3 +1,4 @@
+import { YearlyGuard } from "@/components/YearlyGuard";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Header } from "@/components/Header";
@@ -5,7 +6,8 @@ import { Footer } from "@/components/Footer";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { startCheckout } from "@/app/actions/parent";
-import { BANK_TRANSFER, GRADE_OPTIONS, SITE, seatLabel, PRICE_RULE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE } from "@/lib/config";
+import { SubscribeGradeOptions } from "@/components/GradeOptions";
+import { BANK_TRANSFER, CLOSED_GRADES_LABEL, START_NOTE, SITE, seatLabel, PRICE_RULE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +35,7 @@ export default async function SubscribePage({
             {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。送出後會看到匯款帳號；轉帳完成請把證明寄到老師信箱，確認後開通。
           </p>
           <p className="muted" style={{ marginTop: 4 }}>
-            {PRICE_RULE}。
+            {PRICE_RULE}。{START_NOTE}
           </p>
 
           <div className="banner" style={{ marginTop: 16 }}>
@@ -57,10 +59,11 @@ export default async function SubscribePage({
             <input id="display_name" name="display_name" required maxLength={40} autoComplete="off" placeholder="例如：安安" />
             <label htmlFor="grade">年級*</label>
             <select id="grade" name="grade" required defaultValue="國一">
-              {GRADE_OPTIONS.map((g) => (
-                <option key={g}>{g}</option>
-              ))}
+              <SubscribeGradeOptions />
             </select>
+            <p className="banner" style={{ margin: 0, fontSize: 14 }}>
+              {CLOSED_GRADES_LABEL} 的週練即將開放，目前還不能訂閱。<Link href="/waitlist?src=subscribe" style={{ textDecoration: "underline" }}>先留信箱</Link>，開放時第一個通知你。
+            </p>
             <label htmlFor="school_progress">校內進度</label>
             <textarea id="school_progress" name="school_progress" placeholder="版本、章節、段考範圍" />
             <label htmlFor="exam_target">應考目標</label>
@@ -72,8 +75,9 @@ export default async function SubscribePage({
               <option value="monthly">{PLAN_MONTHLY_LABEL}</option>
               <option value="yearly">{PLAN_YEARLY_LABEL}</option>
             </select>
+<YearlyGuard gradeId="grade" planId="plan" />
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>
-              月費依孩子年級計算，送出後的匯款頁會顯示確切金額。{YEARLY_NOTE}；高中與 SAT 目前只有月繳。
+              月費依孩子年級計算，送出後的匯款頁會顯示確切金額。{YEARLY_NOTE}；小學、高中與 SAT 目前只有月繳。
             </p>
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>
               送出即表示已閱讀{" "}

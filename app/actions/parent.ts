@@ -8,7 +8,7 @@ import { DEMO_PARENT_EMAIL } from "@/lib/config";
 
 const DEMO_READONLY = "/dashboard?error=" + encodeURIComponent("示範帳號為唯讀，無法新增或修改資料。");
 import { uid } from "@/lib/ids";
-import { SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG } from "@/lib/config";
+import { SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, isSubscribeOpen, CLOSED_MSG } from "@/lib/config";
 import { safeNextPath } from "@/lib/safe-next";
 
 export async function sendLoginLink(formData: FormData) {
@@ -109,6 +109,7 @@ export async function startCheckout(formData: FormData) {
   const exam_target = String(formData.get("exam_target") ?? "");
   const weak_topics = String(formData.get("weak_topics") ?? "");
   if (!display_name) redirect("/subscribe?error=" + encodeURIComponent("請填孩子稱呼。"));
+  if (!isSubscribeOpen(grade)) redirect("/subscribe?error=" + encodeURIComponent(CLOSED_MSG));
   if (plan === "yearly" && !yearlyAllowed(grade)) redirect("/subscribe?error=" + encodeURIComponent(NO_YEARLY_MSG));
 
   const db = await getDb();
