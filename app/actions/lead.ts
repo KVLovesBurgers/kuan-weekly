@@ -10,7 +10,7 @@ import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLE
 import { seatsRemaining } from "@/lib/db";
 import { buildScopeDelivery, buildTrialDelivery, isTestAddress, TRIAL_APPLY_KIND } from "@/lib/followup";
 import { isTrialLead, SCOPE_GRADES, SCOPE_OPTIONS, scopeKind, scopeMailAllowed, TRIAL_D0_KIND } from "@/lib/trial";
-import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, isSubscribeOpen, CLOSED_MSG } from "@/lib/config";
+import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
 
 export async function submitSampleLead(formData: FormData) {
@@ -128,11 +128,12 @@ export async function startSampleCheckout(formData: FormData) {
   const grade = (GRADE_OPTIONS as readonly string[]).includes(gradeRaw) ? gradeRaw : "";
   const plan = String(formData.get("plan") ?? "monthly") === "yearly" ? "yearly" : "monthly";
   const exam_target = String(formData.get("exam_target") ?? "").trim().slice(0, 200);
+  const needs = String(formData.get("needs") ?? "").trim().slice(0, NEEDS_MAX);
   if (!display_name || !grade) {
     redirect("/sample?error=" + encodeURIComponent("請填孩子稱呼與年級。") + "#subscribe");
   }
-  if (!isSubscribeOpen(grade)) {
-    redirect("/sample?error=" + encodeURIComponent("孩子的年級：" + CLOSED_MSG) + "#subscribe");
+  if (needsRequired(grade) && !needs) {
+    redirect("/sample?error=" + encodeURIComponent(NEEDS_REQUIRED_MSG) + "#subscribe");
   }
   if (plan === "yearly" && !yearlyAllowed(grade)) {
     redirect("/sample?error=" + encodeURIComponent("孩子的年級：" + NO_YEARLY_MSG) + "#subscribe");
@@ -149,9 +150,9 @@ export async function startSampleCheckout(formData: FormData) {
   const childId = uid("child");
   const tradeNo = merchantTradeNo();
   await db.prepare(
-    `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
-     VALUES (?, ?, ?, ?, '', ?, '', 0, 'pending', ?, ?)`,
-  ).run(childId, parent.id, display_name, grade, exam_target, plan, now);
+    `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, needs, is_demo, subscription_status, plan, created_at)
+     VALUES (?, ?, ?, ?, '', ?, '', ?, 0, 'pending', ?, ?)`,
+  ).run(childId, parent.id, display_name, grade, exam_target, needs, plan, now);
   const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade)!;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
@@ -161,7 +162,7 @@ export async function startSampleCheckout(formData: FormData) {
   if (mailConfigured()) {
     after(async () => {
       try {
-        await sendCheckoutAlert({ email: lead.email, displayName: display_name, grade, plan, amount, tradeNo, source: lead.source, createdAt: now });
+        await sendCheckoutAlert({ email: lead.email, displayName: display_name, grade, plan, amount, tradeNo, source: lead.source, createdAt: now, needs, via: "/sample" });
       } catch (err) {
         console.error("checkout alert failed", err);
       }

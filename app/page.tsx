@@ -10,7 +10,7 @@ import { SampleImg } from "@/components/SampleImg";
 import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
-import { CLOSED_TIERS, CLOSED_TIERS_LABEL, OPEN_TIERS, CLOSED_MSG, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
@@ -45,7 +45,6 @@ const offersLd = {
       name: `寬數週練｜按月｜${TIER_PRICES[k].label}（${TIER_PRICES[k].grades}）`,
       price: TIER_PRICES[k].monthly,
       priceCurrency: "TWD",
-      availability: CLOSED_TIERS.includes(k) ? "https://schema.org/PreOrder" : "https://schema.org/InStock",
       url: `${SITE.url}/#pricing`,
     })),
     {
@@ -112,7 +111,7 @@ export default async function HomePage() {
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
-                <span className="nowrap">{OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("・")}{CLOSED_TIERS_LABEL ? `（${CLOSED_TIERS_LABEL} 即將開放）` : ""}</span>
+                <span className="nowrap">{OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("・")}</span>
               </p>
               <p className="seat-chip">
                 {seat.text}
@@ -327,7 +326,7 @@ export default async function HomePage() {
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
             <p className="muted">
-              一位孩子一份週練。{PRICE_RULE}。{START_NOTE}{CLOSED_MSG}第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
+              一位孩子一份週練。{PRICE_RULE}。{START_NOTE}第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
             </p>
             <p className="muted" style={{ fontSize: 14 }}>{FIRST_WEEK_CONTENT}</p>
             <div className="grid-2" style={{ marginTop: 28 }}>
@@ -412,7 +411,7 @@ export default async function HomePage() {
                 ],
                 [
                   "會出 SAT 嗎？",
-                  "會。SAT 週練即將開放，目前先留信箱（開放後月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週免費）：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
+                  "會。訂閱時年級選 SAT Math（週練月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週免費），依你填的需求，老師製作客製題本：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
                     money(SAT_BOOK.price) +
                     "），第 1 章可免費試閱，購買請私訊「" +
                     SOCIAL.satKeyword +

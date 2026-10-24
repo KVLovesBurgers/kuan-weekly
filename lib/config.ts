@@ -134,13 +134,13 @@ export const TIER_PRICES: Record<PriceTier, { label: string; grades: string; mon
 };
 /**
  * 訂閱開放設定（2026-10-24）：只要改這裡就能切換某一級開不開放。
- * 高中、SAT 沒有每週固定題本，先關閉（即將開放，先留信箱）；小學目前沒有題本，先關閉（2026-10-24 使用者原則：做完就開）。
+ * 2026-10-24 使用者決定：全部年級開放訂閱；小學、高中、SAT 依家長填的需求由老師製作客製題本。
  */
 export const SUBSCRIBE_OPEN: Record<PriceTier, boolean> = {
-  elementary: false,
+  elementary: true,
   junior: true,
-  senior: false,
-  sat: false,
+  senior: true,
+  sat: true,
 };
 const TIERS = Object.keys(TIER_PRICES) as PriceTier[];
 export const OPEN_TIERS = TIERS.filter((k) => SUBSCRIBE_OPEN[k]);
@@ -175,9 +175,6 @@ export const MIN_MONTHLY = Math.min(...OPEN_TIERS.map((k) => TIER_PRICES[k].mont
 export const PRICE_TIERS_LINE = OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${fmt(TIER_PRICES[k].monthly)}`).join("／");
 /** 「高中、SAT」 */
 export const CLOSED_TIERS_LABEL = CLOSED_TIERS.map((k) => TIER_PRICES[k].label).join("、");
-/** 「高一、高二、高三、SAT」 */
-export const CLOSED_GRADES_LABEL = CLOSED_TIERS.map((k) => (k === "sat" ? "SAT" : TIER_PRICES[k].grades)).join("、");
-export const CLOSED_MSG = `${CLOSED_GRADES_LABEL} 的週練即將開放，目前還不能訂閱；請先留信箱，開放時第一個通知你。`;
 /** 不認得的年級（後端用） */
 export const UNKNOWN_GRADE_MSG = "請從選單選擇孩子的年級。";
 const yearlySave = () => SITE.monthlyPrice * 12 - SITE.yearlyPrice;
@@ -187,18 +184,23 @@ export const PLAN_YEARLY_LABEL = `年繳 ${fmt(SITE.yearlyPrice)} /年（僅國�
 /** 起算日說明（頁面、FAQ、匯款頁共用） */
 export const START_NOTE = "第一週從開通那天起算 7 天，請在第二週開始前匯款，涵蓋從第二週起的一個月。";
 export const FREE_WEEK_RULE = "第一週免費，從第二週起才開始計算一個月";
-/** 「第一週免費，從第二週起才開始計算一個月：小學 NT$699／國中 NT$799（每月、每位孩子）；高中、SAT 即將開放」 */
+/** 「第一週免費，從第二週起才開始計算一個月：小學 NT$699／國中 NT$799／高中 NT$999／SAT NT$1,099（每月、每位孩子）」 */
 export const PRICE_RULE = `${FREE_WEEK_RULE}：${PRICE_TIERS_LINE}（每月、每位孩子）${CLOSED_TIERS_LABEL ? `；${CLOSED_TIERS_LABEL} 即將開放` : ""}`;
 export const YEARLY_NOTE = `年繳 ${fmt(SITE.yearlyPrice)} 目前只適用國中`;
 /** 匯款處用句（使用者 2026-10-24 核准原文） */
 export const PAY_NOTE = "第一週免費。請在第二週開始前匯款，涵蓋從第二週起的一個月。";
-/** 小學第一週內容：待使用者決定，決定後把整句填進來（例如「小一到小六是……」）；空字串時不顯示。 */
-export const ELEMENTARY_FIRST_WEEK = "";
 /** 第一週實際可得內容（據實）。 */
 export const FIRST_WEEK_CONTENT =
-  "目前第一週可領的內容：國一、國二、國三是完整一週題本（學生題本 15 題＋家長解答）" +
-  (ELEMENTARY_FIRST_WEEK ? `；${ELEMENTARY_FIRST_WEEK}` : "") +
-  `。${CLOSED_TIERS_LABEL ? `${CLOSED_TIERS_LABEL} 週練即將開放，先留信箱。` : ""}`;
+  "第一週的內容：國一、國二、國三是完整一週題本（學生題本 15 題＋家長解答）；小學、高中、SAT 是依你填的需求，老師製作客製題本。";
+/** 小學、高中、SAT 必填「孩子的需求」；國中選填。 */
+export function needsRequired(grade: string) {
+  const t = priceTier(grade);
+  return t !== null && t !== "junior";
+}
+export const NEEDS_LABEL = "孩子的需求";
+export const NEEDS_HINT = "例如：學校進度、弱點單元、目標考試";
+export const NEEDS_MAX = 1000;
+export const NEEDS_REQUIRED_MSG = "小學、高中、SAT 請填「孩子的需求」（例如學校進度、弱點、目標考試），老師會依此製作客製題本。";
 
 export function seatCap() {
   const n = Number(process.env.SEAT_CAP ?? "20");

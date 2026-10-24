@@ -4,7 +4,7 @@ import { getParent } from "@/lib/auth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getDb } from "@/lib/db";
-import { BANK_TRANSFER, SITE, PAY_NOTE, PRICE_RULE, START_NOTE, CLOSED_MSG, isSubscribeOpen, money } from "@/lib/config";
+import { BANK_TRANSFER, SITE, PAY_NOTE, PRICE_RULE, START_NOTE, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,6 @@ export default async function PayPage({
   const child = (await db.prepare("SELECT display_name, grade FROM children WHERE id = ?").get(row.child_id)) as
     | { display_name: string; grade: string }
     | undefined;
-  if (child && !isSubscribeOpen(child.grade)) redirect("/subscribe?error=" + encodeURIComponent(CLOSED_MSG));
   const planLabel = row.plan === "yearly" ? "年繳" : "月繳";
   const amount = Number(row.amount);
   const mailto = `mailto:${BANK_TRANSFER.proofEmail}?subject=${encodeURIComponent(

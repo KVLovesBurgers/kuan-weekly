@@ -105,6 +105,7 @@ async function openDb(): Promise<KuanDb> {
     await db.exec("PRAGMA foreign_keys = ON");
   }
   await migrate(db);
+  await addColumns(db);
   // 上線驗證用的測試名單（jjredick365+leadtest@…）一律清掉，不留在試閱名單。
   await db.prepare("DELETE FROM leads WHERE email LIKE 'jjredick365+leadtest@%'").run();
   // 家教候補上線驗證用測試信箱（jjredick365+tutortest@…）：開啟時記下筆數後清掉 leads／waitlist／事件。
@@ -135,6 +136,14 @@ async function openDb(): Promise<KuanDb> {
 export function getDb() {
   if (!globalForDb.__kuanDb) globalForDb.__kuanDb = openDb();
   return globalForDb.__kuanDb;
+}
+
+/** 加欄位（相容既有資料庫）：children.needs 存家長填的「孩子的需求」。 */
+async function addColumns(db: KuanDb) {
+  const cols = (await db.prepare("PRAGMA table_info(children)").all()) as { name: string }[];
+  if (!cols.some((c) => c.name === "needs")) {
+    await db.exec("ALTER TABLE children ADD COLUMN needs TEXT NOT NULL DEFAULT ''");
+  }
 }
 
 async function migrate(db: KuanDb) {
@@ -332,6 +341,7 @@ export type ChildRow = {
   school_progress: string;
   exam_target: string;
   weak_topics: string;
+  needs: string;
   is_demo: number;
   subscription_status: string;
   plan: string | null;

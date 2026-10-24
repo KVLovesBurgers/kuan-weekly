@@ -37,7 +37,7 @@ export async function sendLeadAlert(lead: {
   ];
   const text = `有人在 /sample 留信箱下載題本試閱：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
   const html = `<p>有人在 /sample 留信箱下載題本試閱：</p><table>${rows
-    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td>${esc(v)}</td></tr>`)
+    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td style="white-space:pre-wrap">${esc(v)}</td></tr>`)
     .join("")}</table>`;
   await sendMail({ to: SITE.contactEmail, subject, text, html });
 }
@@ -52,8 +52,11 @@ export async function sendCheckoutAlert(o: {
   tradeNo: string;
   source: string;
   createdAt: string;
+  needs?: string;
+  via?: string;
 }) {
-  const subject = `寬數週練｜試閱頁登記匯款 ${o.displayName}（${o.grade}）`;
+  const via = o.via ?? "/sample";
+  const subject = `寬數週練｜${via === "/subscribe" ? "訂閱頁" : "試閱頁"}登記匯款 ${o.displayName}（${o.grade}）`;
   const tw = new Date(o.createdAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false });
   const rows: [string, string][] = [
     ["家長信箱", o.email],
@@ -63,11 +66,12 @@ export async function sendCheckoutAlert(o: {
     ["金額", `${SITE.currency}${o.amount}`],
     ["訂單", o.tradeNo],
     ["來源 src", o.source || "direct"],
+    ["孩子的需求", o.needs || "（未填）"],
     ["時間（台北）", tw],
   ];
-  const text = `有家長在 /sample 看完試閱後登記匯款訂閱（待匯款）：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
-  const html = `<p>有家長在 /sample 看完試閱後登記匯款訂閱（待匯款）：</p><table>${rows
-    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td>${esc(v)}</td></tr>`)
+  const text = `有家長在 ${via} 登記匯款訂閱（待匯款）：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
+  const html = `<p>有家長在 ${esc(via)} 登記匯款訂閱（待匯款）：</p><table>${rows
+    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td style="white-space:pre-wrap">${esc(v)}</td></tr>`)
     .join("")}</table>`;
   await sendMail({ to: SITE.contactEmail, subject, text, html });
 }

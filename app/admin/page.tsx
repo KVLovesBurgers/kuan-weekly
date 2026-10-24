@@ -160,6 +160,12 @@ export default async function AdminHome({
                     {c.grade}
                     {c.exam_target ? <> · {c.exam_target}</> : null}
                     {c.weak_topics ? <div className="muted">{c.weak_topics}</div> : null}
+                    {c.needs ? (
+                      <div className="muted" style={{ whiteSpace: "pre-wrap" }}>
+                        <strong>孩子的需求：</strong>
+                        {c.needs}
+                      </div>
+                    ) : null}
                   </td>
                   <td>
                     {c.is_demo

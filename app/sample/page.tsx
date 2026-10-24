@@ -29,7 +29,8 @@ import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
 import { FirstTouchSrcFill } from "@/components/FirstTouch";
 import { SubscribeGradeOptions } from "@/components/GradeOptions";
-import { isSubscribeOpen, CLOSED_GRADES_LABEL, START_NOTE, BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE, PAY_NOTE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE, FIRST_WEEK_CONTENT } from "@/lib/config";
+import { NeedsField } from "@/components/NeedsField";
+import { NEEDS_LABEL, NEEDS_HINT, NEEDS_MAX, START_NOTE, BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money, startByNote, FREE_WEEK_RULE, PRICE_RULE, PAY_NOTE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE, FIRST_WEEK_CONTENT } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中、高中數學每週練習",
@@ -113,8 +114,6 @@ export default async function SamplePage({
          JOIN children ch ON ch.id = c.child_id JOIN parents p ON p.id = c.parent_id WHERE c.id = ?`,
       )
       .get(tradeParam)) as typeof order;
-    // 未開放年級的舊訂單不顯示匯款資訊
-    if (order && !isSubscribeOpen(order.grade)) order = undefined;
   }
   // 高三、SAT 訂閱尚未開放，預設回國一（選項已停用）
   const leadGradeDefault = "國一";
@@ -413,9 +412,7 @@ export default async function SamplePage({
                   <select id="sub_grade" name="grade" required defaultValue={leadGradeDefault}>
                     <SubscribeGradeOptions />
                   </select>
-                  <p className="banner" style={{ margin: 0, fontSize: 14 }}>
-                    {CLOSED_GRADES_LABEL} 的週練即將開放，目前還不能訂閱。<Link href="/waitlist?src=sample" className="u">先留信箱</Link>，開放時第一個通知你。
-                  </p>
+                  <NeedsField gradeId="sub_grade" id="sub_needs" label={NEEDS_LABEL} hint={NEEDS_HINT} max={NEEDS_MAX} />
                   <label htmlFor="sub_target">應考目標</label>
                   <input id="sub_target" name="exam_target" maxLength={200} placeholder="例如：學測數A、段考、SAT" />
                   <label htmlFor="sub_plan">方案*</label>

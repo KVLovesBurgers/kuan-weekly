@@ -7,7 +7,8 @@ import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
 import { startCheckout } from "@/app/actions/parent";
 import { SubscribeGradeOptions } from "@/components/GradeOptions";
-import { BANK_TRANSFER, CLOSED_GRADES_LABEL, START_NOTE, SITE, seatLabel, PRICE_RULE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE } from "@/lib/config";
+import { NeedsField } from "@/components/NeedsField";
+import { BANK_TRANSFER, NEEDS_LABEL, NEEDS_HINT, NEEDS_MAX, START_NOTE, SITE, seatLabel, PRICE_RULE, PLAN_MONTHLY_LABEL, PLAN_YEARLY_LABEL, YEARLY_NOTE } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -61,9 +62,7 @@ export default async function SubscribePage({
             <select id="grade" name="grade" required defaultValue="國一">
               <SubscribeGradeOptions />
             </select>
-            <p className="banner" style={{ margin: 0, fontSize: 14 }}>
-              {CLOSED_GRADES_LABEL} 的週練即將開放，目前還不能訂閱。<Link href="/waitlist?src=subscribe" style={{ textDecoration: "underline" }}>先留信箱</Link>，開放時第一個通知你。
-            </p>
+            <NeedsField gradeId="grade" id="needs" label={NEEDS_LABEL} hint={NEEDS_HINT} max={NEEDS_MAX} />
             <label htmlFor="school_progress">校內進度</label>
             <textarea id="school_progress" name="school_progress" placeholder="版本、章節、段考範圍" />
             <label htmlFor="exam_target">應考目標</label>
