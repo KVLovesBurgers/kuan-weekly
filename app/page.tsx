@@ -10,7 +10,7 @@ import { SampleImg } from "@/components/SampleImg";
 import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
-import { CLOSED_TIERS, CLOSED_MSG, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { CLOSED_TIERS, CLOSED_TIERS_LABEL, OPEN_TIERS, CLOSED_MSG, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
@@ -112,7 +112,7 @@ export default async function HomePage() {
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
-                <span className="nowrap">小學 {money(TIER_PRICES.elementary.monthly)}・國中 {money(TIER_PRICES.junior.monthly)}・高中 {money(TIER_PRICES.senior.monthly)}・SAT {money(TIER_PRICES.sat.monthly)}（高中、SAT 即將開放）</span>
+                <span className="nowrap">{OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("・")}{CLOSED_TIERS_LABEL ? `（${CLOSED_TIERS_LABEL} 即將開放）` : ""}</span>
               </p>
               <p className="seat-chip">
                 {seat.text}
@@ -424,7 +424,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
-                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + CLOSED_MSG + FIRST_WEEK_CONTENT],
+                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + FIRST_WEEK_CONTENT],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],

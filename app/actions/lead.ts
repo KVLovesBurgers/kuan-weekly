@@ -152,7 +152,7 @@ export async function startSampleCheckout(formData: FormData) {
     `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
      VALUES (?, ?, ?, ?, '', ?, '', 0, 'pending', ?, ?)`,
   ).run(childId, parent.id, display_name, grade, exam_target, plan, now);
-  const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade);
+  const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade)!;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,

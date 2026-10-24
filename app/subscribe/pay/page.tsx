@@ -4,7 +4,7 @@ import { getParent } from "@/lib/auth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getDb } from "@/lib/db";
-import { BANK_TRANSFER, SITE, PAY_NOTE, START_NOTE, CLOSED_MSG, isSubscribeOpen, money } from "@/lib/config";
+import { BANK_TRANSFER, SITE, PAY_NOTE, PRICE_RULE, START_NOTE, CLOSED_MSG, isSubscribeOpen, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +53,7 @@ export default async function PayPage({
           <p className="kicker">應付金額</p>
           <p style={{ margin: "8px 0 0", fontWeight: 600 }}>{PAY_NOTE}</p>
           <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>{START_NOTE}</p>
+          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>{PRICE_RULE}。</p>
           <p className="price" style={{ margin: "8px 0 0" }}>
             {SITE.currency}
             {money(amount)}
