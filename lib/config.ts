@@ -134,10 +134,10 @@ export const TIER_PRICES: Record<PriceTier, { label: string; grades: string; mon
 };
 /**
  * 訂閱開放設定（2026-10-24）：只要改這裡就能切換某一級開不開放。
- * 高中、SAT 沒有每週固定題本，先關閉（即將開放，先留信箱）；小學第一週內容待使用者決定，先維持開放。
+ * 高中、SAT 沒有每週固定題本，先關閉（即將開放，先留信箱）；小學目前沒有題本，先關閉（2026-10-24 使用者原則：做完就開）。
  */
 export const SUBSCRIBE_OPEN: Record<PriceTier, boolean> = {
-  elementary: true,
+  elementary: false,
   junior: true,
   senior: false,
   sat: false,
