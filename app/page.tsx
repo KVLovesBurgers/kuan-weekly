@@ -77,7 +77,7 @@ export default async function HomePage() {
                   {SITE.currency}
                   {money(SITE.monthlyPrice)}
                 </strong>{" "}
-                /月・每位孩子
+                /月・每位孩子。第一週 NT$199，之後每月 NT$799
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
@@ -278,7 +278,7 @@ export default async function HomePage() {
                   {money(SITE.monthlyPrice)}
                   <small> /月 · 每名孩子</small>
                 </p>
-                <p className="muted">適合先試一個月。要停用請寄信 {SITE.contactEmail}。</p>
+                <p className="muted">第一週 NT$199，之後每月 NT$799。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年</p>
