@@ -170,7 +170,7 @@ export default async function HomePage() {
             </div>
             <p style={{ marginTop: 16 }}>
               <Link href="/sample#grades" className="u">
-                看小學、高一、高二、高三、SAT Math 範例題本（實際題本依孩子需求客製）
+                看小學、國一～國三、高一～高三、SAT Math 範例題本（實際題本依孩子需求客製）
               </Link>
             </p>
           </div>

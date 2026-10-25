@@ -118,11 +118,11 @@ export default async function SamplePage({
             目前選擇：<strong>{pack.label}・{pack.unit}</strong>
           </p>
           <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
-            小學、高一、高二、高三與 SAT Math 另有約 5 題的
+            小學、國一到國三、高一到高三與 SAT Math 另有約 5 題的
             <Link href="#grades" className="u">
               範例題本
             </Link>
-            ，實際題本依孩子需求客製。
+            （留信箱後下載；實際題本依孩子需求客製）。
           </p>
 
           <div id="get" style={{ scrollMarginTop: 80 }}>
@@ -231,14 +231,22 @@ export default async function SamplePage({
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>
                     範例題本，實際題本依孩子需求客製。
                   </p>
-                  <div className="cta-row" style={{ marginTop: 12 }}>
-                    <a className="btn btn-ink" href={g.student} download={`寬數週練範例題本-${g.label}-學生題本.pdf`}>
-                      下載學生題本
-                    </a>
-                    <a className="btn btn-paper" href={g.parent} download={`寬數週練範例題本-${g.label}-家長解答.pdf`}>
-                      下載家長解答
-                    </a>
-                  </div>
+                  {unlocked ? (
+                    <div className="cta-row" style={{ marginTop: 12 }}>
+                      <a className="btn btn-ink" href={g.student} download={`寬數週練範例題本-${g.label}-學生題本.pdf`}>
+                        下載學生題本
+                      </a>
+                      <a className="btn btn-paper" href={g.parent} download={`寬數週練範例題本-${g.label}-家長解答.pdf`}>
+                        下載家長解答
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="cta-row" style={{ marginTop: 12 }}>
+                      <a className="btn btn-ink" href="#get">
+                        先留信箱再下載
+                      </a>
+                    </div>
+                  )}
                 </article>
               ))}
             </div>
