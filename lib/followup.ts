@@ -1,5 +1,56 @@
 import type { KuanDb } from "./db";
-import { isTrialLead, packsForGrade, trialEndLabel, trialEndsAt, trialUrl, TRIAL_D6_KIND, TRIAL_PACKS } from "./trial";
+import { createRequire } from "node:module";
+import { existsSync } from "node:fs";
+import path from "node:path";
+
+type TrialPack = { id: string; label: string; unit: string };
+type TrialApi = {
+  isTrialLead: (lead: { created_at?: string; grade?: string }) => boolean;
+  packsForGrade: (grade: string) => TrialPack[];
+  trialEndLabel: (createdAt: string) => string;
+  trialEndsAt: (createdAt: string) => Date;
+  trialUrl: (base: string, id: string, packId: string, kind: "student" | "parent") => string;
+  TRIAL_D6_KIND: string;
+  TRIAL_PACKS: Record<string, TrialPack>;
+};
+
+const nodeRequire = createRequire(import.meta.url);
+let trialCache: TrialApi | null | undefined;
+
+/** origin/main 沒有 lib/trial。只在該檔存在時載入，避免靜態 import 讓 next build 失敗。 */
+function loadTrial(): TrialApi | null {
+  if (trialCache !== undefined) return trialCache;
+  const base = path.join(process.cwd(), "lib", "trial");
+  if (!existsSync(`${base}.ts`) && !existsSync(`${base}.js`)) {
+    trialCache = null;
+    return null;
+  }
+  const id = "./" + "trial";
+  trialCache = nodeRequire(id) as TrialApi;
+  return trialCache;
+}
+
+function trialApi(): TrialApi {
+  const api = loadTrial();
+  if (!api) throw new Error("lib/trial is not in this build");
+  return api;
+}
+
+function isTrialLead(lead: { created_at?: string; grade?: string }) {
+  return trialApi().isTrialLead(lead);
+}
+function packsForGrade(grade: string) {
+  return trialApi().packsForGrade(grade);
+}
+function trialEndLabel(createdAt: string) {
+  return trialApi().trialEndLabel(createdAt);
+}
+function trialEndsAt(createdAt: string) {
+  return trialApi().trialEndsAt(createdAt);
+}
+function trialUrl(base: string, id: string, packId: string, kind: "student" | "parent") {
+  return trialApi().trialUrl(base, id, packId, kind);
+}
 
 export const FOLLOWUP_KIND = "trial_d1";
 export const FOLLOWUP_SUBJECT = "試閱寫完了嗎？3 步看出孩子卡在哪";
@@ -220,7 +271,7 @@ export async function eligibleTrialReminders(db: KuanDb, now = new Date()) {
          )
        ORDER BY l.created_at ASC`,
     )
-    .all(new Date(now.getTime() - 8 * 86400000).toISOString(), TRIAL_D6_KIND)) as {
+    .all(new Date(now.getTime() - 8 * 86400000).toISOString(), trialApi().TRIAL_D6_KIND)) as {
     id: string; email: string; created_at: string; role: string; grade: string;
   }[];
   return rows.filter((r) => {
@@ -233,7 +284,7 @@ export async function eligibleTrialReminders(db: KuanDb, now = new Date()) {
 
 /** 選範圍後自動寄的免費第一週週練包。不放價格、匯款；每個連結單獨一行。 */
 export function buildScopeDelivery(lead: { id: string; role?: string }, packId: string, base = SITE_BASE) {
-  const p = TRIAL_PACKS[packId];
+  const p = trialApi().TRIAL_PACKS[packId];
   const student = lead.role === "學生";
   const subject = `寬數週練免費第一週：${p.label}${p.unit.replace(/（.*）/, "")}`;
   const text = `${student ? "你好" : "您好"}，我是吳寬老師。
