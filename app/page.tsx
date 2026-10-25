@@ -347,7 +347,7 @@ export default async function HomePage() {
                   {money(SITE.yearlyPrice)}
                   <small> /年 · 每名孩子</small>
                 </p>
-                <p className="muted">對準完整學年的每週進度。年繳目前只適用國中；小學、高中與 SAT 目前只有月繳。</p>
+                <p className="muted">對準完整學年的每週進度。年繳目前只適用國中；小學、高中、SAT 與 AMC 目前只有月繳。</p>
                 <p className="savings-note">
                   國中月繳一年 {SITE.currency}
                   {money(SITE.monthlyPrice * 12)} → 年繳 {SITE.currency}
@@ -428,7 +428,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
-                ["第一週怎麼算？什麼時候開始月繳？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + FIRST_WEEK_CONTENT],
+                ["第一週怎麼算？什麼時候開始月繳？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中、SAT 與 AMC 目前只有月繳。" + FIRST_WEEK_CONTENT],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],

@@ -1,3 +1,4 @@
+import { FREE_WEEK_RULE, TIERED_MONTHLY_TEXT, MIN_MONTHLY } from "@/lib/config";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
@@ -343,8 +344,7 @@ export default async function SamplePage({
                   覺得適合，直接匯款訂閱
                 </h2>
                 <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
-                  {SITE.currency}
-                  {money(SITE.monthlyPrice)} /月，或年繳 {SITE.currency}
+                  {FREE_WEEK_RULE}；國中可選年繳 {SITE.currency}
                   {money(SITE.yearlyPrice)}，每位孩子計價。{seat.text}
                   {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。用剛剛留的信箱登記，不用再收登入信。
                 </p>
@@ -366,8 +366,8 @@ export default async function SamplePage({
                   <input id="sub_target" name="exam_target" maxLength={200} placeholder="例如：學測數A、段考、SAT" />
                   <label htmlFor="sub_plan">方案*</label>
                   <select id="sub_plan" name="plan" required defaultValue="monthly">
-                    <option value="monthly">{`月繳 ${SITE.currency}${money(SITE.monthlyPrice)} /月`}</option>
-                    <option value="yearly">{`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}</option>
+                    <option value="monthly">{`月繳（依年級：${TIERED_MONTHLY_TEXT}）`}</option>
+                    <option value="yearly">{`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（僅國中，省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}</option>
                   </select>
                   <button className="btn btn-ink" type="submit">
                     看匯款帳號
@@ -386,11 +386,14 @@ export default async function SamplePage({
                   </h2>
                   <p className="price">
                     {SITE.currency}
-                    {money(SITE.monthlyPrice)}
-                    <small> /月 · 每位孩子</small>
+                    {money(MIN_MONTHLY)}
+                    <small> /月起 · 每位孩子</small>
+                  </p>
+                  <p className="muted" style={{ margin: "0 0 6px", fontSize: 14 }}>
+                    {FREE_WEEK_RULE}
                   </p>
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>
-                    或年繳 {SITE.currency}
+                    國中可選年繳 {SITE.currency}
                     {money(SITE.yearlyPrice)}。{seat.text}
                     {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
                   </p>
