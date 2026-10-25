@@ -147,6 +147,9 @@ export function DiagClient({ sets }: { sets: DiagSetView[] }) {
           ) : null}
         </div>
 
+        <p className="cta-row" style={{ marginTop: 16 }}>
+          <a className="btn btn-ink" href={`/sample?src=diag&grade=${set.id}#grade-${set.id}`}>領對應年級試閱</a>
+        </p>
         {set.id === "g10" || set.id === "g11" ? null : (
           <PaidNext track={set.id === "g12" ? "gsat" : "jh"} label={set.label} weak={score.weak} src="diag-result" />
         )}

@@ -3,7 +3,7 @@ import { isTrialLead, packsForGrade, trialEndLabel, trialEndsAt, trialUrl, TRIAL
 
 export const FOLLOWUP_KIND = "trial_d1";
 export const FOLLOWUP_SUBJECT = "試閱寫完了嗎？3 步看出孩子卡在哪";
-/** 2026-10-25 改為定稿 /workspace/promo/trial-followup-draft-20261025.md：第一週 NT$199，之後每月 NT$799＋訂閱連結；刪「免費寄第一週」。舊註：2026-10-22 使用者核准：訂閱資訊改為免費寄題本的要求（2026-10-24 起統一為「第一週」，避免被讀成每週免費）。使用者 2026-10-19 核准的原稿（/workspace/promo/trial-followup-draft.md 第 9–31 行）。2026-10-20 核准加入：開通時間提示（{{START_BY}}）與年級練習連結（{{UNIT_LINK}}），其餘不改。直接寄請用 buildFollowup()。 */
+/** 2026-10-25 改為定稿 /workspace/promo/trial-followup-draft-20261025.md：第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099＋訂閱連結；刪「免費寄第一週」。舊註：2026-10-22 使用者核准：訂閱資訊改為免費寄題本的要求（2026-10-24 起統一為「第一週」，避免被讀成每週免費）。使用者 2026-10-19 核准的原稿（/workspace/promo/trial-followup-draft.md 第 9–31 行）。2026-10-20 核准加入：開通時間提示（{{START_BY}}）與年級練習連結（{{UNIT_LINK}}），其餘不改。直接寄請用 buildFollowup()。 */
 export const FOLLOWUP_TEXT = `您好，我是吳寬老師。
 
 前幾天您領了寬數週練的題本試閱，想跟您分享怎麼用最有效：
@@ -16,7 +16,7 @@ export const FOLLOWUP_TEXT = `您好，我是吳寬老師。
 
 想問一下孩子寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
 {{UNIT_LINK}}
-如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。回信跟我說要不要續就好。
+如果下個禮拜想繼續：第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。回信跟我說要不要續就好。
 
 登記訂閱：
 https://kuan-weekly.vercel.app/sample#subscribe
@@ -47,7 +47,7 @@ export function buildFollowup(lead: { role?: string; grade?: string }, now = new
 
 想問一下寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
 
-這封可以轉給家長看。如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。請家長回信跟我說要不要續就好。
+這封可以轉給家長看。如果下個禮拜想繼續：第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。請家長回信跟我說要不要續就好。
 
 登記訂閱：
 ${SITE_BASE}/sample#subscribe
@@ -171,7 +171,7 @@ export function buildTrialReminder(lead: { role?: string; grade?: string; create
 
 想問一下寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
 
-這封可以轉給家長看。如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。請家長回信跟我說要不要續就好。
+這封可以轉給家長看。如果下個禮拜想繼續：第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。請家長回信跟我說要不要續就好。
 
 登記訂閱：
 ${SITE_BASE}/sample#subscribe
@@ -187,7 +187,7 @@ ${SITE_BASE}
 
 想問一下孩子寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
 
-如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。回信跟我說要不要續就好。
+如果下個禮拜想繼續：第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。回信跟我說要不要續就好。
 
 登記訂閱：
 ${SITE_BASE}/sample#subscribe

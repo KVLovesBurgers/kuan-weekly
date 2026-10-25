@@ -1,6 +1,6 @@
 import { SITE, TIER_PRICES, money, type PriceTier } from "@/lib/config";
 
-/** 依年級的月費列表（小學 699／國中 799／高中 999／SAT 1,099），價格全部來自 lib/config 的 TIER_PRICES。 */
+/** 依年級的月費列表（小學 699／國中 799／高中 999／SAT・AMC 1,099），價格全部來自 lib/config 的 TIER_PRICES。 */
 export function TierPrices({ compact = false }: { compact?: boolean }) {
   return (
     <ul className={`tier-list${compact ? " tier-list--compact" : ""}`}>

@@ -106,12 +106,16 @@ export default async function SamplePage({
             依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本 3 頁＋家長解答 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
           </p>
 
+          <p style={{ fontSize: 14, margin: "0 0 12px" }}>
+            想先找弱點？<Link href="/diag?src=sample" className="u">做段考檢測</Link>
+          </p>
           <nav className="cta-row sample-jumps" aria-label="依階段看範例題本" style={{ marginTop: 16 }}>
             {[
               ["#grade-elem", "小學"],
               ["#grade-g7", "國中（國一～國三）"],
               ["#grade-g10", "高中（高一～高三）"],
               ["#grade-sat", "SAT"],
+              ["#grade-amc8", "AMC 8／10／12"],
             ].map(([href, label]) => (
               <a key={href} href={href} className="btn btn-ink">
                 {label}

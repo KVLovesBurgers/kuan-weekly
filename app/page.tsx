@@ -338,7 +338,7 @@ export default async function HomePage() {
               <article className="card">
                 <p className="kicker">按月</p>
                 <TierPrices />
-                <p className="muted">第一週 NT$199，之後每月 NT$799。要停用請寄信 {SITE.contactEmail}。</p>
+                <p className="muted">第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年（目前只適用國中）</p>
