@@ -34,10 +34,10 @@ export const SAT_BOOK = {
 
 /** 首頁「看吳寬老師怎麼教」：畫圖一眼懂 Shorts。 */
 export const SHORTS = [
-  { id: "UnimTBJBMbE", title: "sin(θ+90°)＝cosθ", note: "轉 90 度，畫圖一眼懂" },
-  { id: "aHl2mSBsNEw", title: "(a+b)² ≠ a²+b²", note: "用面積看出 2ab" },
-  { id: "3kKvHhoFmxE", title: "(a−b)² 展開別漏項", note: "切掉的那塊在哪裡" },
-  { id: "f47RMUhjKs8", title: "勾股定理 a²+b²＝c²", note: "面積一眼懂" },
+  { id: "m_rVnXIV2zA", title: "學測陷阱題 #1", note: "一個條件沒看，整題就錯" },
+  { id: "qz9QK22q6y8", title: "內積一眼懂", note: "投影長×長度，畫圖就懂" },
+  { id: "q9IBNMTv35A", title: "學測真題：等腰三角形", note: "抓對稱，算式少一半" },
+  { id: "JCeAolxykKg", title: "組合一眼懂", note: "先選再排，不重複不漏" },
 ] as const;
 
 /** 公開試閱檔（示範週：國一 1-1 正負數與數線・學生題本 3 頁＋家長解答 4 頁）。 */

@@ -75,7 +75,7 @@ export default async function HomePage() {
         <section className="hero">
           <div className="wrap hero-grid">
             <div>
-              <p className="kicker">吳寬老師 · 交大應數 · 學測、SAT 數學老師</p>
+              <p className="kicker">吳寬老師｜交大應數｜國中數學教師｜SAT・AMC・會考・學測</p>
               <p className="countdown-chip" title={`116 學年度學測 ${GSAT_DATE.slice(0, 10)} 起`}>
                 距離 116 學測（2027/1/22）還有 <strong>{daysLeft}</strong> 天
               </p>
@@ -233,7 +233,7 @@ export default async function HomePage() {
             </div>
             <p style={{ marginTop: 16 }}>
               <Link href="/sample#grades" className="u">
-                看小學、國一～國三、高一～高三、SAT Math 範例題本（實際題本依孩子需求客製）
+                看小學、國一～國三、高一～高三、SAT Math、AMC 範例題本（實際題本依孩子需求客製）
               </Link>
             </p>
           </div>
@@ -312,7 +312,7 @@ export default async function HomePage() {
             </p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               {[
-                ["年級", "以國一到高三為主；小學與 SAT Math 也收。題距與符號習慣跟著學制走。"],
+                ["年級", "以國一到高三為主；小學、SAT Math 與 AMC 8／10／12 也收。題距與符號習慣跟著學制走。"],
                 ["校內進度", "例如「翰林版二次函數剛結束，下一章指數對數」。"],
                 ["應考目標", "自由填寫，例如跟上段考、會考、學測，或目前想把哪個單元寫穩。"],
                 ["弱點單元", "三角恆等式、向量內積、一元二次、應用題列式……寫孩子真正卡住的名字。"],
@@ -398,7 +398,7 @@ export default async function HomePage() {
                 ["可以先看題本嗎？", "sample"],
                 [
                   "適合哪些年級？",
-                  "以國一到高三為主（段考、會考、學測／分科）。小學與 SAT Math 也可依程度排題，訂閱時選年級即可。",
+                  "以國一到高三為主（段考、會考、學測／分科）。小學、SAT Math 與 AMC 8／10／12 也可依程度排題，訂閱時選年級即可。",
                 ],
                 [
                   "有 LINE 或線上問答嗎？",
