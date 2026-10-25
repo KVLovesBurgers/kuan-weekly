@@ -118,7 +118,7 @@ export default async function SamplePage({
             目前選擇：<strong>{pack.label}・{pack.unit}</strong>
           </p>
           <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
-            小學、國一到國三、高一到高三與 SAT Math 另有約 5 題的
+            小學、國一到國三、高一到高三與 SAT Math 另有 10 題的
             <Link href="#grades" className="u">
               範例題本
             </Link>
@@ -218,7 +218,7 @@ export default async function SamplePage({
           <section id="grades" aria-labelledby="grades-title" style={{ marginTop: 36, scrollMarginTop: 80 }}>
             <p className="kicker">範例題本</p>
             <h2 id="grades-title" className="display">
-              各年級範例題本（約 5 題）
+              各年級範例題本（10 題）
             </h2>
             <p className="muted">{GRADE_SAMPLES_NOTE}</p>
             <div className="grid-2" style={{ marginTop: 16 }}>

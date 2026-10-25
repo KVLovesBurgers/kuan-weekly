@@ -77,9 +77,9 @@ export const SAMPLES = {
   },
 } as const;
 
-/** 年級範例題本（約 5 題）。實際題本依孩子需求客製。 */
+/** 年級範例題本（10 題）。實際題本依孩子需求客製。 */
 export const GRADE_SAMPLES_NOTE =
-  "以下是範例題本（約 5 題），實際題本依孩子需求客製：填好孩子的年級、進度與弱點，吳寬老師再出專屬題本。";
+  "以下是範例題本（10 題），實際題本依孩子需求客製：填好孩子的年級、進度與弱點，吳寬老師再出專屬題本。";
 export const GRADE_SAMPLES = [
   { key: "elem", label: "小學", unit: "分數、四則與單位換算", student: "/samples/sample-elem-student.pdf", parent: "/samples/sample-elem-parent.pdf" },
   { key: "g7", label: "國一", unit: "正負數、分數、一元一次", student: "/samples/sample-g7-student.pdf", parent: "/samples/sample-g7-parent.pdf" },
