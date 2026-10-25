@@ -23,7 +23,7 @@ export default async function TutorPage({ searchParams }: { searchParams: Promis
         <div className="wrap" style={{ maxWidth: 560 }}>
           <p className="kicker">家教候補</p>
           <h1 className="display">一對一家教目前時段已滿</h1>
-          <p className="muted">吳寬老師｜交大應數畢業｜現任國中數學教師</p>
+          <p className="muted">吳寬老師｜交大應數｜國中數學教師｜SAT・AMC・會考・學測</p>
           <p>目前每週的家教時段都已排滿。留下孩子年級、想加強的範圍和聯絡方式，有空位時會依登記順序優先通知你。登記不收費，也不代表一定要上課。</p>
           <p className="muted">等待期間可以先做 <a className="u" href={`/diag?src=tutor`}>免費段考弱點檢測</a>，找出要先補的單元。</p>
           {sp.ok ? <p className="banner ok" role="status">已登記候補。有空位會優先通知你。</p> : null}

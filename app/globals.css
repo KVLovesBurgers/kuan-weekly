@@ -409,7 +409,7 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
   font-size: 22px;
   color: var(--paper);
 }
-.hero-price-sep { margin: 0 6px; opacity: 0.5; }
+.hero-price-tiers { display: block; margin-top: 4px; font-size: 0.95em; }
 .hero-preview {
   position: relative;
   display: block;
@@ -468,8 +468,6 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 }
 .nowrap { white-space: nowrap; }
 @media (max-width: 520px) {
-  .hero-price-sep { display: none; }
-  .hero-price .nowrap { display: block; margin-top: 2px; }
 }
 
 .lead-form { max-width: 520px; }

@@ -27,7 +27,7 @@ import { BANK_TRANSFER, GRADE_OPTIONS, GRADE_SAMPLES, GRADE_SAMPLES_NOTE, SAMPLE
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
-  description: "留下信箱，依孩子年級免費下載寬數週練試閱：國中段考、高中學測必錯題、SAT Math。吳寬老師出題，家長解答含步驟拆解。",
+  description: "留下信箱，依孩子年級免費下載寬數週練試閱：國中段考、高中學測必錯題、SAT Math、AMC 8／10／12。吳寬老師出題，家長解答含步驟拆解。",
   alternates: { canonical: "/sample" },
   openGraph: {
     title: "免費題本試閱｜寬數週練",
@@ -104,7 +104,7 @@ export default async function SamplePage({
             領題本試閱
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
-            依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本 3 頁＋家長解答 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
+            依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本 3 頁＋家長解答 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本；<strong>AMC 8／10／12</strong> 各有一份範例題本＋解答。A4 可以直接列印給孩子寫。
           </p>
 
           <p style={{ fontSize: 14, margin: "0 0 12px" }}>

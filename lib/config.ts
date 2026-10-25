@@ -34,10 +34,10 @@ export const SAT_BOOK = {
 
 /** 首頁「看吳寬老師怎麼教」：畫圖一眼懂 Shorts。 */
 export const SHORTS = [
-  { id: "m_rVnXIV2zA", title: "學測陷阱題 #1", note: "一個條件沒看，整題就錯" },
-  { id: "qz9QK22q6y8", title: "內積一眼懂", note: "投影長×長度，畫圖就懂" },
-  { id: "q9IBNMTv35A", title: "學測真題：等腰三角形", note: "抓對稱，算式少一半" },
-  { id: "JCeAolxykKg", title: "組合一眼懂", note: "先選再排，不重複不漏" },
+  { id: "8PU6JzNelwo", title: "99×101 平方差", note: "畫個圖，心算一秒出來" },
+  { id: "iuCR9YthgjA", title: "兩顆骰子和是 7", note: "排成表格，機率一眼看出" },
+  { id: "hgR6FqtXrQM", title: "圓周角是圓心角一半", note: "國三段考必考，畫圖就懂" },
+  { id: "NTzCS0CHC-U", title: "sin30° = 1/2", note: "正三角形切一半，不用背" },
 ] as const;
 
 /** 公開試閱檔（示範週：國一 1-1 正負數與數線・學生題本 3 頁＋家長解答 4 頁）。 */

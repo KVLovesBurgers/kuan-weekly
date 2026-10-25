@@ -15,25 +15,6 @@ import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsa
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
 
-function CtaPair({ full }: { full: boolean }) {
-  return (
-    <div className="cta-row">
-      <Link href="/sample" className="btn btn-ink">
-        免費看題本試閱
-      </Link>
-      {full ? (
-        <Link href="/waitlist" className="btn btn-paper">
-          名額已滿，加入候補
-        </Link>
-      ) : (
-        <Link href="/login?next=/subscribe" className="btn btn-paper">
-          為孩子訂閱週練
-        </Link>
-      )}
-    </div>
-  );
-}
-
 const offersLd = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
@@ -56,6 +37,7 @@ const offersLd = {
     },
   ],
 };
+
 
 export default async function HomePage() {
   const remaining = await cachedSeatsRemaining();
@@ -95,12 +77,9 @@ export default async function HomePage() {
                 <Link href="/sample?track=gsat" className="btn btn-steel btn-lg">
                   免費下載學測試閱
                 </Link>
-                <a href="#pricing" className="btn btn-ghost btn-lg">
-                  看方案與匯款方式
-                </a>
               </div>
               <p className="muted" style={{ margin: "8px 0 0", fontSize: 13 }}>
-                留信箱即可下載，國中、SAT 也有對應試閱。
+                留信箱即可下載，國中、SAT 也有對應試閱。<a href="#pricing" className="u">看方案與匯款方式</a>
               </p>
               <p className="hero-price">
                 <strong>
@@ -108,10 +87,7 @@ export default async function HomePage() {
                   {money(MIN_MONTHLY)}
                 </strong>{" "}
                 /月起・每位孩子，第一週 NT$199
-                <span className="hero-price-sep" aria-hidden="true">
-                  ｜
-                </span>
-                <span className="nowrap">{OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("・")}</span>
+                <span className="hero-price-tiers">各級月費：{OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("・")}</span>
               </p>
               <p className="seat-chip">
                 {seat.text}
@@ -220,13 +196,13 @@ export default async function HomePage() {
             </div>
             <p className="muted" style={{ marginTop: 24 }}>依孩子年級選一份免費試閱：</p>
             <div className="cta-row sample-tracks">
-              <Link href="/sample?track=jh&src=home-samples#get" className="btn btn-paper">
+              <Link href="/sample?track=jh&src=home-samples#get" className="u">
                 國中試閱
               </Link>
-              <Link href="/sample?track=gsat&src=home-samples#get" className="btn btn-ink">
+              <Link href="/sample?track=gsat&src=home-samples#get" className="u">
                 學測試閱
               </Link>
-              <Link href="/sample?track=sat&src=home-samples#get" className="btn btn-paper">
+              <Link href="/sample?track=sat&src=home-samples#get" className="u">
                 SAT 試閱
               </Link>
               <SocialDm />
@@ -299,7 +275,6 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
-            <CtaPair full={full} />
           </div>
         </section>
 
@@ -366,9 +341,6 @@ export default async function HomePage() {
                   開始訂閱
                 </Link>
               )}
-              <Link href="/sample" className="btn btn-paper">
-                先看題本試閱
-              </Link>
             </div>
           </div>
         </section>
