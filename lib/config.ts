@@ -139,16 +139,16 @@ export const money = (n: number) => n.toLocaleString("en-US");
 
 /**
  * 週練訂閱收費（2026-10-25）：對外行銷統一「第一週 NT$199，之後每月 NT$799」。
- * TIER_PRICES 分級數字仍供結帳金額使用，尚未全面對齊 flat 799。
+ * TIER_PRICES 各級月費一律 799（2026-10-25 flat）。
  * 年繳 NT$7,990 只適用國中；小學、高中與 SAT 沒有年繳定價，不顯示、不收年繳。
  */
 export type PriceTier = "elementary" | "junior" | "senior" | "sat";
-// NOTE 2026-10-25：對外行銷統一為「第一週 NT$199，之後每月 NT$799」(flat)；以下分級數字仍供結帳金額使用，尚未對齊。
+// NOTE 2026-10-25：flat — 第一週 NT$199，之後每月 NT$799（各級結帳同價）。
 export const TIER_PRICES: Record<PriceTier, { label: string; grades: string; monthly: number }> = {
-  elementary: { label: "小學", grades: "小一到小六", monthly: 699 },
+  elementary: { label: "小學", grades: "小一到小六", monthly: 799 },
   junior: { label: "國中", grades: "國一、國二、國三", monthly: 799 },
-  senior: { label: "高中", grades: "高一、高二、高三", monthly: 999 },
-  sat: { label: "SAT", grades: "SAT Math", monthly: 1099 },
+  senior: { label: "高中", grades: "高一、高二、高三", monthly: 799 },
+  sat: { label: "SAT", grades: "SAT Math", monthly: 799 },
 };
 /**
  * 訂閱開放設定（2026-10-24）：只要改這裡就能切換某一級開不開放。
@@ -189,7 +189,7 @@ export const NO_YEARLY_MSG = "年繳目前只適用國中；小學、高中與 S
 const fmt = (n: number) => `${SITE.currency}${money(n)}`;
 /** 最低月費（只算開放的級距，首頁「起」價） */
 export const MIN_MONTHLY = Math.min(...OPEN_TIERS.map((k) => TIER_PRICES[k].monthly));
-/** 開放級距：「小學 NT$699／國中 NT$799」 */
+/** 開放級距：各級每月 NT$799 */
 export const PRICE_TIERS_LINE = OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${fmt(TIER_PRICES[k].monthly)}`).join("／");
 /** 「高中、SAT」 */
 export const CLOSED_TIERS_LABEL = CLOSED_TIERS.map((k) => TIER_PRICES[k].label).join("、");
