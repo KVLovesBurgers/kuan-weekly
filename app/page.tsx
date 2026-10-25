@@ -107,7 +107,7 @@ export default async function HomePage() {
                   {SITE.currency}
                   {money(MIN_MONTHLY)}
                 </strong>{" "}
-                /月起・每位孩子，第一週免費
+                /月起・每位孩子，第一週 NT$199
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
@@ -338,7 +338,7 @@ export default async function HomePage() {
               <article className="card">
                 <p className="kicker">按月</p>
                 <TierPrices />
-                <p className="muted">第一週免費，從第二週起才開始計算一個月，依孩子年級計價。要停用請寄信 {SITE.contactEmail}。</p>
+                <p className="muted">第一週 NT$199，之後每月 NT$799。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年（目前只適用國中）</p>
@@ -416,7 +416,7 @@ export default async function HomePage() {
                 ],
                 [
                   "會出 SAT 嗎？",
-                  "會。訂閱時年級選 SAT Math（週練月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週免費），依你填的需求，老師製作客製題本：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
+                  "會。訂閱時年級選 SAT Math（週練月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週 NT$199），依你填的需求，老師製作客製題本：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
                     money(SAT_BOOK.price) +
                     "），第 1 章可免費試閱，購買請私訊「" +
                     SOCIAL.satKeyword +
@@ -428,7 +428,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
-                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + FIRST_WEEK_CONTENT],
+                ["第一週怎麼算？什麼時候開始月繳？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + FIRST_WEEK_CONTENT],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],

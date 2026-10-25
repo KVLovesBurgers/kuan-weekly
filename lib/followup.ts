@@ -3,7 +3,7 @@ import { isTrialLead, packsForGrade, trialEndLabel, trialEndsAt, trialUrl, TRIAL
 
 export const FOLLOWUP_KIND = "trial_d1";
 export const FOLLOWUP_SUBJECT = "試閱寫完了嗎？3 步看出孩子卡在哪";
-/** 2026-10-22 使用者核准：訂閱資訊改為免費寄題本的要求（2026-10-24 起統一為「第一週」，避免被讀成每週免費）。使用者 2026-10-19 核准的原稿（/workspace/promo/trial-followup-draft.md 第 9–31 行）。2026-10-20 核准加入：開通時間提示（{{START_BY}}）與年級練習連結（{{UNIT_LINK}}），其餘不改。直接寄請用 buildFollowup()。 */
+/** 2026-10-25 改為定稿 /workspace/promo/trial-followup-draft-20261025.md：第一週 NT$199，之後每月 NT$799＋訂閱連結；刪「免費寄第一週」。舊註：2026-10-22 使用者核准：訂閱資訊改為免費寄題本的要求（2026-10-24 起統一為「第一週」，避免被讀成每週免費）。使用者 2026-10-19 核准的原稿（/workspace/promo/trial-followup-draft.md 第 9–31 行）。2026-10-20 核准加入：開通時間提示（{{START_BY}}）與年級練習連結（{{UNIT_LINK}}），其餘不改。直接寄請用 buildFollowup()。 */
 export const FOLLOWUP_TEXT = `您好，我是吳寬老師。
 
 前幾天您領了寬數週練的題本試閱，想跟您分享怎麼用最有效：
@@ -14,9 +14,12 @@ export const FOLLOWUP_TEXT = `您好，我是吳寬老師。
 
 家長不用會數學，照著解答就能看出問題在觀念還是粗心。
 
-回信告訴我孩子的年級和這次段考範圍，我免費寄第一週的週練題本給您。
+想問一下孩子寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
 {{UNIT_LINK}}
-還沒寫完也沒關係，有任何問題直接回這封信就好。
+如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。回信跟我說要不要續就好。
+
+登記訂閱：
+https://kuan-weekly.vercel.app/sample#subscribe
 
 吳寬老師
 寬數週練
@@ -42,7 +45,12 @@ export function buildFollowup(lead: { role?: string; grade?: string }, now = new
 
 謝謝你下載寬數週練的試閱。先自己寫，不要先看解答；卡住的題目記下題號，直接回這封信問我就好。
 
-這封可以轉給家長看。請家長回信告訴我你的年級和這次段考範圍，我免費寄第一週的週練題本。
+想問一下寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
+
+這封可以轉給家長看。如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。請家長回信跟我說要不要續就好。
+
+登記訂閱：
+${SITE_BASE}/sample#subscribe
 
 吳寬老師
 寬數週練
@@ -127,10 +135,10 @@ export function buildTrialDelivery(lead: { id: string; role?: string; grade?: st
     .map((p) => `【${p.label}・${p.unit}】\n學生題本：${trialUrl(SITE_BASE, lead.id, p.id, "student")}\n家長解答：${trialUrl(SITE_BASE, lead.id, p.id, "parent")}`)
     .join("\n\n");
   const student = lead.role === "學生";
-  const subject = `寬數週練 第一週免費：${end}關閉`;
+  const subject = `寬數週練 試用題本：${end}關閉`;
   const text = `${student ? "你好" : "您好"}，我是吳寬老師。
 
-這是寬數週練第一週免費的完整題本（7 天），${packs.length > 1 ? `共 ${packs.length} 份，` : ""}每份都是完整的一週：學生題本 15 題（基礎、常考、進階三關）＋家長解答（每題步驟和常見錯誤）。
+這是寬數週練的試用完整題本（7 天），${packs.length > 1 ? `共 ${packs.length} 份，` : ""}每份都是完整的一週：學生題本 15 題（基礎、常考、進階三關）＋家長解答（每題步驟和常見錯誤）。
 
 ${links}
 
@@ -156,22 +164,41 @@ ${SITE_BASE}
 export function buildTrialReminder(lead: { role?: string; grade?: string; created_at: string }, now = new Date()) {
   const end = trialEndLabel(lead.created_at);
   const student = lead.role === "學生";
-  const subject = `第一週免費題本 ${end}關閉，寫完了嗎？`;
-  const text = `${student ? "你好" : "您好"}，我是吳寬老師。
+  const subject = `試用題本 ${end}關閉，寫完了嗎？`;
+  const text = student ? `你好，我是吳寬老師。
 
-提醒一下，第一週免費的下載連結會在 ${end}晚上 11:59 關閉，還沒下載的話請記得先存下來。
+提醒一下，試用的下載連結會在 ${end}晚上 11:59 關閉，還沒下載的話請記得先存下來。
 
-${student ? "寫完了嗎？卡住的題號直接回信問我。" : "孩子寫完了嗎？哪一題卡住，回信告訴我題號，我幫您看是觀念還是粗心。"}
+想問一下寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
 
-${student ? "請家長回信告訴我你的年級和這次段考範圍，我免費寄第一週的週練題本。" : "回信告訴我孩子的年級和這次段考範圍，我免費寄第一週的週練題本給您。"}
+這封可以轉給家長看。如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。請家長回信跟我說要不要續就好。
 
-${student ? "這封可以轉給家長看。" : "這封也可以轉給家裡另一位家長看。"}
+登記訂閱：
+${SITE_BASE}/sample#subscribe
 
 吳寬老師
 寬數週練
 ${SITE_BASE}
 
-（這是第一週免費期間唯一一封提醒，之後不會再寄。不想收到，回信告訴我即可）
+（這是試用期間唯一一封提醒，之後不會再寄。不想收到，回信告訴我即可）
+` : `您好，我是吳寬老師。
+
+提醒一下，試用的下載連結會在 ${end}晚上 11:59 關閉，還沒下載的話請記得先存下來。
+
+想問一下孩子寫起來感覺如何？哪一題特別卡，回信跟我說題號就好。
+
+如果下個禮拜想繼續：第一週 NT$199，之後每月 NT$799。回信跟我說要不要續就好。
+
+登記訂閱：
+${SITE_BASE}/sample#subscribe
+
+這封也可以轉給家裡另一位家長看。
+
+吳寬老師
+寬數週練
+${SITE_BASE}
+
+（這是試用期間唯一一封提醒，之後不會再寄。不想收到，回信告訴我即可）
 `;
   return { subject, text };
 }

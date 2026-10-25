@@ -39,8 +39,8 @@ export async function GET(_req: Request, ctx: { params: Promise<{ token: string;
   if (!packsForGrade(lead.grade).some((p) => p.id === m[1])) return page("連結無效", "<p>這份不在你的免費範圍內。</p>", 404);
   if (!trialActive(lead)) {
     return page(
-      "第一週免費已結束",
-      `<p>這份第一週免費的題本已在 ${trialEndLabel(lead.created_at)}關閉。</p><p>想每週跟著學校進度練，可以登記訂閱；有問題直接回信給吳寬老師。</p>`,
+      "試用已結束",
+      `<p>這份試用題本已在 ${trialEndLabel(lead.created_at)}關閉。</p><p>想每週跟著學校進度練，可以登記訂閱；有問題直接回信給吳寬老師。</p>`,
       410,
     );
   }

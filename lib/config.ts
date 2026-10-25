@@ -98,6 +98,9 @@ export const GRADE_SAMPLES = [
   { key: "g11", label: "高二", unit: "三角函數、指數對數、向量", student: "/samples/sample-g11-student.pdf", parent: "/samples/sample-g11-parent.pdf" },
   { key: "g12", label: "高三", unit: "學測綜合範例", student: "/samples/sample-g12-student.pdf", parent: "/samples/sample-g12-parent.pdf" },
   { key: "sat5", label: "SAT Math", unit: "代數基礎範例", student: "/samples/sample-sat5-student.pdf", parent: "/samples/sample-sat5-parent.pdf" },
+  { key: "amc8", label: "AMC 8", unit: "計數、數感與基礎幾何", student: "/samples/sample-amc8-student.pdf", parent: "/samples/sample-amc8-parent.pdf" },
+  { key: "amc10", label: "AMC 10", unit: "代數、幾何、計數與機率", student: "/samples/sample-amc10-student.pdf", parent: "/samples/sample-amc10-parent.pdf" },
+  { key: "amc12", label: "AMC 12", unit: "三角、指對數、數列與複數", student: "/samples/sample-amc12-student.pdf", parent: "/samples/sample-amc12-parent.pdf" },
 ] as const;
 
 /** 目前主收款：私人匯款。綠界信用卡／ATM 審過後再開線上刷卡。 */
@@ -135,11 +138,12 @@ export function gsatDaysLeft(now = new Date()) {
 export const money = (n: number) => n.toLocaleString("en-US");
 
 /**
- * 週練訂閱收費（2026-10-24 使用者決定）：所有年級第一週免費，從第二週起才開始計算一個月，依年級分三級（每位孩子）：
- * 小學（小一到小六）NT$699／國中（國一、國二、國三）NT$799／高中（高一、高二、高三）NT$999／SAT NT$1,099（小學 2026-10-24 使用者定價）。
+ * 週練訂閱收費（2026-10-25）：對外行銷統一「第一週 NT$199，之後每月 NT$799」。
+ * TIER_PRICES 分級數字仍供結帳金額使用，尚未全面對齊 flat 799。
  * 年繳 NT$7,990 只適用國中；小學、高中與 SAT 沒有年繳定價，不顯示、不收年繳。
  */
 export type PriceTier = "elementary" | "junior" | "senior" | "sat";
+// NOTE 2026-10-25：對外行銷統一為「第一週 NT$199，之後每月 NT$799」(flat)；以下分級數字仍供結帳金額使用，尚未對齊。
 export const TIER_PRICES: Record<PriceTier, { label: string; grades: string; monthly: number }> = {
   elementary: { label: "小學", grades: "小一到小六", monthly: 699 },
   junior: { label: "國中", grades: "國一、國二、國三", monthly: 799 },
@@ -196,13 +200,13 @@ const yearlySave = () => SITE.monthlyPrice * 12 - SITE.yearlyPrice;
 export const PLAN_MONTHLY_LABEL = `月繳 ${OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("／")} /月`;
 export const PLAN_YEARLY_LABEL = `年繳 ${fmt(SITE.yearlyPrice)} /年（僅國中，省 ${fmt(yearlySave())}）`;
 /** 起算日說明（頁面、FAQ、匯款頁共用） */
-export const START_NOTE = "第一週從開通那天起算 7 天，請在第二週開始前匯款，涵蓋從第二週起的一個月。";
-export const FREE_WEEK_RULE = "第一週免費，從第二週起才開始計算一個月";
-/** 「第一週免費，從第二週起才開始計算一個月：小學 NT$699／國中 NT$799／高中 NT$999／SAT NT$1,099（每月、每位孩子）」 */
-export const PRICE_RULE = `${FREE_WEEK_RULE}：${PRICE_TIERS_LINE}（每月、每位孩子）${CLOSED_TIERS_LABEL ? `；${CLOSED_TIERS_LABEL} 即將開放` : ""}`;
+export const START_NOTE = "第一週 NT$199（開通起算 7 天），之後每月 NT$799。";
+export const FREE_WEEK_RULE = "第一週 NT$199，之後每月 NT$799";
+/** 2026-10-25：第一週 NT$199，之後每月 NT$799 */
+export const PRICE_RULE = `${FREE_WEEK_RULE}（每位孩子；四週題本＋家長解答）`;
 export const YEARLY_NOTE = `年繳 ${fmt(SITE.yearlyPrice)} 目前只適用國中`;
 /** 匯款處用句（使用者 2026-10-24 核准原文） */
-export const PAY_NOTE = "第一週免費。請在第二週開始前匯款，涵蓋從第二週起的一個月。";
+export const PAY_NOTE = "第一週 NT$199，之後每月 NT$799。請在開始前匯款。";
 /** 第一週實際可得內容（據實）。 */
 export const FIRST_WEEK_CONTENT =
   "第一週的內容：國一、國二、國三是完整一週題本（學生題本 15 題＋家長解答）；小學、高中、SAT 是依你填的需求，老師製作客製題本。";
