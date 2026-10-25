@@ -3,7 +3,9 @@ export const SITE = {
   brand: "寬數",
   teacher: "吳寬老師",
   tagline: "觀念拆細，路才走得穩",
+  /** 國中月費（基準價）；依年級的月費請用 monthlyPriceFor(grade)，見 TIER_PRICES。 */
   monthlyPrice: 799,
+  /** 年繳目前只適用國中。 */
   yearlyPrice: 7990,
   currency: "NT$",
   oneOnOneUrl: "https://kuanmath.vercel.app",
@@ -21,6 +23,13 @@ export const SOCIAL = {
   youtubeName: "Saber數學",
   weeklyKeyword: "週練",
   satKeyword: "SAT講義",
+} as const;
+
+/** Digital SAT 完整數學講義 v1.0（取代舊五週版，2026-10-18 起只賣完整版）。交貨走私訊＋Drive 個別分享。 */
+export const SAT_BOOK = {
+  name: "Digital SAT 完整數學講義 v1.0",
+  price: 990,
+  contents: "21 章觀念練習本＋解答本＋2 套模考與附錄",
 } as const;
 
 /** 首頁「看吳寬老師怎麼教」：畫圖一眼懂 Shorts。 */
@@ -125,6 +134,88 @@ export function gsatDaysLeft(now = new Date()) {
 
 export const money = (n: number) => n.toLocaleString("en-US");
 
+/**
+ * 週練訂閱收費（2026-10-24 使用者決定）：所有年級第一週免費，從第二週起才開始計算一個月，依年級分三級（每位孩子）：
+ * 小學（小一到小六）NT$699／國中（國一、國二、國三）NT$799／高中（高一、高二、高三）NT$999／SAT NT$1,099（小學 2026-10-24 使用者定價）。
+ * 年繳 NT$7,990 只適用國中；小學、高中與 SAT 沒有年繳定價，不顯示、不收年繳。
+ */
+export type PriceTier = "elementary" | "junior" | "senior" | "sat";
+export const TIER_PRICES: Record<PriceTier, { label: string; grades: string; monthly: number }> = {
+  elementary: { label: "小學", grades: "小一到小六", monthly: 699 },
+  junior: { label: "國中", grades: "國一、國二、國三", monthly: 799 },
+  senior: { label: "高中", grades: "高一、高二、高三", monthly: 999 },
+  sat: { label: "SAT", grades: "SAT Math", monthly: 1099 },
+};
+/**
+ * 訂閱開放設定（2026-10-24）：只要改這裡就能切換某一級開不開放。
+ * 2026-10-24 使用者決定：全部年級開放訂閱；小學、高中、SAT 依家長填的需求由老師製作客製題本。
+ */
+export const SUBSCRIBE_OPEN: Record<PriceTier, boolean> = {
+  elementary: true,
+  junior: true,
+  senior: true,
+  sat: true,
+};
+const TIERS = Object.keys(TIER_PRICES) as PriceTier[];
+export const OPEN_TIERS = TIERS.filter((k) => SUBSCRIBE_OPEN[k]);
+export const CLOSED_TIERS = TIERS.filter((k) => !SUBSCRIBE_OPEN[k]);
+
+/** 年級 → 價格級距；不認得的年級回傳 null（一律視為未開放，後端會擋）。 */
+export function priceTier(grade: string): PriceTier | null {
+  if (grade === "SAT" || grade === "SAT Math") return "sat";
+  if (/^小[一二三四五六]$/.test(grade)) return "elementary";
+  if (grade === "國一" || grade === "國二" || grade === "國三") return "junior";
+  if (grade === "高一" || grade === "高二" || grade === "高三") return "senior";
+  return null;
+}
+/** 只在 isSubscribeOpen(grade) 為真之後呼叫；不認得的年級回傳 null。 */
+export function monthlyPriceFor(grade: string): number | null {
+  const t = priceTier(grade);
+  return t ? TIER_PRICES[t].monthly : null;
+}
+/** 年繳只適用國中；小學、高中與 SAT 沒有年繳。 */
+export function yearlyAllowed(grade: string) {
+  return priceTier(grade) === "junior";
+}
+export function isSubscribeOpen(grade: string) {
+  const t = priceTier(grade);
+  return t !== null && SUBSCRIBE_OPEN[t];
+}
+export const NO_YEARLY_MSG = "年繳目前只適用國中；小學、高中與 SAT 請選月繳。";
+const fmt = (n: number) => `${SITE.currency}${money(n)}`;
+/** 最低月費（只算開放的級距，首頁「起」價） */
+export const MIN_MONTHLY = Math.min(...OPEN_TIERS.map((k) => TIER_PRICES[k].monthly));
+/** 開放級距：「小學 NT$699／國中 NT$799」 */
+export const PRICE_TIERS_LINE = OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${fmt(TIER_PRICES[k].monthly)}`).join("／");
+/** 「高中、SAT」 */
+export const CLOSED_TIERS_LABEL = CLOSED_TIERS.map((k) => TIER_PRICES[k].label).join("、");
+/** 不認得的年級（後端用） */
+export const UNKNOWN_GRADE_MSG = "請從選單選擇孩子的年級。";
+const yearlySave = () => SITE.monthlyPrice * 12 - SITE.yearlyPrice;
+/** 下拉選單用：只列開放的年級。 */
+export const PLAN_MONTHLY_LABEL = `月繳 ${OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("／")} /月`;
+export const PLAN_YEARLY_LABEL = `年繳 ${fmt(SITE.yearlyPrice)} /年（僅國中，省 ${fmt(yearlySave())}）`;
+/** 起算日說明（頁面、FAQ、匯款頁共用） */
+export const START_NOTE = "第一週從開通那天起算 7 天，請在第二週開始前匯款，涵蓋從第二週起的一個月。";
+export const FREE_WEEK_RULE = "第一週免費，從第二週起才開始計算一個月";
+/** 「第一週免費，從第二週起才開始計算一個月：小學 NT$699／國中 NT$799／高中 NT$999／SAT NT$1,099（每月、每位孩子）」 */
+export const PRICE_RULE = `${FREE_WEEK_RULE}：${PRICE_TIERS_LINE}（每月、每位孩子）${CLOSED_TIERS_LABEL ? `；${CLOSED_TIERS_LABEL} 即將開放` : ""}`;
+export const YEARLY_NOTE = `年繳 ${fmt(SITE.yearlyPrice)} 目前只適用國中`;
+/** 匯款處用句（使用者 2026-10-24 核准原文） */
+export const PAY_NOTE = "第一週免費。請在第二週開始前匯款，涵蓋從第二週起的一個月。";
+/** 第一週實際可得內容（據實）。 */
+export const FIRST_WEEK_CONTENT =
+  "第一週的內容：國一、國二、國三是完整一週題本（學生題本 15 題＋家長解答）；小學、高中、SAT 是依你填的需求，老師製作客製題本。";
+/** 小學、高中、SAT 必填「孩子的需求」；國中選填。 */
+export function needsRequired(grade: string) {
+  const t = priceTier(grade);
+  return t !== null && t !== "junior";
+}
+export const NEEDS_LABEL = "孩子的需求";
+export const NEEDS_HINT = "例如：學校進度、弱點單元、目標考試";
+export const NEEDS_MAX = 1000;
+export const NEEDS_REQUIRED_MSG = "小學、高中、SAT 請填「孩子的需求」（例如學校進度、弱點、目標考試），老師會依此製作客製題本。";
+
 export function seatCap() {
   const n = Number(process.env.SEAT_CAP ?? "20");
   return Number.isFinite(n) && n > 0 ? n : 20;
@@ -173,3 +264,10 @@ export const COMPLETION_OPTIONS = [
   ["some", "寫了一部分"],
   ["all", "全部寫完"],
 ] as const;
+
+/** 開通時間提示：只在 2026-11-02（台北）以前顯示，過了自動消失，不延期。 */
+export const START_BY_DEADLINE = "2026-11-02T00:00:00+08:00";
+export const START_BY_NOTE = "11/2 前開通，第二次段考前可以練滿 3 週";
+export function startByNote(now = new Date()) {
+  return now.getTime() < new Date(START_BY_DEADLINE).getTime() ? START_BY_NOTE : "";
+}

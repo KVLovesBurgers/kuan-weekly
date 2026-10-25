@@ -1,15 +1,19 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { StudentHero } from "@/components/StudentHero";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 import { LiteYouTube } from "@/components/LiteYouTube";
-import { SocialDm } from "@/components/SocialDm";
+import { InstagramIcon, SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
-import { getParent } from "@/lib/auth";
-import { seatsRemaining } from "@/lib/db";
-import { GSAT_DATE, gsatDaysLeft, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { DiagCta } from "@/components/DiagCta";
+import { cachedSeatsRemaining } from "@/lib/seats";
+import { TierPrices } from "@/components/TierPrices";
+import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
-export const dynamic = "force-dynamic";
+// 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
+export const revalidate = 300;
 
 function CtaPair({ full }: { full: boolean }) {
   return (
@@ -30,9 +34,31 @@ function CtaPair({ full }: { full: boolean }) {
   );
 }
 
+const offersLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: SITE.name,
+  url: SITE.url,
+  makesOffer: [
+    ...(Object.keys(TIER_PRICES) as (keyof typeof TIER_PRICES)[]).map((k) => ({
+      "@type": "Offer",
+      name: `寬數週練｜按月｜${TIER_PRICES[k].label}（${TIER_PRICES[k].grades}）`,
+      price: TIER_PRICES[k].monthly,
+      priceCurrency: "TWD",
+      url: `${SITE.url}/#pricing`,
+    })),
+    {
+      "@type": "Offer",
+      name: "寬數週練｜按年（目前只適用國中）",
+      price: SITE.yearlyPrice,
+      priceCurrency: "TWD",
+      url: `${SITE.url}/#pricing`,
+    },
+  ],
+};
+
 export default async function HomePage() {
-  const parent = await getParent();
-  const remaining = await seatsRemaining();
+  const remaining = await cachedSeatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
   const daysLeft = gsatDaysLeft();
@@ -40,8 +66,12 @@ export default async function HomePage() {
 
   return (
     <>
-      <Header parentEmail={parent?.email} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offersLd) }} />
+      <Header />
       <main id="main">
+        <Suspense fallback={null}>
+          <StudentHero />
+        </Suspense>
         <section className="hero">
           <div className="wrap hero-grid">
             <div>
@@ -75,17 +105,13 @@ export default async function HomePage() {
               <p className="hero-price">
                 <strong>
                   {SITE.currency}
-                  {money(SITE.monthlyPrice)}
+                  {money(MIN_MONTHLY)}
                 </strong>{" "}
-                /月・每位孩子
+                /月起・每位孩子，第一週免費
                 <span className="hero-price-sep" aria-hidden="true">
                   ｜
                 </span>
-                <span className="nowrap">
-                  年繳 {SITE.currency}
-                  {money(SITE.yearlyPrice)}（省 {SITE.currency}
-                  {money(yearlySave)}）
-                </span>
+                <span className="nowrap">{OPEN_TIERS.map((k) => `${TIER_PRICES[k].label} ${money(TIER_PRICES[k].monthly)}`).join("・")}</span>
               </p>
               <p className="seat-chip">
                 {seat.text}
@@ -125,6 +151,43 @@ export default async function HomePage() {
               <strong className="display">限 {seatCap()} 名</strong>
               <span className="sub">{seat.short === `限 ${seatCap()} 名` ? "依名額收，不超量" : seat.short}</span>
             </div>
+          </div>
+        </section>
+
+        <section className="diag-band" aria-label="免費段考弱點檢測">
+          <div className="wrap">
+            <DiagCta src="home-diag" variant="banner" />
+          </div>
+        </section>
+
+        <section id="path" className="section">
+          <div className="wrap">
+            <p className="kicker">三步看懂適不適合</p>
+            <h2 className="display">免費練習題 → 試閱 → 方案</h2>
+            <div className="path-steps">
+              <div className="card">
+                <span className="path-no">第 1 步</span>
+                <strong className="display">免費練習題</strong>
+                <span className="muted">依單元整理，卡在哪個單元就從那裡開始練，每份都有題目和逐步詳解。</span>
+                <Link href="/units" className="u">依單元找練習題</Link>
+                <Link href="/videos-practice" className="u">看完影片？用影片編號找題目</Link>
+              </div>
+              <div className="card">
+                <span className="path-no">第 2 步</span>
+                <strong className="display">一週試閱</strong>
+                <span className="muted">留信箱下載學生題本＋家長解答，實際寫一週看看。</span>
+                <Link href="/sample" className="u">領題本試閱</Link>
+              </div>
+              <div className="card">
+                <span className="path-no">第 3 步</span>
+                <strong className="display">方案</strong>
+                <span className="muted">覺得適合再訂閱，按孩子計價，匯款後約 1 個工作天開通。</span>
+                <a href="#pricing" className="u">看方案與匯款方式</a>
+              </div>
+            </div>
+            <p className="muted" style={{ marginTop: 16 }}>
+              高三準備學測？<Link href="/quiz" className="u">免費學測數學模擬測驗</Link>，數A、數B 各 10 題，交卷後看分數和弱點單元。
+            </p>
           </div>
         </section>
 
@@ -201,10 +264,10 @@ export default async function HomePage() {
             <p className="kicker">吳寬老師｜寬數</p>
             <h2 className="display">誰在出題</h2>
             <p className="muted" style={{ marginTop: 12 }}>
-              陽明交大應用數學系畢業。Stanford OHS 數學老師暨官方監考官，也在站前教 SAT 數學。週練是講義方案：每週兩份
+              陽明交大應用數學系畢業。現任國中數學教師，曾任菁英國際 SAT 數學老師，也是梭羅國際教育 AMC 競賽數學老師；Stanford OHS（史丹佛線上高中）官方授權監考官，並指導該校學生數學。週練是講義方案：每週兩份
               PDF，不提供 LINE 即時答題。
             </p>
-            <p className="muted">成效一例：學測數學 11 級到分科 58 級（例如精誠高中備考）。更多經歷請看個人頁。</p>
+            <p className="muted">學生案例：精誠高中學測數學 11 級到分科 58 級。更多經歷請看個人頁。</p>
             <p style={{ marginTop: 20 }}>
               <a className="btn btn-paper" href={SITE.oneOnOneUrl}>
                 認識吳寬老師
@@ -268,28 +331,25 @@ export default async function HomePage() {
             <p className="kicker">03</p>
             <h2 className="display">方案</h2>
             <p className="muted">
-              一位孩子一份週練。第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
+              一位孩子一份週練。{PRICE_RULE}。{START_NOTE}第二個孩子再加一席。目前以匯款開通；轉帳證明寄到老師信箱，確認後開席。
             </p>
+            <p className="muted" style={{ fontSize: 14 }}>{FIRST_WEEK_CONTENT}</p>
             <div className="grid-2" style={{ marginTop: 28 }}>
               <article className="card">
                 <p className="kicker">按月</p>
-                <p className="price">
-                  {SITE.currency}
-                  {money(SITE.monthlyPrice)}
-                  <small> /月 · 每名孩子</small>
-                </p>
-                <p className="muted">適合先試一個月。要停用請寄信 {SITE.contactEmail}。</p>
+                <TierPrices />
+                <p className="muted">第一週免費，從第二週起才開始計算一個月，依孩子年級計價。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
-                <p className="kicker">按年</p>
+                <p className="kicker">按年（目前只適用國中）</p>
                 <p className="price">
                   {SITE.currency}
                   {money(SITE.yearlyPrice)}
                   <small> /年 · 每名孩子</small>
                 </p>
-                <p className="muted">對準完整學年的每週進度。</p>
+                <p className="muted">對準完整學年的每週進度。年繳目前只適用國中；小學、高中與 SAT 目前只有月繳。</p>
                 <p className="savings-note">
-                  月繳一年 {SITE.currency}
+                  國中月繳一年 {SITE.currency}
                   {money(SITE.monthlyPrice * 12)} → 年繳 {SITE.currency}
                   {money(SITE.yearlyPrice)}，省 {SITE.currency}
                   {money(yearlySave)}
@@ -318,11 +378,11 @@ export default async function HomePage() {
             <div>
               <p className="kicker">另一份講義</p>
               <h2 className="display" style={{ fontSize: 26, margin: "6px 0 8px" }}>
-                準備 Digital SAT？五週講義
+                準備 Digital SAT？完整數學講義
               </h2>
               <p className="muted" style={{ margin: 0 }}>
-                對準 Digital SAT Math 的五週講義。到 IG {SOCIAL.handle} 或臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.satKeyword}」，送 Week 1
-                試閱。
+                21 章觀念練習本＋解答本＋2 套模考與附錄，題目全部原創，英文原題搭配中文詳解。電子 PDF，NT${money(SAT_BOOK.price)}。講義是另外販售的一次性商品，和 SAT 週練每月 NT${money(TIER_PRICES.sat.monthly)} 是分開的。
+                可以先<Link href="/sample?track=sat&src=home-sat#get">免費下載第 1 章試閱</Link>，或到 IG {SOCIAL.handle}、臉書粉專「{SOCIAL.facebookName}」私訊「{SOCIAL.satKeyword}」。
               </p>
             </div>
             <SocialDm keyword={SOCIAL.satKeyword} />
@@ -356,9 +416,11 @@ export default async function HomePage() {
                 ],
                 [
                   "會出 SAT 嗎？",
-                  "會。訂閱時年級選 SAT Math：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 五週講義，私訊「" +
+                  "會。訂閱時年級選 SAT Math（週練月費 NT$" + money(TIER_PRICES.sat.monthly) + "，第一週免費），依你填的需求，老師製作客製題本：題目英文、解答中文講解，對準 Digital SAT。另有 Digital SAT 完整數學講義，是另外販售的一次性電子 PDF，不是週練訂閱（21 章＋2 套模考，電子 PDF，NT$" +
+                    money(SAT_BOOK.price) +
+                    "），第 1 章可免費試閱，購買請私訊「" +
                     SOCIAL.satKeyword +
-                    "」可先看 Week 1。",
+                    "」。",
                 ],
                 ["名額滿了怎麼辦？", `限 ${seatCap()} 名，額滿後改候補。老師從後台看到候補名單後再通知開席。`],
                 ["匯款後多久開通？", "通常 1 個工作天內開通。請把轉帳證明寄到 " + SITE.contactEmail + "。"],
@@ -366,6 +428,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
+                ["第一週真的免費嗎？什麼時候開始收費？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中與 SAT 目前只有月繳。" + FIRST_WEEK_CONTENT],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],
@@ -414,6 +477,31 @@ export default async function HomePage() {
                 免費看題本試閱
               </Link>
               <SocialDm compact />
+            </div>
+          </div>
+        </section>
+
+        <section id="gsat-mock" className="section" style={{ paddingTop: 0 }}>
+          <div className="wrap card sat-card">
+            <div>
+              <p className="kicker">學測考前</p>
+              <h2 className="display" style={{ fontSize: 22, margin: "6px 0 8px" }}>
+                學測數學考前猜題卷
+              </h2>
+              <p className="muted" style={{ margin: 0 }}>
+                數A、數B 各三回，依 111–115 學測的命題分布原創設計。
+                <br />
+                題型、題數、作答時間和正式考試相同，每回附完整詳解與答題卷。
+                <br />
+                加贈該科的命題分析報告，PDF 電子檔。
+              </p>
+            </div>
+            <div className="dm-row">
+              <a className="btn btn-paper" href="https://instagram.com/saber_math" target="_blank" rel="noopener noreferrer">
+                <InstagramIcon />
+                IG 私訊詢問
+                <span className="sr-only">（Instagram @saber_math，另開新分頁）</span>
+              </a>
             </div>
           </div>
         </section>

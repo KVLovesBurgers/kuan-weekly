@@ -8,7 +8,9 @@ import { DEMO_PARENT_EMAIL } from "@/lib/config";
 
 const DEMO_READONLY = "/dashboard?error=" + encodeURIComponent("示範帳號為唯讀，無法新增或修改資料。");
 import { uid } from "@/lib/ids";
-import { SITE } from "@/lib/config";
+import { SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, priceTier, UNKNOWN_GRADE_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
+import { mailConfigured, sendCheckoutAlert } from "@/lib/mail";
+import { after } from "next/server";
 import { safeNextPath } from "@/lib/safe-next";
 
 export async function sendLoginLink(formData: FormData) {
@@ -108,7 +110,11 @@ export async function startCheckout(formData: FormData) {
   const school_progress = String(formData.get("school_progress") ?? "");
   const exam_target = String(formData.get("exam_target") ?? "");
   const weak_topics = String(formData.get("weak_topics") ?? "");
+  const needs = String(formData.get("needs") ?? "").trim().slice(0, NEEDS_MAX);
   if (!display_name) redirect("/subscribe?error=" + encodeURIComponent("請填孩子稱呼。"));
+  if (!priceTier(grade)) redirect("/subscribe?error=" + encodeURIComponent(UNKNOWN_GRADE_MSG));
+  if (needsRequired(grade) && !needs) redirect("/subscribe?error=" + encodeURIComponent(NEEDS_REQUIRED_MSG));
+  if (plan === "yearly" && !yearlyAllowed(grade)) redirect("/subscribe?error=" + encodeURIComponent(NO_YEARLY_MSG));
 
   const db = await getDb();
   if ((await seatsRemaining(db)) <= 0) redirect("/waitlist");
@@ -118,15 +124,26 @@ export async function startCheckout(formData: FormData) {
   const tradeNo = merchantTradeNo();
   const now = new Date().toISOString();
   await db.prepare(
-    `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 0, 'pending', ?, ?)`,
-  ).run(childId, parent.id, display_name, grade, school_progress, exam_target, weak_topics, plan, now);
+    `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, needs, is_demo, subscription_status, plan, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 'pending', ?, ?)`,
+  ).run(childId, parent.id, display_name, grade, school_progress, exam_target, weak_topics, needs, plan, now);
 
-  const amount = plan === "yearly" ? SITE.yearlyPrice : SITE.monthlyPrice;
+  const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade)!;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
   ).run(tradeNo, parent.id, childId, plan, amount, now);
+
+  if (mailConfigured()) {
+    const email = parent.email;
+    after(async () => {
+      try {
+        await sendCheckoutAlert({ email, displayName: display_name, grade, plan, amount, tradeNo, source: "subscribe", createdAt: now, needs, via: "/subscribe" });
+      } catch (err) {
+        console.error("checkout alert failed", err);
+      }
+    });
+  }
 
   redirect(`/subscribe/pay?trade=${encodeURIComponent(tradeNo)}`);
 }

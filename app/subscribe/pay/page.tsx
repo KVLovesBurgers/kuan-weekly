@@ -4,7 +4,7 @@ import { getParent } from "@/lib/auth";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getDb } from "@/lib/db";
-import { BANK_TRANSFER, SITE } from "@/lib/config";
+import { BANK_TRANSFER, SITE, PAY_NOTE, PRICE_RULE, START_NOTE, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -26,15 +26,15 @@ export default async function PayPage({
   if (!row) redirect("/subscribe");
   if (row.status === "paid") redirect("/dashboard");
 
-  const child = (await db.prepare("SELECT display_name FROM children WHERE id = ?").get(row.child_id)) as
-    | { display_name: string }
+  const child = (await db.prepare("SELECT display_name, grade FROM children WHERE id = ?").get(row.child_id)) as
+    | { display_name: string; grade: string }
     | undefined;
   const planLabel = row.plan === "yearly" ? "年繳" : "月繳";
   const amount = Number(row.amount);
   const mailto = `mailto:${BANK_TRANSFER.proofEmail}?subject=${encodeURIComponent(
     `寬數週練匯款證明｜${child?.display_name ?? ""}｜${row.id}`,
   )}&body=${encodeURIComponent(
-    `老師您好，\n\n已匯款 ${SITE.currency}${amount}（${planLabel}）。\n訂單編號：${row.id}\n孩子：${child?.display_name ?? ""}\n家長信箱：${parent.email}\n\n（請附上轉帳證明截圖）\n`,
+    `老師您好，\n\n已匯款 ${SITE.currency}${money(amount)}（${planLabel}）。\n訂單編號：${row.id}\n孩子：${child?.display_name ?? ""}\n家長信箱：${parent.email}\n\n（請附上轉帳證明截圖）\n`,
   )}`;
 
   return (
@@ -50,9 +50,12 @@ export default async function PayPage({
 
         <div className="card" style={{ marginTop: 20 }}>
           <p className="kicker">應付金額</p>
+          <p style={{ margin: "8px 0 0", fontWeight: 600 }}>{PAY_NOTE}</p>
+          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>{START_NOTE}</p>
+          <p className="muted" style={{ margin: "6px 0 0", fontSize: 14 }}>{PRICE_RULE}。</p>
           <p className="price" style={{ margin: "8px 0 0" }}>
             {SITE.currency}
-            {amount}
+            {money(amount)}
             <small>
               {" "}
               · {planLabel} · 訂單 {row.id}

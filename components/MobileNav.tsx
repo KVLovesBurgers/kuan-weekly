@@ -27,8 +27,14 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
       </button>
       {open ? (
         <div id="mobile-nav-panel" className="mobile-nav-panel" role="navigation" aria-label="手機選單">
+          <Link href="/units" onClick={close}>
+            免費練習題（依單元）
+          </Link>
           <Link href="/sample" onClick={close}>
             領題本試閱
+          </Link>
+          <Link href="/quiz" onClick={close}>
+            免費學測數學模擬測驗
           </Link>
           <Link href="/#videos" onClick={close}>
             看老師怎麼教

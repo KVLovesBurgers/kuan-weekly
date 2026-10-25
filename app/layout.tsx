@@ -1,11 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
 import { SITE, SOCIAL } from "@/lib/config";
+import { Analytics } from "@vercel/analytics/next";
+import { AnalyticsEvents } from "@/components/AnalyticsEvents";
+import { ZhValidation } from "@/components/ZhValidation";
+import { LateFonts } from "@/components/LateFonts";
+import { Suspense } from "react";
+import { FirstTouch } from "@/components/FirstTouch";
 
-// 自架字型（next/font）：拿掉 fonts.googleapis.com 的阻塞式 CSS，改用可變字重、同網域載入。
-const sans = Noto_Sans_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-sans" });
-const serif = Noto_Serif_TC({ subsets: ["latin"], display: "swap", preload: false, variable: "--font-serif" });
+// 字型拆三份：內文 400（public/fonts，全站用字，唯一 preload）、粗體 500–700（只含粗體出現過的字）、標題襯線（只含標題用字）。後兩份由 LateFonts 在 load 之後才載。
+// 內文兩份的 @font-face 在 globals.css；子集外的字會逐字落到後面的系統字型。
 
 const title = "寬數週練｜國中數學・高中數學每週練習題本｜吳寬老師";
 const description =
@@ -13,6 +17,7 @@ const description =
 
 export const metadata: Metadata = {
   title,
+  verification: { google: "SOkVAhLs7t2aSY_ar60dISeEnJbcfYg4mHM8b8gUIeQ" },
   description,
   keywords: [
     "國中數學",
@@ -69,22 +74,6 @@ const jsonLd = {
     jobTitle: "數學老師",
     alumniOf: "國立陽明交通大學 應用數學系",
   },
-  makesOffer: [
-    {
-      "@type": "Offer",
-      name: "寬數週練｜按月",
-      price: SITE.monthlyPrice,
-      priceCurrency: "TWD",
-      url: `${SITE.url}/#pricing`,
-    },
-    {
-      "@type": "Offer",
-      name: "寬數週練｜按年",
-      price: SITE.yearlyPrice,
-      priceCurrency: "TWD",
-      url: `${SITE.url}/#pricing`,
-    },
-  ],
   sameAs: [SOCIAL.instagramUrl, SOCIAL.facebookUrl, SOCIAL.youtubeChannelUrl],
 };
 
@@ -96,11 +85,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant-TW" className={`${sans.variable} ${serif.variable}`}>
+    <html lang="zh-Hant-TW">
       <head>
+        <link rel="preload" href="/fonts/noto-sans-tc-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={null}><FirstTouch /></Suspense>
+        {children}
+        <Analytics />
+        <AnalyticsEvents />
+        <ZhValidation />
+        <LateFonts />
+      </body>
     </html>
   );
 }

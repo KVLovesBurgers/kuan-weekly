@@ -5,10 +5,12 @@ import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { getDb } from "@/lib/db";
 import { uid } from "@/lib/ids";
-import { mailConfigured, sendLeadAlert } from "@/lib/mail";
+import { mailConfigured, sendFollowupEmail, sendLeadAlert } from "@/lib/mail";
 import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLES, LEAD_TRACK_COOKIE, LEAD_TRADE_COOKIE, LEAD_GRADE_COOKIE, cleanTrack, trackForGrade } from "@/lib/leads";
 import { seatsRemaining } from "@/lib/db";
-import { GRADE_OPTIONS, SITE } from "@/lib/config";
+import { buildScopeDelivery, buildTrialDelivery, isTestAddress, TRIAL_APPLY_KIND } from "@/lib/followup";
+import { isTrialLead, SCOPE_GRADES, SCOPE_OPTIONS, scopeKind, scopeMailAllowed, TRIAL_D0_KIND } from "@/lib/trial";
+import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
 
 export async function submitSampleLead(formData: FormData) {
@@ -33,6 +35,10 @@ export async function submitSampleLead(formData: FormData) {
   const db = await getDb();
   const now = new Date().toISOString();
   const existing = await db.prepare("SELECT id FROM leads WHERE email = ?").get(email);
+  // 記下「申請過試用」，試用跟進信 cron 依此判斷（只做過 /mock 的人不寄）。
+  await db
+    .prepare(`INSERT INTO lead_followups (email, kind, status, sent_at, error) VALUES (?, ?, 'granted', ?, '') ON CONFLICT(email, kind) DO NOTHING`)
+    .run(email, TRIAL_APPLY_KIND, now);
   if (existing) {
     await db
       .prepare(
@@ -50,6 +56,29 @@ export async function submitSampleLead(formData: FormData) {
          ON CONFLICT(email) DO UPDATE SET hits = hits + 1, last_seen_at = excluded.last_seen_at`,
       )
       .run(uid("lead"), email, grade, role, src, utm, now, now);
+    const fresh = (await db.prepare("SELECT id, created_at FROM leads WHERE email = ?").get(email)) as
+      | { id: string; created_at: string }
+      | undefined;
+    if (fresh && mailConfigured() && isTrialLead({ created_at: fresh.created_at, grade }) && !isTestAddress(email)) {
+      // 7 天試用送達信：只在第一次留信箱時寄，記在 lead_followups（trial_d0），重送表單不會再寄。
+      after(async () => {
+        await db
+          .prepare(`INSERT INTO lead_followups (email, kind, status, sent_at, error) VALUES (?, ?, 'sending', ?, '') ON CONFLICT(email, kind) DO NOTHING`)
+          .run(email, TRIAL_D0_KIND, now);
+        const claim = (await db.prepare("SELECT status, sent_at FROM lead_followups WHERE email = ? AND kind = ?").get(email, TRIAL_D0_KIND)) as
+          | { status: string; sent_at: string }
+          | undefined;
+        if (!claim || claim.status !== "sending" || claim.sent_at !== now) return;
+        try {
+          const mail = buildTrialDelivery({ id: fresh.id, role, grade, created_at: fresh.created_at });
+          await sendFollowupEmail(email, mail.subject, mail.text);
+          await db.prepare("UPDATE lead_followups SET status = 'sent' WHERE email = ? AND kind = ?").run(email, TRIAL_D0_KIND);
+        } catch (err) {
+          console.error("trial delivery failed", err);
+          await db.prepare("UPDATE lead_followups SET status = 'failed', error = ? WHERE email = ? AND kind = ?").run(String(err).slice(0, 300), email, TRIAL_D0_KIND);
+        }
+      });
+    }
     if (mailConfigured()) {
       after(async () => {
         try {
@@ -100,8 +129,15 @@ export async function startSampleCheckout(formData: FormData) {
   const grade = (GRADE_OPTIONS as readonly string[]).includes(gradeRaw) ? gradeRaw : "";
   const plan = String(formData.get("plan") ?? "monthly") === "yearly" ? "yearly" : "monthly";
   const exam_target = String(formData.get("exam_target") ?? "").trim().slice(0, 200);
+  const needs = String(formData.get("needs") ?? "").trim().slice(0, NEEDS_MAX);
   if (!display_name || !grade) {
     redirect("/sample?error=" + encodeURIComponent("請填孩子稱呼與年級。") + "#subscribe");
+  }
+  if (needsRequired(grade) && !needs) {
+    redirect("/sample?error=" + encodeURIComponent(NEEDS_REQUIRED_MSG) + "#subscribe");
+  }
+  if (plan === "yearly" && !yearlyAllowed(grade)) {
+    redirect("/sample?error=" + encodeURIComponent("孩子的年級：" + NO_YEARLY_MSG) + "#subscribe");
   }
   if ((await seatsRemaining(db)) <= 0) redirect("/waitlist");
 
@@ -115,10 +151,10 @@ export async function startSampleCheckout(formData: FormData) {
   const childId = uid("child");
   const tradeNo = merchantTradeNo();
   await db.prepare(
-    `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
-     VALUES (?, ?, ?, ?, '', ?, '', 0, 'pending', ?, ?)`,
-  ).run(childId, parent.id, display_name, grade, exam_target, plan, now);
-  const amount = plan === "yearly" ? SITE.yearlyPrice : SITE.monthlyPrice;
+    `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, needs, is_demo, subscription_status, plan, created_at)
+     VALUES (?, ?, ?, ?, '', ?, '', ?, 0, 'pending', ?, ?)`,
+  ).run(childId, parent.id, display_name, grade, exam_target, needs, plan, now);
+  const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade)!;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
@@ -127,7 +163,7 @@ export async function startSampleCheckout(formData: FormData) {
   if (mailConfigured()) {
     after(async () => {
       try {
-        await sendCheckoutAlert({ email: lead.email, displayName: display_name, grade, plan, amount, tradeNo, source: lead.source, createdAt: now });
+        await sendCheckoutAlert({ email: lead.email, displayName: display_name, grade, plan, amount, tradeNo, source: lead.source, createdAt: now, needs, via: "/sample" });
       } catch (err) {
         console.error("checkout alert failed", err);
       }
@@ -141,4 +177,58 @@ export async function startSampleCheckout(formData: FormData) {
     maxAge: 60 * 60 * 24 * 30,
   });
   redirect(`/sample?trade=${encodeURIComponent(tradeNo)}#subscribe`);
+}
+
+/** 試閱留資料後：選年級＋範圍。有對應週練包就寄學生版＋家長版；沒有就通知老師手動回。 */
+export async function submitScopeChoice(formData: FormData) {
+  const jar = await cookies();
+  const leadId = jar.get(LEAD_ID_COOKIE)?.value ?? "";
+  const gradeRaw = String(formData.get("scope_grade") ?? "");
+  const grade = (SCOPE_GRADES as readonly string[]).includes(gradeRaw) ? gradeRaw : "";
+  const opt = SCOPE_OPTIONS.find((o) => o.value === String(formData.get("scope") ?? ""));
+  const note = String(formData.get("scope_note") ?? "").trim().slice(0, 200);
+  const back = (q: string) => redirect(`/sample?${q}#subscribe`);
+  if (!grade || !opt) back("scope=err");
+  const db = await getDb();
+  const lead = leadId
+    ? ((await db.prepare("SELECT id, email, role FROM leads WHERE id = ?").get(leadId)) as { id: string; email: string; role: string } | undefined)
+    : undefined;
+  if (!lead) redirect("/sample?error=" + encodeURIComponent("請先留下信箱領試閱。") + "#get");
+  const now = new Date().toISOString();
+  const pack = opt!.pack && opt!.grade === grade ? opt!.pack : "";
+  const allowed = scopeMailAllowed(lead.email, isTestAddress(lead.email));
+  if (pack && mailConfigured() && allowed) {
+    const kind = scopeKind(pack);
+    await db.prepare(`INSERT INTO lead_followups (email, kind, status, sent_at, error) VALUES (?, ?, 'sending', ?, '') ON CONFLICT(email, kind) DO NOTHING`).run(lead.email, kind, now);
+    const claim = (await db.prepare("SELECT status, sent_at FROM lead_followups WHERE email = ? AND kind = ?").get(lead.email, kind)) as { status: string; sent_at: string } | undefined;
+    if (claim && claim.status === "sending" && claim.sent_at === now) {
+      try {
+        // 先標 sent 再寄，信裡的連結一打開就能用；寄失敗再改回 failed。
+        await db.prepare("UPDATE lead_followups SET status = 'sent' WHERE email = ? AND kind = ?").run(lead.email, kind);
+        const base = process.env.VERCEL_ENV === "production" || !process.env.VERCEL_URL ? SITE.url : `https://${process.env.VERCEL_URL}`;
+        const mail = buildScopeDelivery(lead, pack, base);
+        await sendFollowupEmail(lead.email, mail.subject, mail.text);
+      } catch (err) {
+        console.error("scope delivery failed", err);
+        await db.prepare("UPDATE lead_followups SET status = 'failed', error = ? WHERE email = ? AND kind = ?").run(String(err).slice(0, 300), lead.email, kind);
+        back("scope=fail");
+      }
+    }
+    back(`scope=sent&pack=${pack}`);
+  }
+  // 沒有對應範圍（或預覽版的非測試信箱）：通知老師手動回。
+  if (mailConfigured() && !pack && (allowed || process.env.VERCEL_ENV === "production")) {
+    after(async () => {
+      try {
+        await sendFollowupEmail(
+          SITE.contactEmail,
+          `寬數週練｜待手動回覆：${grade} ${opt!.label}`,
+          `信箱：${lead.email}\n年級：${grade}\n選擇：${opt!.label}\n補充：${note || "（無）"}\n時間（台北）：${new Date(now).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false })}`,
+        );
+      } catch (err) {
+        console.error("scope manual alert failed", err);
+      }
+    });
+  }
+  back(pack && (!allowed || !mailConfigured()) && process.env.VERCEL_ENV !== "production" ? "scope=preview" : "scope=manual");
 }

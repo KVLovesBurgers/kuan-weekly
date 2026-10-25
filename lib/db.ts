@@ -105,8 +105,30 @@ async function openDb(): Promise<KuanDb> {
     await db.exec("PRAGMA foreign_keys = ON");
   }
   await migrate(db);
+  await addColumns(db);
   // 上線驗證用的測試名單（jjredick365+leadtest@…）一律清掉，不留在試閱名單。
   await db.prepare("DELETE FROM leads WHERE email LIKE 'jjredick365+leadtest@%'").run();
+  // 家教候補上線驗證用測試信箱（jjredick365+tutortest@…）：開啟時記下筆數後清掉 leads／waitlist／事件。
+  {
+    const t = "jjredick365+tutortest@%";
+    const l = (await db.prepare("SELECT COUNT(*) AS n FROM leads WHERE email LIKE ? AND source = 'tutor-waitlist'").get(t)) as { n: number } | undefined;
+    const w = (await db.prepare("SELECT COUNT(*) AS n FROM waitlist WHERE email LIKE ? AND note LIKE '【家教】%'").get(t)) as { n: number } | undefined;
+    if (Number(l?.n) || Number(w?.n)) {
+      console.log(`tutortest cleanup: leads=${l?.n} waitlist=${w?.n}`);
+      await db.prepare("DELETE FROM leads WHERE email LIKE ?").run(t);
+      await db.prepare("DELETE FROM waitlist WHERE email LIKE ?").run(t);
+      await db.prepare("DELETE FROM site_events WHERE kind = 'tutor_waitlist' AND source = 'prodtest'").run();
+    }
+  }
+  // 試閱自動寄信的正式站測試信箱（jjredick365+scopetest@…）：測完 20 分鐘後的下一次開啟就清掉名單與寄信紀錄。
+  {
+    const cut = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+    const old = await db.prepare("SELECT 1 AS x FROM leads WHERE email = 'jjredick365+scopetest@gmail.com' AND created_at < ?").get(cut);
+    if (old) {
+      await db.prepare("DELETE FROM lead_followups WHERE email = 'jjredick365+scopetest@gmail.com'").run();
+      await db.prepare("DELETE FROM leads WHERE email = 'jjredick365+scopetest@gmail.com'").run();
+    }
+  }
   await seed(db);
   return db;
 }
@@ -114,6 +136,14 @@ async function openDb(): Promise<KuanDb> {
 export function getDb() {
   if (!globalForDb.__kuanDb) globalForDb.__kuanDb = openDb();
   return globalForDb.__kuanDb;
+}
+
+/** 加欄位（相容既有資料庫）：children.needs 存家長填的「孩子的需求」。 */
+async function addColumns(db: KuanDb) {
+  const cols = (await db.prepare("PRAGMA table_info(children)").all()) as { name: string }[];
+  if (!cols.some((c) => c.name === "needs")) {
+    await db.exec("ALTER TABLE children ADD COLUMN needs TEXT NOT NULL DEFAULT ''");
+  }
 }
 
 async function migrate(db: KuanDb) {
@@ -166,6 +196,18 @@ async function migrate(db: KuanDb) {
       created_at TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS quiz_results (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      score INTEGER NOT NULL,
+      total INTEGER NOT NULL,
+      answers TEXT NOT NULL DEFAULT '',
+      weak_units TEXT NOT NULL DEFAULT '',
+      src TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS leads (
       id TEXT PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
@@ -213,6 +255,29 @@ async function migrate(db: KuanDb) {
       FOREIGN KEY (week_id) REFERENCES weeks(id)
     );
 
+    CREATE TABLE IF NOT EXISTS site_events (
+      id TEXT PRIMARY KEY,
+      kind TEXT NOT NULL,
+      target TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS lead_followups (
+      email TEXT NOT NULL,
+      kind TEXT NOT NULL,
+      status TEXT NOT NULL,
+      sent_at TEXT NOT NULL,
+      error TEXT NOT NULL DEFAULT '',
+      PRIMARY KEY (email, kind)
+    );
+
+    CREATE TABLE IF NOT EXISTS email_optouts (
+      email TEXT PRIMARY KEY,
+      note TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS checkout_attempts (
       id TEXT PRIMARY KEY,
       parent_id TEXT NOT NULL,
@@ -233,7 +298,6 @@ async function seed(db: KuanDb) {
 
   const now = new Date().toISOString();
   const parentId = "parent_demo";
-  const childId = "child_demo";
   const weekId = "week_demo_01";
 
   await db.prepare("INSERT INTO parents (id, email, created_at) VALUES (?, ?, ?)").run(
@@ -241,22 +305,7 @@ async function seed(db: KuanDb) {
     DEMO_PARENT_EMAIL,
     now,
   );
-  await db
-    .prepare(
-      `INSERT INTO children
-        (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, is_demo, subscription_status, plan, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 1, 'demo', NULL, ?)`,
-    )
-    .run(
-      childId,
-      parentId,
-      "示範孩子",
-      "小五",
-      "分數應用",
-      "跟上段考",
-      "應用題列式",
-      now,
-    );
+  // 示範孩子已不再自動建立（後台可刪除，避免刪了又長回來）。
   await db
     .prepare(
       `INSERT INTO weeks (id, week_label, title, synopsis, published, published_at, created_at)
@@ -292,6 +341,7 @@ export type ChildRow = {
   school_progress: string;
   exam_target: string;
   weak_topics: string;
+  needs: string;
   is_demo: number;
   subscription_status: string;
   plan: string | null;

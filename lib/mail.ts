@@ -37,7 +37,7 @@ export async function sendLeadAlert(lead: {
   ];
   const text = `有人在 /sample 留信箱下載題本試閱：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
   const html = `<p>有人在 /sample 留信箱下載題本試閱：</p><table>${rows
-    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td>${esc(v)}</td></tr>`)
+    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td style="white-space:pre-wrap">${esc(v)}</td></tr>`)
     .join("")}</table>`;
   await sendMail({ to: SITE.contactEmail, subject, text, html });
 }
@@ -52,8 +52,11 @@ export async function sendCheckoutAlert(o: {
   tradeNo: string;
   source: string;
   createdAt: string;
+  needs?: string;
+  via?: string;
 }) {
-  const subject = `寬數週練｜試閱頁登記匯款 ${o.displayName}（${o.grade}）`;
+  const via = o.via ?? "/sample";
+  const subject = `寬數週練｜${via === "/subscribe" ? "訂閱頁" : "試閱頁"}登記匯款 ${o.displayName}（${o.grade}）`;
   const tw = new Date(o.createdAt).toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false });
   const rows: [string, string][] = [
     ["家長信箱", o.email],
@@ -63,16 +66,45 @@ export async function sendCheckoutAlert(o: {
     ["金額", `${SITE.currency}${o.amount}`],
     ["訂單", o.tradeNo],
     ["來源 src", o.source || "direct"],
+    ["孩子的需求", o.needs || "（未填）"],
     ["時間（台北）", tw],
   ];
-  const text = `有家長在 /sample 看完試閱後登記匯款訂閱（待匯款）：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
-  const html = `<p>有家長在 /sample 看完試閱後登記匯款訂閱（待匯款）：</p><table>${rows
-    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td>${esc(v)}</td></tr>`)
+  const text = `有家長在 ${via} 登記匯款訂閱（待匯款）：\n\n${rows.map(([k, v]) => `${k}：${v}`).join("\n")}\n`;
+  const html = `<p>有家長在 ${esc(via)} 登記匯款訂閱（待匯款）：</p><table>${rows
+    .map(([k, v]) => `<tr><td style="color:#666;padding-right:12px">${esc(k)}</td><td style="white-space:pre-wrap">${esc(v)}</td></tr>`)
     .join("")}</table>`;
   await sendMail({ to: SITE.contactEmail, subject, text, html });
 }
 
-async function sendMail({ to, subject, text, html }: { to: string; subject: string; text: string; html: string }) {
+type MailOpts = {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+  replyTo?: string;
+  headers?: Record<string, string>;
+};
+
+/** 試閱後跟進信（寄給家長／學生本人）。回信與退訂都回到老師信箱。 */
+export async function sendFollowupEmail(to: string, subject: string, text: string) {
+  const html = `<div style="font-size:15px;line-height:1.7">${text
+    .split("\n")
+    .map((l) => (l ? esc(l).replace(/(https:\/\/[^\s<]+)/g, '<a href="$1">$1</a>') : "&nbsp;"))
+    .map((l) => `<div>${l}</div>`)
+    .join("")}</div>`;
+  await sendMail({
+    to,
+    subject,
+    text,
+    html,
+    replyTo: SITE.contactEmail,
+    headers: {
+      "List-Unsubscribe": `<mailto:${SITE.contactEmail}?subject=${encodeURIComponent("退訂試閱跟進信")}>`,
+    },
+  });
+}
+
+async function sendMail({ to, subject, text, html, replyTo, headers }: MailOpts) {
   const from = process.env.SMTP_FROM || process.env.MAIL_FROM || `${SITE.name} <${SITE.contactEmail}>`;
 
   if (process.env.RESEND_API_KEY) {
@@ -82,7 +114,7 @@ async function sendMail({ to, subject, text, html }: { to: string; subject: stri
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from, to: [to], subject, text, html }),
+      body: JSON.stringify({ from, to: [to], subject, text, html, ...(replyTo ? { reply_to: replyTo } : {}), ...(headers ? { headers } : {}) }),
     });
     if (!res.ok) {
       const body = await res.text();
@@ -104,5 +136,5 @@ async function sendMail({ to, subject, text, html }: { to: string; subject: stri
         ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
         : undefined,
   });
-  await transporter.sendMail({ from, to, subject, text, html });
+  await transporter.sendMail({ from, to, subject, text, html, ...(replyTo ? { replyTo } : {}), ...(headers ? { headers } : {}) });
 }

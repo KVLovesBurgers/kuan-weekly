@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getAdmin, loginAdmin, logoutAdmin } from "@/lib/auth";
 import { getDb, seatsRemaining } from "@/lib/db";
 import { uid } from "@/lib/ids";
@@ -115,6 +115,7 @@ export async function activateChild(formData: FormData) {
     .run(id);
   revalidatePath("/admin");
   revalidatePath("/");
+  revalidateTag("seats");
   redirect("/admin?ok=1");
 }
 
@@ -126,5 +127,32 @@ export async function deleteLead(formData: FormData) {
     await db.prepare("DELETE FROM leads WHERE id = ?").run(id);
   }
   revalidatePath("/admin");
+  redirect("/admin");
+}
+
+export async function deleteQuizResults(formData: FormData) {
+  await requireAdmin();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (email) {
+    const db = await getDb();
+    await db.prepare("DELETE FROM quiz_results WHERE email = ?").run(email);
+  }
+  revalidatePath("/admin");
+  redirect("/admin");
+}
+
+/** 刪除單一孩子：連同該孩子的待匯款紀錄與回饋一起刪；不動家長帳號與其他孩子。 */
+export async function deleteChild(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("child_id") ?? "").trim();
+  if (id) {
+    const db = await getDb();
+    await db.prepare("DELETE FROM checkout_attempts WHERE child_id = ? AND status = 'pending'").run(id);
+    await db.prepare("DELETE FROM feedback WHERE child_id = ?").run(id);
+    await db.prepare("DELETE FROM children WHERE id = ?").run(id);
+  }
+  revalidateTag("seats");
+  revalidatePath("/admin");
+  revalidatePath("/");
   redirect("/admin");
 }

@@ -1,3 +1,7 @@
+/* 上下標與角括號：Noto TC 沒有這些字形，用小型補字檔，避免落到系統字型。 */
+@font-face { font-family: "KW Sans"; src: url(/fonts/noto-sans-tc-400.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "KW Math"; src: url(/fonts/kw-supsub.woff2) format("woff2"); font-weight: 100 900; font-display: swap; unicode-range: U+2070-209F; }
+@font-face { font-family: "KW Math"; src: url(/fonts/kw-angle.woff2) format("woff2"); font-display: swap; unicode-range: U+27E8-27E9; }
 
 :root {
   --ink: #0f1419;
@@ -15,8 +19,8 @@
   --shadow-border: 0 0 0 1px #ddd6c8;
   --shadow-hover: 0 0 0 1px #c9c0ae;
   --radius: 12px;
-  --display: var(--font-serif), "Noto Serif TC", "Songti TC", serif;
-  --sans: var(--font-sans), "Noto Sans TC", "PingFang TC", sans-serif;
+  --display: "KW Math", "KW Serif", "Noto Serif TC", "Songti TC", serif;
+  --sans: "KW Math", "KW Sans", "Noto Sans TC", "PingFang TC", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -477,3 +481,200 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .countdown-chip { display: inline-block; margin: 6px 0 0; font-size: 14px; opacity: 0.85; }
 .countdown-chip strong { font-size: 18px; }
 .sample-tracks { flex-wrap: wrap; }
+
+/* /practice 免費練習題清單 */
+.practice-page { padding: 40px 0 56px; }
+.practice-title { font-size: clamp(30px, 6vw, 40px); margin: 6px 0 0; }
+.practice-list { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 14px; }
+.practice-card { padding: 18px 18px 20px; border-radius: 18px; }
+.practice-card h2, .practice-card h3 { font-size: 20px; line-height: 1.4; margin: 8px 0 4px; }
+.unit-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.unit-jump a { display: inline-block; padding: 6px 12px; border-radius: 999px; box-shadow: var(--shadow-border); font-size: 14px; color: var(--ink); text-decoration: none; }
+.unit-section { margin-top: 32px; scroll-margin-top: 80px; }
+.unit-section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.unit-section-head h2 { font-size: 22px; margin: 0; }
+.unit-level { margin-top: 36px; font-size: 14px; letter-spacing: .08em; color: var(--muted); }
+.practice-card p { margin: 0 0 14px; font-size: 15px; }
+.practice-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.practice-meta .badge { margin-right: 4px; background: transparent; color: var(--ink); box-shadow: var(--shadow-border); }
+.practice-btn { width: 100%; min-height: 48px; }
+.practice-cta { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; }
+.practice-cta p { margin: 0 0 4px; }
+.practice-cta-link { text-decoration: underline; text-underline-offset: 3px; color: #4f6075; }
+@media (min-width: 640px) {
+  .practice-card { padding: 22px 24px; }
+  .practice-btn { width: auto; }
+}
+
+/* 學生版首屏（有 src 時） */
+.student-hero { background: #18222c; color: var(--paper); padding: 40px 0 32px; border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent); }
+.student-hero-title { font-size: clamp(28px, 6vw, 44px); margin: 6px 0 14px; line-height: 1.2; }
+.student-steps { margin: 0; padding-left: 20px; line-height: 1.8; max-width: 640px; }
+.student-hero .cta-row { margin-top: 20px; }
+.student-hero-note { margin: 14px 0 0; font-size: 13px; color: color-mix(in srgb, var(--paper) 70%, transparent); }
+/* 單元包 → 試閱 → 方案 */
+.path-steps { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); margin-top: 24px; }
+.path-steps .card { display: flex; flex-direction: column; gap: 6px; }
+.path-steps .path-no { font-size: 13px; letter-spacing: .08em; opacity: .7; }
+@media (max-width: 760px) { .path-steps { grid-template-columns: 1fr; } }
+/* 試閱下載後的家長指引 */
+.parent-guide ol { margin: 8px 0 0; padding-left: 20px; line-height: 1.8; }
+
+/* /quiz 線上小卷 */
+.quiz-wrap { max-width: 720px; }
+.quiz-title { font-family: var(--display); font-size: clamp(28px, 6vw, 40px); margin: 6px 0 12px; }
+.quiz-lead { color: var(--muted); line-height: 1.8; }
+.quiz-pick { display: grid; gap: 12px; margin: 24px 0 12px; }
+.quiz-pick-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 18px 20px; font-size: 18px; text-align: left; width: 100%; }
+.quiz-pick-btn span { font-size: 13px; opacity: .75; font-weight: 400; }
+.quiz-note { color: var(--muted); font-size: 13px; }
+.quiz-bar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 0; background: var(--paper); border-bottom: 1px solid var(--line); }
+.quiz-back { background: none; border: 0; color: var(--steel-deep); font-size: 15px; padding: 6px 0; cursor: pointer; }
+.quiz-list { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 14px; }
+.quiz-q { padding: 16px; }
+.quiz-meta { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+.quiz-stem { font-size: 17px; line-height: 1.8; margin: 0 0 10px; font-variant-numeric: normal; }
+.quiz-opts { display: grid; gap: 8px; }
+.quiz-opt { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper-raised); font-size: 17px; cursor: pointer; }
+.quiz-opt input { padding: 0; border: 0; box-shadow: none; background: none; border-radius: 50%; margin: 0; width: 18px; height: 18px; accent-color: var(--ink); flex: none; }
+.quiz-opt.on { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.quiz-num { color: var(--muted); min-width: 2em; }
+.quiz-submit { padding: 18px; display: grid; gap: 10px; }
+.quiz-email-label { font-weight: 600; }
+.quiz-submit input[type=email] { font-size: 17px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; width: 100%; box-sizing: border-box; }
+.quiz-error { color: var(--danger); margin: 0; }
+.quiz-go { width: 100%; padding: 14px; font-size: 17px; }
+.quiz-units { padding: 18px; margin: 16px 0; }
+.quiz-units h2, .quiz-h2 { font-size: 20px; margin: 0 0 10px; }
+.quiz-units ul { list-style: none; padding: 0; margin: 0; }
+.quiz-units li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.quiz-units li.weak { color: var(--danger); font-weight: 600; }
+.quiz-weak { margin: 12px 0 0; line-height: 1.8; }
+.quiz-cta { padding: 18px; display: grid; gap: 12px; margin: 16px 0 24px; }
+.quiz-cta p { margin: 0; line-height: 1.8; font-size: 16px; }
+.quiz-q.ok { box-shadow: inset 4px 0 0 var(--ok), var(--shadow-border); }
+.quiz-q.ng { box-shadow: inset 4px 0 0 var(--danger), var(--shadow-border); }
+.quiz-ans { font-size: 15px; line-height: 1.8; margin: 0 0 8px; }
+.quiz-exp { font-size: 15px; line-height: 1.8; color: var(--ink-soft); margin: 0; background: var(--paper); padding: 10px 12px; border-radius: 8px; }
+.quiz-cta-end { display: grid; gap: 10px; margin: 16px 0 8px; }
+picture { display: contents; }
+
+/* 單元頁網頁詳解 */
+.lesson { margin-top: 20px; }
+.lesson-q { margin-top: 20px; padding: 16px; border: 1px solid rgba(0,0,0,.12); border-radius: 12px; overflow-x: auto; }
+.lesson-q h2 { font-size: 18px; margin: 0 0 8px; }
+.lesson-q p, .lesson-q li { line-height: 1.8; font-size: 16px; }
+.lesson-q ol, .lesson-q ul { padding-left: 1.3em; margin: 6px 0; }
+.lesson-label { font-weight: 700; margin: 12px 0 0; }
+.lesson-ans { font-weight: 700; margin-top: 8px; }
+.lesson-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+.lesson-btns .btn { flex: 1 1 140px; text-align: center; }
+.lesson-pdf-h { font-size: 18px; margin-top: 28px; }
+.katex { font-size: 1.05em; }
+.quiz-recs { margin-top: 12px; } .quiz-recs ul { padding-left: 1.2em; } .quiz-recs li { margin: 6px 0; }
+.scope-form { display: grid; gap: 12px; } .scope-form label { display: grid; gap: 4px; font-size: 15px; } .scope-form select, .scope-form input { font-size: 16px; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.2); }
+/* 段考弱點檢測 /diag */
+.diag-h { font-size: 18px; margin: 20px 0 0; }
+.diag-progress { height: 4px; background: var(--line); border-radius: 2px; margin: 10px 0 14px; overflow: hidden; }
+.diag-progress span { display: block; height: 100%; background: var(--ink); transition: width .2s; }
+.diag-nav { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin: 16px 0; }
+.diag-nav .btn { padding: 14px; font-size: 17px; }
+.diag-nav .btn:disabled { opacity: .4; }
+.diag-role { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.diag-pack p { margin: 0 0 8px; }
+.diag-pack-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.diag-pack-btns .btn { text-align: center; padding: 12px 8px; }
+.quiz-opt .katex { font-size: 1.05em; }
+/* /mock 學測模擬考 */
+.mock-when { padding: 14px 16px; margin: 16px 0; }
+.mock-when p { margin: 0 0 4px; }
+.mock-rules { color: var(--muted); font-size: 14px; line-height: 1.8; padding-left: 1.2em; }
+.mock-timer { font-variant-numeric: tabular-nums; }
+.mock-timer.warn { color: var(--danger); }
+.mock-nav { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin: 10px 0 14px; }
+.mock-nav button { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper-raised); font-size: 15px; cursor: pointer; color: var(--ink); }
+.mock-nav button.done { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.mock-nav button.cur { box-shadow: 0 0 0 2px var(--steel-deep); }
+.mock-group { background: var(--paper); border-radius: 8px; padding: 10px 12px; font-size: 15px; line-height: 1.8; margin: 0 0 10px; }
+.mock-fill { display: grid; gap: 8px; }
+.mock-cells { display: flex; flex-wrap: wrap; gap: 8px; }
+.mock-cells label { display: grid; justify-items: center; gap: 2px; font-size: 12px; color: var(--muted); }
+.mock-cells input { width: 48px; height: 52px; text-align: center; font-size: 22px; border: 1px solid var(--line); border-radius: 10px; padding: 0; }
+.mock-level { font-size: 18px; margin: 0 0 8px; }
+.mock-level .quiz-note { display: block; }
+.mock-optlist { list-style: none; padding: 0; margin: 0 0 8px; font-size: 15px; line-height: 1.8; }
+.mock-early { width: 100%; margin: 0 0 16px; }
+.quiz-stem .katex-display, .mock-group .katex-display { overflow-x: auto; overflow-y: hidden; }
+.quiz-stem, .quiz-opt, .mock-optlist li { overflow-wrap: anywhere; }
+.nobr { white-space: nowrap; }
+
+/* PaidNext（/diag、/mock 結果頁下一步） */
+.paid-next { margin-top: 20px; display: grid; gap: 10px; border: 2px solid var(--ink); }
+.paid-next-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.paid-next-btns .btn { min-height: 48px; flex: 1 1 200px; justify-content: center; gap: 8px; display: inline-flex; align-items: center; }
+
+/* 段考弱點檢測入口 DiagCta（首頁、國中 learn／units 頁） */
+.diag-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  padding: 18px 20px;
+  margin: 28px 0 0;
+}
+.diag-cta-text { min-width: 0; flex: 1 1 auto; }
+.diag-cta .eyebrow { margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--steel, var(--muted)); }
+.diag-cta-h { font-family: var(--display); font-size: 20px; margin: 0 0 6px; }
+.diag-cta-p { margin: 0; font-size: 15px; color: var(--muted); }
+.diag-cta-btn { flex: 0 0 auto; text-align: center; white-space: nowrap; }
+.diag-cta--banner { margin: 0 auto; max-width: 1080px; }
+.diag-band { padding: 24px 0 0; }
+@media (max-width: 640px) {
+  .diag-cta { flex-direction: column; align-items: stretch; padding: 16px; }
+  .diag-cta-btn { width: 100%; padding: 14px 12px; }
+  .diag-cta-h { font-size: 18px; }
+}
+
+/* /videos-practice 影片練習題：搜尋＋篩選＋清單（手機優先，不載入額外字型或圖片） */
+.vp-tools { margin-top: 20px; }
+.vp-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.vp-search input { width: 100%; min-height: 48px; padding: 10px 14px; border-radius: 12px; border: 0; box-shadow: var(--shadow-border); background: var(--paper-raised); font: inherit; font-size: 16px; color: var(--ink); }
+.vp-search input:focus { outline: 2px solid var(--steel-deep); outline-offset: 1px; }
+.vp-group { margin: 14px 0 6px; font-size: 13px; letter-spacing: .08em; color: var(--muted); }
+.vp-chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.vp-chip { flex: 0 0 auto; min-height: 44px; padding: 6px 14px; border: 0; border-radius: 999px; box-shadow: var(--shadow-border); background: var(--paper-raised); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.vp-chip.on { background: var(--ink); color: var(--paper); box-shadow: none; }
+.vp-count { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+.vp-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 14px; }
+.vp-card { padding: 18px 18px 20px; border-radius: 18px; }
+.vp-card[hidden] { display: none; }
+.vp-card h3 { font-size: 19px; line-height: 1.45; margin: 6px 0 8px; }
+.vp-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.vp-no { font-size: 15px; color: var(--ink); }
+.vp-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 14px; }
+.vp-tags .badge { background: transparent; color: var(--ink); box-shadow: var(--shadow-border); }
+.vp-tags .vp-unit { background: var(--ink); color: var(--paper); box-shadow: none; }
+.vp-btn { width: 100%; min-height: 48px; }
+.vp-empty { margin-top: 14px; padding: 18px; border-radius: 18px; font-size: 15px; }
+@media (min-width: 640px) {
+  .vp-card { padding: 22px 24px; }
+  .vp-btn { width: auto; }
+}
+.video-entry { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--paper-raised); box-shadow: var(--shadow-border); font-size: 15px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+
+/* /sample 頁首入口：影片練習題（2026-10-24） */
+.sample-top-link { margin: 0 0 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; line-height: 1.5; background: color-mix(in srgb, var(--paper) 92%, #4f6075); }
+.sample-top-link a { display: block; padding: 10px 12px; min-height: 44px; box-sizing: border-box; }
+
+/* 依年級月費列表（2026-10-24） */
+.tier-list { list-style: none; margin: 8px 0; padding: 0; }
+.tier-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.tier-list li:last-child { border-bottom: 0; }
+.tier-name { font-weight: 600; }
+.tier-name small { font-weight: 400; color: var(--muted); font-size: 13px; }
+.tier-amount strong { font-family: var(--display); font-size: 26px; }
+.tier-amount { color: var(--muted); font-size: 14px; }
+.tier-list--compact .tier-amount strong { font-size: 20px; }
