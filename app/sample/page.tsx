@@ -13,6 +13,8 @@ import {
   cleanUtm,
   LEAD_COOKIE,
   LEAD_GRADES,
+  LEAD_GRADE_COOKIE,
+  GRADE_SAMPLE_KEY,
   LEAD_ID_COOKIE,
   LEAD_ROLES,
   LEAD_TRACK_COOKIE,
@@ -68,6 +70,8 @@ export default async function SamplePage({
   const seat = seatLabel(remaining);
   const track: SampleTrack = cleanTrack(one(sp.track)) || cleanTrack(jar.get(LEAD_TRACK_COOKIE)?.value) || "jh";
   const pack = SAMPLES[track];
+  const leadGrade = jar.get(LEAD_GRADE_COOKIE)?.value ?? "";
+  const mine = GRADE_SAMPLES.find((g) => g.key === GRADE_SAMPLE_KEY[leadGrade]);
   const leadId = jar.get(LEAD_ID_COOKIE)?.value ?? "";
   const canQuickSubscribe = unlocked && Boolean(leadId) && !parent;
   const tradeParam = one(sp.trade).slice(0, 40);
@@ -99,30 +103,38 @@ export default async function SamplePage({
             領題本試閱
           </h1>
           <p className="muted" style={{ maxWidth: 620 }}>
-            依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本＋家長解答各 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
+            依孩子年級給你對應的一份：<strong>國中</strong>是真實的一週（{SAMPLE.unit}，學生題本 3 頁＋家長解答 4 頁）；<strong>高中</strong>是學測必錯 5 題（對數、向量、條件機率、數列、餘弦定理），附步驟與常見錯誤；<strong>SAT</strong> 是 Digital SAT Math 講義第 1 章與解答本。A4 可以直接列印給孩子寫。
           </p>
 
-          <nav className="cta-row sample-tracks" aria-label="選擇試閱年級" style={{ marginTop: 16 }}>
+          <nav className="cta-row sample-jumps" aria-label="依階段看範例題本" style={{ marginTop: 16 }}>
+            {[
+              ["#grade-elem", "小學"],
+              ["#grade-g7", "國中（國一～國三）"],
+              ["#grade-g10", "高中（高一～高三）"],
+              ["#grade-sat", "SAT"],
+            ].map(([href, label]) => (
+              <a key={href} href={href} className="btn btn-ink">
+                {label}
+              </a>
+            ))}
+          </nav>
+          <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
+            點階段直接跳到下方的<Link href="#grades" className="u">各年級範例題本</Link>（10 題，留信箱後下載；實際題本依孩子需求客製）。
+          </p>
+          <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
+            7 天試用試閱：
             {(["jh", "gsat", "sat"] as SampleTrack[]).map((k) => (
               <Link
                 key={k}
                 href={`/sample?track=${k}${src ? `&src=${encodeURIComponent(src)}` : ""}#get`}
-                className={`btn ${k === track ? "btn-ink" : "btn-paper"}`}
+                className="u"
                 aria-current={k === track ? "page" : undefined}
+                style={{ marginLeft: 8, fontWeight: k === track ? 700 : 400 }}
               >
-                {k === "jh" ? "國中" : k === "gsat" ? "學測" : "SAT"}試閱
+                {k === "jh" ? "國中" : k === "gsat" ? "學測" : "SAT"}
               </Link>
             ))}
-          </nav>
-          <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
-            目前選擇：<strong>{pack.label}・{pack.unit}</strong>
-          </p>
-          <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
-            小學、國一到國三、高一到高三與 SAT Math 另有 10 題的
-            <Link href="#grades" className="u">
-              範例題本
-            </Link>
-            （留信箱後下載；實際題本依孩子需求客製）。
+            <span style={{ marginLeft: 8 }}>（目前：<strong>{pack.label}・{pack.unit}</strong>）</span>
           </p>
 
           <div id="get" style={{ scrollMarginTop: 80 }}>
@@ -132,6 +144,21 @@ export default async function SamplePage({
                   <p className="banner ok" role="status" style={{ marginTop: 20 }}>
                     已收到，題本試閱可以下載了。
                   </p>
+                ) : null}
+                {mine ? (
+                  <div className="card" style={{ marginTop: 16 }}>
+                    <p className="kicker" style={{ marginTop: 0 }}>你選的年級：{leadGrade}</p>
+                    <h3 style={{ margin: "4px 0" }}>{mine.label}範例題本（10 題）・{mine.unit}</h3>
+                    <div className="cta-row" style={{ marginTop: 12 }}>
+                      <a className="btn btn-ink" href={mine.student} download={`寬數週練範例題本-${mine.label}-學生題本.pdf`}>
+                        下載學生題本
+                      </a>
+                      <a className="btn btn-paper" href={mine.parent} download={`寬數週練範例題本-${mine.label}-家長解答.pdf`}>
+                        下載家長解答
+                      </a>
+                    </div>
+                    <p className="muted" style={{ margin: "8px 0 0", fontSize: 14 }}>其他年級在下方<Link href="#grades" className="u">各年級範例題本</Link>；以下另附 7 天試用試閱。</p>
+                  </div>
                 ) : null}
                 <p className="muted" style={{ marginTop: 16 }}>
                   目前顯示：<strong>{pack.label}試閱・{pack.unit}</strong>。也可以看
@@ -163,7 +190,7 @@ export default async function SamplePage({
             ) : (
               <form action={submitSampleLead} className="form card lead-form" style={{ marginTop: 24 }}>
                 <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
-                  留下信箱，馬上下載兩份 PDF
+                  留下信箱，馬上解鎖下載（學生題本＋家長解答 PDF）
                 </h2>
                 {error ? (
                   <p className="banner warn" role="alert" style={{ margin: 0 }}>
@@ -223,7 +250,7 @@ export default async function SamplePage({
             <p className="muted">{GRADE_SAMPLES_NOTE}</p>
             <div className="grid-2" style={{ marginTop: 16 }}>
               {GRADE_SAMPLES.map((g) => (
-                <article key={g.key} className="card">
+                <article key={g.key} id={`grade-${g.key === "sat5" ? "sat" : g.key}`} className="card" style={{ scrollMarginTop: 80 }}>
                   <h3 style={{ marginTop: 0 }}>{g.label}</h3>
                   <p className="muted" style={{ margin: "0 0 4px" }}>
                     {g.unit}
@@ -259,7 +286,7 @@ export default async function SamplePage({
               </div>
               <figcaption>
                 <strong>學生題本・第 1 頁</strong>
-                <span className="muted">本週觀念＋數線圖 → 三關 15 題</span>
+                <span className="muted">本週觀念＋數線圖 → 基礎・常考・進階 15 題</span>
               </figcaption>
             </figure>
             <figure className="sample-card">

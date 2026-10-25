@@ -6,7 +6,7 @@ import { after } from "next/server";
 import { getDb } from "@/lib/db";
 import { uid } from "@/lib/ids";
 import { mailConfigured, sendLeadAlert } from "@/lib/mail";
-import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLES, LEAD_TRACK_COOKIE, LEAD_TRADE_COOKIE, cleanTrack, trackForGrade } from "@/lib/leads";
+import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLES, LEAD_TRACK_COOKIE, LEAD_TRADE_COOKIE, LEAD_GRADE_COOKIE, cleanTrack, trackForGrade } from "@/lib/leads";
 import { seatsRemaining } from "@/lib/db";
 import { GRADE_OPTIONS, SITE } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
@@ -73,6 +73,7 @@ export async function submitSampleLead(formData: FormData) {
   jar.set(LEAD_COOKIE, "1", opts);
   if (row) jar.set(LEAD_ID_COOKIE, row.id, opts);
   jar.set(LEAD_TRACK_COOKIE, grade ? trackForGrade(grade) : cleanTrack(formData.get("track")) || "jh", opts);
+  if (grade) jar.set(LEAD_GRADE_COOKIE, grade, opts);
   redirect(`/sample?ok=1${src ? `&src=${src}` : ""}#get`);
 }
 
