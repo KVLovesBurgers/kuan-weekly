@@ -77,6 +77,17 @@ export const SAMPLES = {
   },
 } as const;
 
+/** 年級範例題本（約 5 題）。實際題本依孩子需求客製。 */
+export const GRADE_SAMPLES_NOTE =
+  "以下是範例題本（約 5 題），實際題本依孩子需求客製：填好孩子的年級、進度與弱點，吳寬老師再出專屬題本。";
+export const GRADE_SAMPLES = [
+  { key: "elem", label: "小學", unit: "分數、四則與單位換算", student: "/samples/sample-elem-student.pdf", parent: "/samples/sample-elem-parent.pdf" },
+  { key: "g10", label: "高一", unit: "絕對值、多項式、直線與圓", student: "/samples/sample-g10-student.pdf", parent: "/samples/sample-g10-parent.pdf" },
+  { key: "g11", label: "高二", unit: "三角函數、指數對數、向量", student: "/samples/sample-g11-student.pdf", parent: "/samples/sample-g11-parent.pdf" },
+  { key: "g12", label: "高三", unit: "學測綜合範例", student: "/samples/sample-g12-student.pdf", parent: "/samples/sample-g12-parent.pdf" },
+  { key: "sat5", label: "SAT Math", unit: "代數基礎範例", student: "/samples/sample-sat5-student.pdf", parent: "/samples/sample-sat5-parent.pdf" },
+] as const;
+
 /** 目前主收款：私人匯款。綠界信用卡／ATM 審過後再開線上刷卡。 */
 export const BANK_TRANSFER = {
   bankName: "兆豐國際商業銀行",

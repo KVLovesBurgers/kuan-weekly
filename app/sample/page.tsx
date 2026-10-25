@@ -20,7 +20,7 @@ import {
   type SampleTrack,
 } from "@/lib/leads";
 import { getDb, seatsRemaining } from "@/lib/db";
-import { BANK_TRANSFER, GRADE_OPTIONS, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money } from "@/lib/config";
+import { BANK_TRANSFER, GRADE_OPTIONS, GRADE_SAMPLES, GRADE_SAMPLES_NOTE, SAMPLE, SAMPLES, SITE, SOCIAL, seatLabel, money } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "免費題本試閱｜寬數週練・國中數學每週練習",
@@ -117,6 +117,13 @@ export default async function SamplePage({
           <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
             目前選擇：<strong>{pack.label}・{pack.unit}</strong>
           </p>
+          <p className="muted" style={{ fontSize: 14, margin: "8px 0 0" }}>
+            小學、高一、高二、高三與 SAT Math 另有約 5 題的
+            <Link href="#grades" className="u">
+              範例題本
+            </Link>
+            ，實際題本依孩子需求客製。
+          </p>
 
           <div id="get" style={{ scrollMarginTop: 80 }}>
             {unlocked ? (
@@ -207,6 +214,35 @@ export default async function SamplePage({
               </form>
             )}
           </div>
+
+          <section id="grades" aria-labelledby="grades-title" style={{ marginTop: 36, scrollMarginTop: 80 }}>
+            <p className="kicker">範例題本</p>
+            <h2 id="grades-title" className="display">
+              各年級範例題本（約 5 題）
+            </h2>
+            <p className="muted">{GRADE_SAMPLES_NOTE}</p>
+            <div className="grid-2" style={{ marginTop: 16 }}>
+              {GRADE_SAMPLES.map((g) => (
+                <article key={g.key} className="card">
+                  <h3 style={{ marginTop: 0 }}>{g.label}</h3>
+                  <p className="muted" style={{ margin: "0 0 4px" }}>
+                    {g.unit}
+                  </p>
+                  <p className="muted" style={{ margin: 0, fontSize: 14 }}>
+                    範例題本，實際題本依孩子需求客製。
+                  </p>
+                  <div className="cta-row" style={{ marginTop: 12 }}>
+                    <a className="btn btn-ink" href={g.student} download={`寬數週練範例題本-${g.label}-學生題本.pdf`}>
+                      下載學生題本
+                    </a>
+                    <a className="btn btn-paper" href={g.parent} download={`寬數週練範例題本-${g.label}-家長解答.pdf`}>
+                      下載家長解答
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
 
           <div className="sample-grid" style={{ marginTop: 36 }}>
             <figure className="sample-card">
