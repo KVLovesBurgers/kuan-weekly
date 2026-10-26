@@ -1,0 +1,432 @@
+export type VideoPractice = {
+  id: string;
+  /** 卡片上的系列＋編號，例如「學測一眼懂 #26」。 */
+  label: string;
+  kind: string;
+  title: string;
+  /** 搜尋用，不顯示在卡片上。 */
+  topic: string;
+  level: string;
+  grade: string;
+  unit: string;
+  unitTitle: string;
+  /** 卡片上的日期，月/日。 */
+  date: string;
+  /** 台北日曆日。到這天才出現在清單。 */
+  publishOn: string;
+  href: string;
+};
+
+/** 新的在最上面。公開日用台北日曆，#28 於 2026-10-27 才列出。 */
+export const VIDEO_PRACTICE: VideoPractice[] = [
+  {
+    id: "vp-ey28",
+    label: "學測一眼懂 #28",
+    kind: "學測一眼懂",
+    title: "濾光片每片剩 80%，幾片才低於 10%？",
+    topic: "指數對數：0.8^n＜0.1，取 log 後不等號變號，至少 11 片",
+    level: "高中",
+    grade: "高二",
+    unit: "gsat-log",
+    unitTitle: "指數與對數（log）",
+    date: "10/27",
+    publishOn: "2026-10-27",
+    href: "/sheets/16Q8UBbM9TQy_Td01cDqZZHZCg643LVJU.pdf",
+  },
+  {
+    id: "vp-ey27",
+    label: "畫圖一眼懂 #27",
+    kind: "畫圖一眼懂",
+    title: "絕對值就是距離：小於夾中間、大於往兩邊",
+    topic: "絕對值不等式：|x−a| 是到 a 的距離，小於夾中間、大於往兩邊",
+    level: "高中",
+    grade: "高一",
+    unit: "abs-ineq",
+    unitTitle: "絕對值不等式",
+    date: "10/26",
+    publishOn: "2026-10-26",
+    href: "/sheets/1Gwcn1UBU5nwBn3iUXdj8kXvdPikvW7zv.pdf",
+  },
+  {
+    id: "vp-ey26",
+    label: "學測一眼懂 #26",
+    kind: "學測一眼懂",
+    title: "每個人都加 10 分，標準差變多少？",
+    topic: "標準差：加常數不變、乘 a 變 |a| 倍",
+    level: "高中",
+    grade: "高中",
+    unit: "stats",
+    unitTitle: "數據分析（標準差）",
+    date: "10/25",
+    publishOn: "2026-10-25",
+    href: "/sheets/1dHMCCWgeDL5JsTmHZUgGBVQH6MPnd06H.pdf",
+  },
+  {
+    id: "vp-tr1",
+    label: "學測陷阱題 #1",
+    kind: "學測陷阱題",
+    title: "根式方程只找到一個解？兩個解都要，和是 6",
+    topic: "根式方程：定義域、平方後代回檢查增根、不能同除以可能為 0 的根號、換元 t ≥ 0",
+    level: "高中",
+    grade: "高一",
+    unit: "other",
+    unitTitle: "其他",
+    date: "10/25",
+    publishOn: "2026-10-25",
+    href: "/pdf/gsat-trap1-practice.pdf",
+  },
+  {
+    id: "vp-1eaPs155",
+    label: "學測數A 長片",
+    kind: "長片",
+    title: "三角函數 一次複習（sin 210° 是正還是負？）",
+    topic: "特殊角、廣義角符號、平方關係、正弦與餘弦定理、面積、疊合最大值",
+    level: "高中",
+    grade: "高中",
+    unit: "trig",
+    unitTitle: "三角函數",
+    date: "10/25",
+    publishOn: "2026-10-25",
+    href: "/sheets/1eaPs155DBk5KbDjvMPUWHN0hhf9rAgjx.pdf",
+  },
+  {
+    id: "vp-gr3",
+    label: "學測真題 #3",
+    kind: "學測真題",
+    title: "解出 m＝0 要丟掉，答對率只有 18%（114 學測數A 第16題）",
+    topic: "點到直線距離、相切時半徑＝距離、弦長 2√(r²−d²)，解出參數要回頭檢查相異兩點",
+    level: "高中",
+    grade: "高中",
+    unit: "circle-eq",
+    unitTitle: "圓方程式",
+    date: "10/24",
+    publishOn: "2026-10-24",
+    href: "/pdf/gsat-real3-practice.pdf",
+  },
+  {
+    id: "vp-ey25",
+    label: "畫圖一眼懂 #25",
+    kind: "畫圖一眼懂",
+    title: "兩邊 5、8 夾 60 度，第三邊是 7",
+    topic: "餘弦定理：兩邊夾角求第三邊、三邊求角、判斷鈍角",
+    level: "高中",
+    grade: "高一",
+    unit: "trig",
+    unitTitle: "三角函數",
+    date: "10/23",
+    publishOn: "2026-10-23",
+    href: "/sheets/1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f.pdf",
+  },
+  {
+    id: "vp-gr2",
+    label: "學測真題 #2",
+    kind: "學測真題",
+    title: "5、6 相鄰又 6、7 相鄰，不能各乘 2（115 學測數B 第14題）",
+    topic: "相鄰排列的綑綁法：同一個數字出現在兩個相鄰條件裡，要合成一串",
+    level: "高中",
+    grade: "高一",
+    unit: "prob",
+    unitTitle: "排列組合與機率",
+    date: "10/23",
+    publishOn: "2026-10-23",
+    href: "/pdf/gsat-real2-practice.pdf",
+  },
+  {
+    id: "vp-ey24",
+    label: "學測一眼懂 #24",
+    kind: "學測一眼懂",
+    title: "兩個向量垂直，t 是多少？內積等於 0",
+    topic: "向量內積：坐標算法、垂直等於內積 0、夾角與長度",
+    level: "高中",
+    grade: "高二",
+    unit: "vector",
+    unitTitle: "向量",
+    date: "10/22",
+    publishOn: "2026-10-22",
+    href: "/sheets/1YK2q2BYjLBBr-jlK4eL6R0X89FrjHMJI.pdf",
+  },
+  {
+    id: "vp-gr1",
+    label: "學測真題 #1",
+    kind: "學測真題",
+    title: "等腰三角形算出 3 個，答案只有 2 個（115 學測數A 第6題）",
+    topic: "坐標平面上的等腰三角形：三種等腰情況、點到直線距離、中垂線，最後檢查三點共線",
+    level: "高中",
+    grade: "高一",
+    unit: "other",
+    unitTitle: "其他",
+    date: "10/22",
+    publishOn: "2026-10-22",
+    href: "/pdf/gsat-real1-practice.pdf",
+  },
+  {
+    id: "vp-1lnFhgWQ",
+    label: "學測數A 長片",
+    kind: "長片",
+    title: "排列組合 一次講完（5 顆糖分 3 人有幾種？）",
+    topic: "排列、相鄰插空、捷徑走法、組合、重複組合、分組",
+    level: "高中",
+    grade: "高一",
+    unit: "prob",
+    unitTitle: "排列組合與機率",
+    date: "10/22",
+    publishOn: "2026-10-22",
+    href: "/sheets/1lnFhgWQX-a19d9CLPRoBW2fKX0elHIcv.pdf",
+  },
+  {
+    id: "vp-ey23",
+    label: "畫圖一眼懂 #23",
+    kind: "畫圖一眼懂",
+    title: "圓的方程式，其實就是畢氏定理",
+    topic: "圓方程式就是畢氏定理：讀圓心半徑、配方、點與圓、切線",
+    level: "高中",
+    grade: "高一",
+    unit: "circle-eq",
+    unitTitle: "圓方程式",
+    date: "10/21",
+    publishOn: "2026-10-21",
+    href: "/sheets/1B4MBdG34wQMPdwygTln2yIxd3nye4XyC.pdf",
+  },
+  {
+    id: "vp-ey22",
+    label: "學測一眼懂 #22",
+    kind: "學測一眼懂",
+    title: "5 人選 2 人，是 20 種還是 10 種？",
+    topic: "組合 C(n,k)：只選不排，同一組被排了 k! 次",
+    level: "高中",
+    grade: "高一",
+    unit: "prob",
+    unitTitle: "排列組合與機率",
+    date: "10/20",
+    publishOn: "2026-10-20",
+    href: "/sheets/1t5M_odF6LCwlPCe_TQWxmG6aPrX3SvoI.pdf",
+  },
+  {
+    id: "vp-1vrd8Za",
+    label: "Digital SAT Ch.3",
+    kind: "長片",
+    title: "一次函數與圖形 完整帶練",
+    topic: "SAT 英文原題風格：斜率、截距、平行垂直、變化率，附中文關鍵字與詳解",
+    level: "SAT",
+    grade: "SAT",
+    unit: "sat-algebra",
+    unitTitle: "Digital SAT 代數",
+    date: "10/20",
+    publishOn: "2026-10-20",
+    href: "/sheets/1vrd_8ZaRW4me58-B8PVXILP09UdS_9f_.pdf",
+  },
+  {
+    id: "vp-ey21",
+    label: "畫圖一眼懂 #21",
+    kind: "畫圖一眼懂",
+    title: "99 × 101 心算 3 秒：平方差畫圖就懂",
+    topic: "平方差 a² − b² ＝ (a + b)(a − b)，剪拼圖看懂速算",
+    level: "國中",
+    grade: "國二",
+    unit: "jh-mult",
+    unitTitle: "乘法公式",
+    date: "10/19",
+    publishOn: "2026-10-19",
+    href: "/sheets/1WCsZRivJ68te1jn7WFYIEFixHieVV0EI.pdf",
+  },
+  {
+    id: "vp-1trphOaY",
+    label: "Digital SAT Ch.2",
+    kind: "長片",
+    title: "二元一次方程式與公式變形 完整帶練",
+    topic: "SAT 英文原題風格，附中文關鍵字與逐步詳解",
+    level: "SAT",
+    grade: "SAT",
+    unit: "sat-algebra",
+    unitTitle: "Digital SAT 代數",
+    date: "10/19",
+    publishOn: "2026-10-19",
+    href: "/sheets/1trphOaYKfKLGBP5jPw7GNY3EMrVCiDyP.pdf",
+  },
+  {
+    id: "vp-ey20",
+    label: "學測一眼懂 #20",
+    kind: "學測一眼懂",
+    title: "兩顆骰子和是 7，機率是 1/11 嗎？",
+    topic: "古典機率：用 6 × 6 格子數出所有等可能結果",
+    level: "高中",
+    grade: "高一",
+    unit: "prob",
+    unitTitle: "排列組合與機率",
+    date: "10/18",
+    publishOn: "2026-10-18",
+    href: "/sheets/1X9EMH_cbhLwf0zNNUr7yyCcA0H6DneaR.pdf",
+  },
+  {
+    id: "vp-1UtEkfeH",
+    label: "國三段考",
+    kind: "長片",
+    title: "國三段考練習：圓（弧長、圓周角、弦切角）",
+    topic: "弧長與扇形、圓心角與圓周角、直徑所對圓周角、弦切角、圓內接四邊形",
+    level: "國中",
+    grade: "國三",
+    unit: "jh-circle",
+    unitTitle: "圓（國三）",
+    date: "10/18",
+    publishOn: "2026-10-18",
+    href: "/sheets/1UtEkfeHf-6oQMtNozJZMwXVhlQ04KMar.pdf",
+  },
+  {
+    id: "vp-ey19",
+    label: "畫圖一眼懂 #19",
+    kind: "畫圖一眼懂",
+    title: "1 加到 100，畫兩個樓梯就算完",
+    topic: "等差級數求和：兩個樓梯拼成長方形",
+    level: "高中",
+    grade: "高一",
+    unit: "series",
+    unitTitle: "數列與級數",
+    date: "10/17",
+    publishOn: "2026-10-17",
+    href: "/sheets/1eFQG9fg1DMlX6k-AaH4WEFzHN7kI0jqW.pdf",
+  },
+  {
+    id: "vp-ey18",
+    label: "學測一眼懂 #18",
+    kind: "學測一眼懂",
+    title: "log 只問一件事：要幾次方？",
+    topic: "對數的定義：log 就是在問次方",
+    level: "高中",
+    grade: "高二",
+    unit: "gsat-log",
+    unitTitle: "指數與對數（log）",
+    date: "10/16",
+    publishOn: "2026-10-16",
+    href: "/sheets/108wOij62LPGPzgTfqnVlnEFvuFAXg499.pdf",
+  },
+  {
+    id: "vp-ey17",
+    label: "畫圖一眼懂 #17",
+    kind: "畫圖一眼懂",
+    title: "sin²θ ＋ cos²θ ＝ 1，畫一個單位圓就懂",
+    topic: "單位圓與平方關係：已知 sin 求 cos",
+    level: "高中",
+    grade: "高一",
+    unit: "trig",
+    unitTitle: "三角函數",
+    date: "10/15",
+    publishOn: "2026-10-15",
+    href: "/sheets/1dNoiI1vesdR-uv9DhG6kmfZTdLgkP0wz.pdf",
+  },
+  {
+    id: "vp-1Fxs7EyR",
+    label: "學測數A 長片",
+    kind: "長片",
+    title: "指數與對數 一次講完（2^50 是幾位數？）",
+    topic: "指數律、對數律、換底公式、位數問題與 ln",
+    level: "高中",
+    grade: "高二",
+    unit: "gsat-log",
+    unitTitle: "指數與對數（log）",
+    date: "10/15",
+    publishOn: "2026-10-15",
+    href: "/sheets/1Fxs7EyRkUVDM4Q1rPVlgYY8CC1E21w8L.pdf",
+  },
+  {
+    id: "vp-ey16",
+    label: "學測一眼懂 #16",
+    kind: "學測一眼懂",
+    title: "向量相加，其實就是「頭接尾」走兩步",
+    topic: "向量加法：圖形頭接尾與坐標相加、求長度",
+    level: "高中",
+    grade: "高二",
+    unit: "vector",
+    unitTitle: "向量",
+    date: "10/14",
+    publishOn: "2026-10-14",
+    href: "/sheets/1GpDzykD27BaH7GcnPIWOYmXlFqoKKg1m.pdf",
+  },
+  {
+    id: "vp-ey15",
+    label: "畫圖一眼懂 #15",
+    kind: "畫圖一眼懂",
+    title: "tan 到底是什麼？其實就是斜率",
+    topic: "過原點直線：tanθ 就是斜率",
+    level: "高中",
+    grade: "高一",
+    unit: "trig",
+    unitTitle: "三角函數",
+    date: "10/13",
+    publishOn: "2026-10-13",
+    href: "/sheets/1Kgja9H0S8OxXVkiOhl-NEcpj-c-AjG2O.pdf",
+  },
+  {
+    id: "vp-ex6",
+    label: "段考必錯 #6",
+    kind: "段考必錯",
+    title: "(x ＋ 3)² − (x − 2)² 等於多少？",
+    topic: "國二乘法公式：兩個平方相減，後面整個加括號",
+    level: "國中",
+    grade: "國二",
+    unit: "jh-mult",
+    unitTitle: "乘法公式",
+    date: "10/13",
+    publishOn: "2026-10-13",
+    href: "/sheets/1vE3OG2B-EouAnME4dDHcb4nK5tPnR9ao.pdf",
+  },
+  {
+    id: "vp-ex5",
+    label: "段考必錯 #5",
+    kind: "段考必錯",
+    title: "sin(30° ＋ 60°) 可以直接拆開嗎？",
+    topic: "高二和角公式：sin(A ＋ B) 不能直接拆",
+    level: "高中",
+    grade: "高二",
+    unit: "trig",
+    unitTitle: "三角函數",
+    date: "10/13",
+    publishOn: "2026-10-13",
+    href: "/sheets/1hShrUHRkiwdeIpilMpr6YTrg7nCcKXzB.pdf",
+  },
+];
+
+const KIND_ORDER = ["畫圖一眼懂", "學測一眼懂", "學測真題", "學測陷阱題", "段考必錯", "長片"];
+const GRADE_ORDER = ["國二", "國三", "高一", "高二", "SAT", "高中"];
+const UNIT_ORDER = ["jh-mult", "jh-circle", "gsat-log", "trig", "vector", "prob", "series", "circle-eq", "stats", "abs-ineq", "sat-algebra", "other"];
+
+export function taipeiDate(now = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
+export function visiblePractice(now = new Date()): VideoPractice[] {
+  const today = taipeiDate(now);
+  return VIDEO_PRACTICE.filter((row) => row.publishOn <= today);
+}
+
+export type PracticeFacet = { key: string; label: string };
+
+function counted(rows: VideoPractice[], key: keyof VideoPractice, order: string[], nameOf: (row: VideoPractice) => string): PracticeFacet[] {
+  const counts = new Map<string, { n: number; name: string }>();
+  for (const row of rows) {
+    const id = String(row[key]);
+    const cur = counts.get(id);
+    if (cur) cur.n += 1;
+    else counts.set(id, { n: 1, name: nameOf(row) });
+  }
+  const keys = [
+    ...order.filter((id) => counts.has(id)),
+    ...[...counts.keys()].filter((id) => !order.includes(id)),
+  ];
+  return keys.map((id) => {
+    const item = counts.get(id)!;
+    return { key: id, label: `${item.name}（${item.n}）` };
+  });
+}
+
+export function practiceFacets(rows: VideoPractice[]) {
+  return {
+    kinds: counted(rows, "kind", KIND_ORDER, (row) => row.kind),
+    grades: counted(rows, "grade", GRADE_ORDER, (row) => row.grade),
+    units: counted(rows, "unit", UNIT_ORDER, (row) => row.unitTitle),
+  };
+}

@@ -20,6 +20,9 @@ export function Header({
           <span>寬數週練</span>
         </Link>
         <nav className="nav nav-desktop" aria-label="主要">
+          <Link href="/videos-practice" className="hide-sm">
+            影片練習題
+          </Link>
           <Link href="/#videos" className="hide-sm">
             教學影片
           </Link>

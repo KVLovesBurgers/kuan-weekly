@@ -27,6 +27,9 @@ export function MobileNav({ parentEmail }: { parentEmail?: string | null }) {
       </button>
       {open ? (
         <div id="mobile-nav-panel" className="mobile-nav-panel" role="navigation" aria-label="手機選單">
+          <Link href="/videos-practice" onClick={close}>
+            影片練習題
+          </Link>
           <Link href="/sample" onClick={close}>
             領題本試閱
           </Link>
