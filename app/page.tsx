@@ -7,7 +7,7 @@ import { SocialDm } from "@/components/SocialDm";
 import { SampleImg } from "@/components/SampleImg";
 import { getParent } from "@/lib/auth";
 import { seatsRemaining } from "@/lib/db";
-import { GSAT_DATE, gsatDaysLeft, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { CAP_DATE, GSAT_DATE, capCountdownNote, capDaysLeft, gsatDaysLeft, SAMPLE, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +35,10 @@ export default async function HomePage() {
   const remaining = await seatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
-  const daysLeft = gsatDaysLeft();
+  const now = new Date();
+  const daysLeft = gsatDaysLeft(now);
+  const capDays = capDaysLeft(now);
+  const capNote = capCountdownNote(now);
   const yearlySave = SITE.monthlyPrice * 12 - SITE.yearlyPrice;
 
   return (
@@ -46,9 +49,20 @@ export default async function HomePage() {
           <div className="wrap hero-grid">
             <div>
               <p className="kicker">吳寬老師 · 交大應數 · 學測、SAT 數學老師</p>
-              <p className="countdown-chip" title={`116 學年度學測 ${GSAT_DATE.slice(0, 10)} 起`}>
-                距離 116 學測（2027/1/22）還有 <strong>{daysLeft}</strong> 天
-              </p>
+              <div className="countdown-list">
+                <p className="countdown-chip" title={`116 學年度學測 ${GSAT_DATE.slice(0, 10)} 起`}>
+                  距離 116 學測（2027/1/22）還有 <strong>{daysLeft}</strong> 天
+                </p>
+                {capDays > 0 ? (
+                  <p className="countdown-chip" title={`116 年國中教育會考 ${CAP_DATE.slice(0, 10)} 起`}>
+                    距離 116 會考（2027/5/15）還有 <strong>{capDays}</strong> 天
+                  </p>
+                ) : capNote ? (
+                  <p className="countdown-chip" title={`116 年國中教育會考 ${CAP_DATE.slice(0, 10)} 起`}>
+                    {capNote}
+                  </p>
+                ) : null}
+              </div>
               <h1 className="display">寬數週練</h1>
               <p className="promise display">
                 每週把必錯題

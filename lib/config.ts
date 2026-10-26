@@ -120,6 +120,24 @@ export function gsatDaysLeft(now = new Date()) {
   return Math.max(0, Math.ceil(ms / 86400000));
 }
 
+/** 116 年國中教育會考首日：2027 年 5 月 15 日（考期 5 月 15 日至 16 日）。 */
+export const CAP_DATE = "2027-05-15T00:00:00+08:00";
+
+/** 會考兩日結束後的台北時間零時。僅供首頁狀態文案，不影響天數計算。 */
+const CAP_ENDED_AT = "2027-05-17T00:00:00+08:00";
+
+export function capDaysLeft(now = new Date()) {
+  const ms = new Date(CAP_DATE).getTime() - now.getTime();
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+
+/** 天數為 0 時的首頁文案。考期內為已開始，5 月 17 日零時起為已結束。 */
+export function capCountdownNote(now = new Date()) {
+  if (capDaysLeft(now) > 0) return null;
+  if (now.getTime() >= new Date(CAP_ENDED_AT).getTime()) return "116 會考已結束";
+  return "116 會考已開始";
+}
+
 export const money = (n: number) => n.toLocaleString("en-US");
 
 export function seatCap() {
