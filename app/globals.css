@@ -476,6 +476,7 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .lead-radio { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 15px; letter-spacing: 0; color: var(--charcoal); cursor: pointer; }
 .lead-radio input { width: auto; min-height: 0; margin: 0; }
 
+.countdown-list { display: flex; flex-direction: column; align-items: flex-start; }
 .countdown-chip { display: inline-block; margin: 6px 0 0; font-size: 14px; opacity: 0.85; }
 .countdown-chip strong { font-size: 18px; }
 .sample-tracks { flex-wrap: wrap; }
@@ -498,6 +499,10 @@ a.u, .u { text-decoration: underline; text-underline-offset: 3px; }
 .practice-btn { width: 100%; min-height: 48px; }
 .practice-cta { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; }
 .practice-cta p { margin: 0 0 4px; }
+.practice-promo { margin: 16px 0 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; }
+.practice-promo p { margin: 0; }
+.practice-promo-links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 6px !important; }
+.practice-promo-links a { display: inline-flex; align-items: center; min-height: 44px; }
 .practice-cta-link { text-decoration: underline; text-underline-offset: 3px; color: #4f6075; }
 @media (min-width: 640px) {
   .practice-card { padding: 22px 24px; }

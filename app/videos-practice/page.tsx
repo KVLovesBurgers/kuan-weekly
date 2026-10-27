@@ -61,6 +61,23 @@ export default function VideosPracticePage() {
             <Link href="/units" className="practice-cta-link">看依單元整理的完整清單</Link>
           </p>
 
+          <div className="practice-promo">
+            <p>
+              <strong>練習題都免費。</strong>想每週固定練一份這種附詳解的題本，可以先免費試閱寬數週練（留信箱即可下載）：
+            </p>
+            <p className="practice-promo-links">
+              {([
+                ["jh", "國中試閱"],
+                ["gsat", "學測試閱"],
+                ["sat", "SAT 講義試閱"],
+              ] as const).map(([t, label]) => (
+                <Suspense key={t} fallback={<Link href={`/sample?track=${t}&src=videos-top`} className="practice-cta-link">{label}</Link>}>
+                  <UnitTrialLink base="videos-top" track={t} label={label} />
+                </Suspense>
+              ))}
+            </p>
+          </div>
+
           <VideoPracticeList rows={rows} kinds={kinds} units={units} grades={grades} />
 
           <p className="muted" style={{ marginTop: 28, fontSize: 14 }}>
