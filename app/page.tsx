@@ -10,7 +10,7 @@ import { SampleImg } from "@/components/SampleImg";
 import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
-import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, GSAT_DATE, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, CAP_DATE, GSAT_DATE, capCountdownNote, capDaysLeft, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
 
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
@@ -43,7 +43,10 @@ export default async function HomePage() {
   const remaining = await cachedSeatsRemaining();
   const full = remaining <= 0;
   const seat = seatLabel(remaining);
-  const daysLeft = gsatDaysLeft();
+  const now = new Date();
+  const daysLeft = gsatDaysLeft(now);
+  const capDays = capDaysLeft(now);
+  const capNote = capCountdownNote(now);
   const yearlySave = SITE.monthlyPrice * 12 - SITE.yearlyPrice;
 
   return (
@@ -58,9 +61,20 @@ export default async function HomePage() {
           <div className="wrap hero-grid">
             <div>
               <p className="kicker">吳寬老師｜交大應數｜國中數學教師｜SAT・AMC・會考・學測</p>
-              <p className="countdown-chip" title={`116 學年度學測 ${GSAT_DATE.slice(0, 10)} 起`}>
-                距離 116 學測（2027/1/22）還有 <strong>{daysLeft}</strong> 天
-              </p>
+              <div className="countdown-list">
+                <p className="countdown-chip" title={`116 學年度學測 ${GSAT_DATE.slice(0, 10)} 起`}>
+                  距離 116 學測（2027/1/22）還有 <strong>{daysLeft}</strong> 天
+                </p>
+                {capDays > 0 ? (
+                  <p className="countdown-chip" title={`116 年國中教育會考 ${CAP_DATE.slice(0, 10)} 起`}>
+                    距離 116 會考（2027/5/15）還有 <strong>{capDays}</strong> 天
+                  </p>
+                ) : capNote ? (
+                  <p className="countdown-chip" title={`116 年國中教育會考 ${CAP_DATE.slice(0, 10)} 起`}>
+                    {capNote}
+                  </p>
+                ) : null}
+              </div>
               <h1 className="display">寬數週練</h1>
               <p className="promise display">
                 每週把必錯題
