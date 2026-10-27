@@ -97,10 +97,10 @@ export const GRADE_SAMPLES = [
   { key: "g10", label: "高一", unit: "絕對值、多項式、直線與圓", student: "/samples/sample-g10-student.pdf", parent: "/samples/sample-g10-parent.pdf" },
   { key: "g11", label: "高二", unit: "三角函數、指數對數、向量", student: "/samples/sample-g11-student.pdf", parent: "/samples/sample-g11-parent.pdf" },
   { key: "g12", label: "高三", unit: "學測綜合範例", student: "/samples/sample-g12-student.pdf", parent: "/samples/sample-g12-parent.pdf" },
-  { key: "sat5", label: "SAT Math", unit: "代數基礎範例", student: "/samples/sample-sat5-student.pdf", parent: "/samples/sample-sat5-parent.pdf" },
+  { key: "sat5", label: "SAT Math", unit: "綜合範例（含 Module 2 hard）", student: "/samples/sample-sat5-student.pdf", parent: "/samples/sample-sat5-parent.pdf" },
   { key: "amc8", label: "AMC 8", unit: "計數、數感與基礎幾何", student: "/samples/sample-amc8-student.pdf", parent: "/samples/sample-amc8-parent.pdf" },
   { key: "amc10", label: "AMC 10", unit: "代數、幾何、計數與機率", student: "/samples/sample-amc10-student.pdf", parent: "/samples/sample-amc10-parent.pdf" },
-  { key: "amc12", label: "AMC 12", unit: "三角、指對數、數列與複數", student: "/samples/sample-amc12-student.pdf", parent: "/samples/sample-amc12-parent.pdf" },
+  { key: "amc12", label: "AMC 12", unit: "代數、三角、複數與計數", student: "/samples/sample-amc12-student.pdf", parent: "/samples/sample-amc12-parent.pdf" },
 ] as const;
 
 /** 目前主收款：私人匯款。綠界信用卡／ATM 審過後再開線上刷卡。 */
