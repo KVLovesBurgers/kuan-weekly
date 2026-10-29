@@ -2193,5 +2193,93 @@ export const LEARN_PAGES_3: LearnPage[] = [
         "反推調分時把 $b$ 也拿去配標準差。標準差只由 $a$ 決定，先用標準差求 $a$，再用平均數求 $b$（第 4 題）。"
       ]
     }
+  },
+  {
+    "slug": "law-of-cosines",
+    "keyword": "餘弦定理",
+    "title": "餘弦定理詳解：兩邊夾角求第三邊、三邊求角、判斷鈍角，5 題由淺到深｜Saber數學",
+    "h1": "餘弦定理：兩邊 5、8 夾 60°，第三邊為什麼是 7",
+    "description": "餘弦定理 c²=a²+b²−2ab cos C，夾角 90° 時就是畢氏定理。練兩邊夾角求第三邊、三邊求最大角、判斷鈍角三角形、夾角 120°、求角再算面積，5 題高一程度附詳解。",
+    "level": "高中",
+    "teaches": "餘弦定理、三角形求邊求角、鈍角判斷、三角形面積",
+    "short": {
+      "id": "wC6fgZVZlpM",
+      "title": "兩邊 5、8 夾 60 度，第三邊是 7｜畫圖一眼懂 #25"
+    },
+    "related": [
+      {
+        "href": "/units/trig",
+        "label": "三角函數：免費練習題附詳解"
+      },
+      {
+        "href": "/learn/pythagorean-theorem",
+        "label": "畢氏定理詳解"
+      },
+      {
+        "href": "/quiz?src=learn-cosine",
+        "label": "做 5 題小卷，看自己的弱點"
+      }
+    ],
+    "updated": "2026-10-29",
+    "lesson": {
+      "intro": "三角形兩邊 $a$、$b$ 夾角 $C$，第三邊 $c$ 滿足 $c^2=a^2+b^2-2ab\\cos C$。夾角是 $90^\\circ$ 時 $\\cos 90^\\circ=0$，公式就變回畢氏定理 $c^2=a^2+b^2$；夾角比 $90^\\circ$ 小，第三邊比畢氏定理算的短，夾角比 $90^\\circ$ 大就比較長。反過來，知道三邊也能求角：$\\cos C=\\dfrac{a^2+b^2-c^2}{2ab}$。下面 5 題由淺到深。",
+      "problems": [
+        {
+          "title": "兩邊夾角求第三邊",
+          "question": "$\\triangle ABC$ 中，$a=5$，$b=8$，$\\angle C=60^\\circ$。求 $c$。",
+          "steps": [
+            "$c^2=5^2+8^2-2\\times 5\\times 8\\times\\cos 60^\\circ$。",
+            "$\\cos 60^\\circ=\\dfrac{1}{2}$，所以 $c^2=25+64-40=49$。",
+            "$c=7$。"
+          ],
+          "answer": "$c=7$"
+        },
+        {
+          "title": "三邊求最大角",
+          "question": "三角形三邊長為 $3$、$5$、$7$。求最大角的度數。",
+          "steps": [
+            "大邊對大角，最大角是 $7$ 對的角，設為 $C$。",
+            "$\\cos C=\\dfrac{3^2+5^2-7^2}{2\\times 3\\times 5}=\\dfrac{9+25-49}{30}=-\\dfrac{1}{2}$。",
+            "$0^\\circ<C<180^\\circ$ 且 $\\cos C=-\\dfrac{1}{2}$，所以 $C=120^\\circ$。"
+          ],
+          "answer": "$120^\\circ$"
+        },
+        {
+          "title": "判斷鈍角三角形",
+          "question": "三邊長為 $4$、$5$、$7$ 的三角形是銳角、直角還是鈍角三角形？",
+          "steps": [
+            "只要看最大邊 $7$ 對的角。",
+            "$4^2+5^2=41$，$7^2=49$，$41<49$。",
+            "$\\cos C=\\dfrac{41-49}{2\\times 4\\times 5}=-\\dfrac{1}{5}<0$，所以 $C$ 是鈍角。"
+          ],
+          "answer": "鈍角三角形"
+        },
+        {
+          "title": "夾角大於 90°",
+          "question": "$\\triangle ABC$ 中，$a=2$，$b=3$，$\\angle C=120^\\circ$。求 $c$。",
+          "steps": [
+            "$\\cos 120^\\circ=-\\dfrac{1}{2}$，帶入時負號要留著。",
+            "$c^2=2^2+3^2-2\\times 2\\times 3\\times\\left(-\\dfrac{1}{2}\\right)=4+9+6=19$。",
+            "$c=\\sqrt{19}$。"
+          ],
+          "answer": "$c=\\sqrt{19}$"
+        },
+        {
+          "title": "先求角，再算面積",
+          "question": "$\\triangle ABC$ 中，$b=2$，$c=3$，$a=\\sqrt{7}$。求 $\\angle A$ 與 $\\triangle ABC$ 的面積。",
+          "steps": [
+            "$\\cos A=\\dfrac{b^2+c^2-a^2}{2bc}=\\dfrac{4+9-7}{12}=\\dfrac{1}{2}$，所以 $\\angle A=60^\\circ$。",
+            "面積 $=\\dfrac{1}{2}bc\\sin A=\\dfrac{1}{2}\\times 2\\times 3\\times\\dfrac{\\sqrt{3}}{2}=\\dfrac{3\\sqrt{3}}{2}$。"
+          ],
+          "answer": "$\\angle A=60^\\circ$，面積 $\\dfrac{3\\sqrt{3}}{2}$"
+        }
+      ],
+      "mistakes": [
+        "把 $-2ab\\cos C$ 漏掉，直接用畢氏定理。只有夾角是 $90^\\circ$ 才能這樣算（第 1 題）。",
+        "夾角是鈍角時把 $\\cos C$ 當正數。$\\cos 120^\\circ=-\\dfrac{1}{2}$，減一個負數等於加（第 4 題）。",
+        "三邊求角時分子放錯邊。要求哪個角，就把那個角對面的邊放在減號後面（第 2、5 題）。",
+        "判斷鈍角時拿任意一個角來看。只有最大邊對的角可能是鈍角，看它就夠了（第 3 題）。"
+      ]
+    }
   }
 ];
