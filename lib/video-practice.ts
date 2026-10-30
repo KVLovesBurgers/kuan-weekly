@@ -6,6 +6,7 @@
 import { driveUrl, livePracticeSheets, type PracticeSheet } from "@/lib/practice-sheets";
 import { LOCAL_SHEETS } from "@/lib/sheet-files";
 import { UNIT_PACKS } from "@/lib/unit-packs";
+import { EN_NOTES } from "@/lib/en-notes";
 
 export type VideoRow = {
   /** 追蹤用代號（只含英數與連字號，例如 vp-ey24）。 */
@@ -24,6 +25,8 @@ export type VideoRow = {
   date: string;
   /** 站內 PDF 網址（相對路徑）；沒放進站內才退回 Drive。 */
   href: string;
+  /** English lecture notes PDF (only when one exists in lib/en-notes.ts). */
+  hrefEn?: string;
 };
 
 const fmtDate = (iso: string) =>
@@ -100,6 +103,7 @@ export function videoRows(now = new Date()): VideoRow[] {
       unitTitle: known.get(unit) ?? "其他",
       date: fmtDate(s.publishAt),
       href: pdfHref(s),
+      hrefEn: EN_NOTES[s.driveId] ?? EN_NOTES[s.url?.match(/\/pdf\/([^/]+)\.pdf$/)?.[1] ?? ""],
     };
   });
 }

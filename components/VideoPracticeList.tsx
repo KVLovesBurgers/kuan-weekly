@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { track } from "@/lib/track-client";
 import type { VideoRow } from "@/lib/video-practice";
+import { EN_STANDALONE } from "@/lib/en-notes";
 
 type Chip = { key: string; label: string };
 
@@ -111,11 +112,41 @@ export function VideoPracticeList({ rows, kinds, units, grades }: { rows: VideoR
               rel="noopener"
               onClick={() => track("unit_pdf", r.id, src())}
             >
-              開啟練習題（附解答）
+              <span lang="zh-Hant">中文講義</span>｜開啟練習題（附解答）
             </a>
+            {r.hrefEn && (
+              <a
+                className="btn vp-btn vp-btn-en"
+                href={r.hrefEn}
+                target="_blank"
+                rel="noopener"
+                lang="en"
+                onClick={() => track("unit_pdf_en", r.id, src())}
+              >
+                English notes (PDF)
+              </a>
+            )}
           </li>
         ))}
       </ul>
+
+      {EN_STANDALONE.length > 0 && (
+        <section className="vp-en" lang="en" aria-labelledby="vp-en-h">
+          <h2 id="vp-en-h" className="display">English notes · 英文講義</h2>
+          <p>For English-speaking parents and students: lecture notes in English. 中文家長請使用上方「中文講義」。</p>
+          <ul className="vp-list">
+            {EN_STANDALONE.map((n) => (
+              <li key={n.id} className="card vp-card">
+                <div className="vp-meta"><strong className="vp-no">{n.label}</strong></div>
+                <h3 className="display">{n.title}</h3>
+                <a className="btn btn-ink vp-btn" href={n.href} target="_blank" rel="noopener" onClick={() => track("unit_pdf_en", n.id, src())}>
+                  English notes (PDF)
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {visible.size === 0 && (
         <div className="card vp-empty">
