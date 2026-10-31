@@ -17,6 +17,11 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "段考必錯 #9", title: "直角三角形兩邊 3 和 4，第三邊只有 5？還有 √7", topic: "國二畢氏定理：只給兩邊要分「兩股」和「一股一斜邊」兩種情況，斜邊最長", level: "國中", driveId: "duankao09-pyth-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao09-pyth-practice.pdf", publishAt: "2026-10-31T21:30:00+08:00" },
+  { series: "段考必錯 #8", title: "360 有幾個正因數？不是 6，是 24", topic: "國一正因數個數：標準分解後各次方加 1 再相乘、反求次方、偶數因數", level: "國中", driveId: "duankao08-divisors-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao08-divisors-practice.pdf", publishAt: "2026-10-31T21:30:00+08:00" },
+  { series: "動漫 DIY short", title: "5 顆相同的糖分給 3 人，可以拿 0 顆，有 21 種", topic: "重複組合：糖和隔板、每人至少幾顆先發掉、方程式非負整數解", level: "高中", driveId: "anime-diy-candy-practice", url: "https://kuan-weekly.vercel.app/pdf/anime-diy-candy-practice.pdf", unit: "prob", publishAt: "2026-10-31T21:30:00+08:00" },
+  { series: "學測一眼懂 項數陷阱", title: "3＋7＋11＋…＋99 有幾項？不是 24，是 25", topic: "等差數列項數：（末項 − 首項）÷ 公差 ＋ 1、倍數個數、先求項數再求和、植樹問題", level: "高中", driveId: "number-of-terms-practice", url: "https://kuan-weekly.vercel.app/pdf/number-of-terms-practice.pdf", unit: "series", publishAt: "2026-10-31T21:30:00+08:00" },
+  { series: "畫圖一眼懂 #30", title: "連起三邊中點，中間佔幾分之幾？再連一次呢？", topic: "中點連線定理：三邊中點連線切成四塊全等，中間是 1/4；再連一次最中間是 1/16", level: "高中", driveId: "10QbMKpe9K5ymJ_jdU0GA3Ag1u9Cj5yKt", publishAt: "2026-10-29T20:30:00+08:00" },
   { series: "學測陷阱題 #1", title: "根式方程只找到一個解？兩個解都要，和是 6", topic: "根式方程：定義域、平方後代回檢查增根、不能同除以可能為 0 的根號、換元 t ≥ 0", level: "高中", driveId: "gsat-trap1-practice", url: "https://kuan-weekly.vercel.app/pdf/gsat-trap1-practice.pdf", publishAt: "2026-10-25T17:30:00+08:00" },
   { series: "學測真題 #3", title: "解出 m＝0 要丟掉，答對率只有 18%（114 學測數A 第16題）", topic: "點到直線距離、相切時半徑＝距離、弦長 2√(r²−d²)，解出參數要回頭檢查相異兩點", level: "高中", driveId: "1QnqdNaLSQLPzweJhE18AM8K4h6wNw7IP", url: "https://kuan-weekly.vercel.app/pdf/gsat-real3-practice.pdf", unit: "circle-eq", publishAt: "2026-10-24T17:30:00+08:00" },
   { series: "學測真題 #2", title: "5、6 相鄰又 6、7 相鄰，不能各乘 2（115 學測數B 第14題）", topic: "相鄰排列的綑綁法：同一個數字出現在兩個相鄰條件裡，要合成一串", level: "高中", driveId: "1j3QXMRTUhBANKkpMjj5iXuSX-Issb_C9", url: "https://kuan-weekly.vercel.app/pdf/gsat-real2-practice.pdf", unit: "prob", publishAt: "2026-10-23T17:30:00+08:00" },
