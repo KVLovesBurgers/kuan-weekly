@@ -1,4 +1,4 @@
-import { FREE_WEEK_RULE, TIERED_MONTHLY_TEXT, MIN_MONTHLY } from "@/lib/config";
+import { FREE_WEEK_RULE, TIERED_MONTHLY_TEXT, MIN_MONTHLY, PLAN_YEARLY_LABEL, TIERED_YEARLY_TEXT, YEARLY_NOTE } from "@/lib/config";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Header } from "@/components/Header";
@@ -344,8 +344,7 @@ export default async function SamplePage({
                   覺得適合，直接匯款訂閱
                 </h2>
                 <p className="muted" style={{ margin: "0 0 12px", fontSize: 14 }}>
-                  {FREE_WEEK_RULE}；國中可選年繳 {SITE.currency}
-                  {money(SITE.yearlyPrice)}，每位孩子計價。{seat.text}
+                  {FREE_WEEK_RULE}；也可年繳（依年級：{TIERED_YEARLY_TEXT}，＝月費×10），每位孩子計價。{seat.text}
                   {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。用剛剛留的信箱登記，不用再收登入信。
                 </p>
                 {error && one(sp.error).includes("孩子") ? (
@@ -367,7 +366,7 @@ export default async function SamplePage({
                   <label htmlFor="sub_plan">方案*</label>
                   <select id="sub_plan" name="plan" required defaultValue="monthly">
                     <option value="monthly">{`月繳（依年級：${TIERED_MONTHLY_TEXT}）`}</option>
-                    <option value="yearly">{`年繳 ${SITE.currency}${money(SITE.yearlyPrice)} /年（僅國中，省 ${SITE.currency}${money(SITE.monthlyPrice * 12 - SITE.yearlyPrice)}）`}</option>
+                    <option value="yearly">{PLAN_YEARLY_LABEL}</option>
                   </select>
                   <button className="btn btn-ink" type="submit">
                     看匯款帳號
@@ -393,8 +392,7 @@ export default async function SamplePage({
                     {FREE_WEEK_RULE}
                   </p>
                   <p className="muted" style={{ margin: 0, fontSize: 14 }}>
-                    國中可選年繳 {SITE.currency}
-                    {money(SITE.yearlyPrice)}。{seat.text}
+                    也可選年繳（{YEARLY_NOTE}）。{seat.text}
                     {seat.remaining !== null ? ` ${seat.remaining} 名` : ""}。
                   </p>
                   <ol className="steps-list">

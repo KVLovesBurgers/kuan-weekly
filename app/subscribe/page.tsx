@@ -76,7 +76,7 @@ export default async function SubscribePage({
             </select>
 <YearlyGuard gradeId="grade" planId="plan" />
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>
-              月費依孩子年級計算，送出後的匯款頁會顯示確切金額。{YEARLY_NOTE}；小學、高中與 SAT 目前只有月繳。
+              月費依孩子年級計算，送出後的匯款頁會顯示確切金額。{YEARLY_NOTE}。
             </p>
             <p className="muted" style={{ fontSize: 13, margin: 0 }}>
               送出即表示已閱讀{" "}

@@ -10,7 +10,7 @@ import { cleanSrc, cleanUtm, LEAD_COOKIE, LEAD_GRADES, LEAD_ID_COOKIE, LEAD_ROLE
 import { seatsRemaining } from "@/lib/db";
 import { buildScopeDelivery, buildTrialDelivery, isTestAddress, TRIAL_APPLY_KIND } from "@/lib/followup";
 import { isTrialLead, SCOPE_GRADES, SCOPE_OPTIONS, scopeKind, scopeMailAllowed, TRIAL_D0_KIND } from "@/lib/trial";
-import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
+import { GRADE_OPTIONS, SITE, monthlyPriceFor, yearlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
 import { sendCheckoutAlert } from "@/lib/mail";
 
 export async function submitSampleLead(formData: FormData) {
@@ -154,7 +154,7 @@ export async function startSampleCheckout(formData: FormData) {
     `INSERT INTO children (id, parent_id, display_name, grade, school_progress, exam_target, weak_topics, needs, is_demo, subscription_status, plan, created_at)
      VALUES (?, ?, ?, ?, '', ?, '', ?, 0, 'pending', ?, ?)`,
   ).run(childId, parent.id, display_name, grade, exam_target, needs, plan, now);
-  const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade)!;
+  const amount = plan === "yearly" ? yearlyPriceFor(grade)! : monthlyPriceFor(grade)!;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,

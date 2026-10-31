@@ -8,7 +8,7 @@ import { DEMO_PARENT_EMAIL } from "@/lib/config";
 
 const DEMO_READONLY = "/dashboard?error=" + encodeURIComponent("示範帳號為唯讀，無法新增或修改資料。");
 import { uid } from "@/lib/ids";
-import { SITE, monthlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, priceTier, UNKNOWN_GRADE_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
+import { SITE, monthlyPriceFor, yearlyPriceFor, yearlyAllowed, NO_YEARLY_MSG, priceTier, UNKNOWN_GRADE_MSG, needsRequired, NEEDS_MAX, NEEDS_REQUIRED_MSG } from "@/lib/config";
 import { mailConfigured, sendCheckoutAlert } from "@/lib/mail";
 import { after } from "next/server";
 import { safeNextPath } from "@/lib/safe-next";
@@ -128,7 +128,7 @@ export async function startCheckout(formData: FormData) {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 'pending', ?, ?)`,
   ).run(childId, parent.id, display_name, grade, school_progress, exam_target, weak_topics, needs, plan, now);
 
-  const amount = plan === "yearly" ? SITE.yearlyPrice : monthlyPriceFor(grade)!;
+  const amount = plan === "yearly" ? yearlyPriceFor(grade)! : monthlyPriceFor(grade)!;
   await db.prepare(
     `INSERT INTO checkout_attempts (id, parent_id, child_id, plan, amount, status, created_at)
      VALUES (?, ?, ?, ?, ?, 'pending', ?)`,

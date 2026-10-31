@@ -10,7 +10,7 @@ import { SampleImg } from "@/components/SampleImg";
 import { DiagCta } from "@/components/DiagCta";
 import { cachedSeatsRemaining } from "@/lib/seats";
 import { TierPrices } from "@/components/TierPrices";
-import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, CAP_DATE, GSAT_DATE, capCountdownNote, capDaysLeft, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money } from "@/lib/config";
+import { OPEN_TIERS, START_NOTE, MIN_MONTHLY, FIRST_WEEK_CONTENT, CAP_DATE, GSAT_DATE, capCountdownNote, capDaysLeft, gsatDaysLeft, PRICE_RULE, TIER_PRICES, YEARLY_NOTE, SAMPLE, SAT_BOOK, SHORTS, SITE, SOCIAL, seatCap, seatLabel, money, TIERED_YEARLY_TEXT, yearlyFromMonthly } from "@/lib/config";
 
 // 行銷首頁改 ISR：邊緣快取、每 5 分鐘背景重算一次；後台開席時 revalidatePath("/") 會立即更新。
 export const revalidate = 300;
@@ -28,13 +28,13 @@ const offersLd = {
       priceCurrency: "TWD",
       url: `${SITE.url}/#pricing`,
     })),
-    {
+    ...(Object.keys(TIER_PRICES) as (keyof typeof TIER_PRICES)[]).map((k) => ({
       "@type": "Offer",
-      name: "寬數週練｜按年（目前只適用國中）",
-      price: SITE.yearlyPrice,
+      name: `寬數週練｜按年｜${TIER_PRICES[k].label}（${TIER_PRICES[k].grades}）`,
+      price: yearlyFromMonthly(TIER_PRICES[k].monthly),
       priceCurrency: "TWD",
       url: `${SITE.url}/#pricing`,
-    },
+    })),
   ],
 };
 
@@ -47,7 +47,6 @@ export default async function HomePage() {
   const daysLeft = gsatDaysLeft(now);
   const capDays = capDaysLeft(now);
   const capNote = capCountdownNote(now);
-  const yearlySave = SITE.monthlyPrice * 12 - SITE.yearlyPrice;
 
   return (
     <>
@@ -330,18 +329,18 @@ export default async function HomePage() {
                 <p className="muted">第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
-                <p className="kicker">按年（目前只適用國中）</p>
+                <p className="kicker">按年（＝月費×10）</p>
                 <p className="price">
                   {SITE.currency}
-                  {money(SITE.yearlyPrice)}
-                  <small> /年 · 每名孩子</small>
+                  {money(Math.min(...OPEN_TIERS.map((k) => yearlyFromMonthly(TIER_PRICES[k].monthly))))}
+                  <small> 起 /年 · 每名孩子</small>
                 </p>
-                <p className="muted">對準完整學年的每週進度。年繳目前只適用國中；小學、高中、SAT 與 AMC 目前只有月繳。</p>
+                <p className="muted">對準完整學年的每週進度。年繳依年級：{TIERED_YEARLY_TEXT}（＝該年級月費×10，約省兩個月）。</p>
                 <p className="savings-note">
-                  國中月繳一年 {SITE.currency}
+                  例如國中月繳一年 {SITE.currency}
                   {money(SITE.monthlyPrice * 12)} → 年繳 {SITE.currency}
-                  {money(SITE.yearlyPrice)}，省 {SITE.currency}
-                  {money(yearlySave)}
+                  {money(yearlyFromMonthly(SITE.monthlyPrice))}，省 {SITE.currency}
+                  {money(SITE.monthlyPrice * 12 - yearlyFromMonthly(SITE.monthlyPrice))}
                 </p>
               </article>
             </div>
@@ -414,7 +413,7 @@ export default async function HomePage() {
                   "每週什麼時候出題？",
                   "通常每週一前後固定出題。開通後下一週起算；若當週已發布，開通後即可下載已發布週次。",
                 ],
-                ["第一週怎麼算？什麼時候開始月繳？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "；小學、高中、SAT 與 AMC 目前只有月繳。" + FIRST_WEEK_CONTENT],
+                ["第一週怎麼算？什麼時候開始月繳？", PRICE_RULE + "。" + START_NOTE + YEARLY_NOTE + "。" + FIRST_WEEK_CONTENT],
                 ["怎麼停用？已匯款能退嗎？", "要停用請寄信即可。已匯款的當期不退，請開通前確認方案。"],
                 ["第二個孩子怎麼訂？同帳號可以嗎？", "第二個孩子再訂一席。同一家長帳號可掛多名孩子。"],
                 ["個資怎麼用？", "privacy"],
