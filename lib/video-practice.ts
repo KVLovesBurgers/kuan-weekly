@@ -70,6 +70,7 @@ const GRADE: Record<string, string> = {
   "1Kgja9H0S8OxXVkiOhl-NEcpj-c-AjG2O": "高一", // #15 tan
   "1vE3OG2B-EouAnME4dDHcb4nK5tPnR9ao": "國二", // 段考必錯 #6 乘法公式
   "1hShrUHRkiwdeIpilMpr6YTrg7nCcKXzB": "高二", // 段考必錯 #5 sin 和角
+  "duankao10-circle-practice": "國三", // 段考必錯 #10 圓周角
 };
 
 export const GRADE_ORDER = ["國二", "國三", "高一", "高二", "SAT", "國中", "高中"];
