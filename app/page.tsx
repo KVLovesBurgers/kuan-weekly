@@ -56,6 +56,25 @@ export default async function HomePage() {
         <Suspense fallback={null}>
           <StudentHero />
         </Suspense>
+        <section id="exam-pack" className="exam-band" aria-label="第二次段考加強卷">
+          <div className="wrap">
+            <div className="exam-card">
+              <div>
+                <p className="kicker">段考前首推｜第二次段考約 11/25–11/26</p>
+                <h2 className="exam-card-h display">第二次段考加強卷</h2>
+                <p className="sub">國一～高二偏難加強卷，對準第二次段考常見單元。每級兩份 PDF：學生卷可列印作答，詳解家長卷附答案與步驟。電子檔，付款確認後傳送。</p>
+                <p className="exam-card-price"><strong>單級 NT$99</strong>・<strong>全套（國一～高二）NT$399</strong></p>
+              </div>
+              <div className="exam-card-cta">
+                <a className="btn btn-steel btn-lg" href={SOCIAL.instagramUrl} target="_blank" rel="noopener">私訊 IG {SOCIAL.handle}</a>
+                <a className="btn btn-ghost" href={SOCIAL.facebookUrl} target="_blank" rel="noopener">私訊 FB {SOCIAL.facebookName}</a>
+                <a className="btn btn-ghost" href="mailto:jjredick365@gmail.com?subject=%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%AE%B5%E8%80%83%E5%8A%A0%E5%BC%B7%E5%8D%B7">Email 告知年級或全套</a>
+                <a className="u" href="https://kuanmath.vercel.app/#exam99" target="_blank" rel="noopener">看各級範圍 →</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="hero">
           <div className="wrap hero-grid">
             <div>

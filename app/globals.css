@@ -681,3 +681,11 @@ picture { display: contents; }
 .tier-amount strong { font-family: var(--display); font-size: 26px; }
 .tier-amount { color: var(--muted); font-size: 14px; }
 .tier-list--compact .tier-amount strong { font-size: 20px; }
+
+/* 第二次段考加強卷首推區 */
+.exam-band { padding: 24px 0 0; }
+.exam-card { display: flex; gap: 24px; align-items: center; justify-content: space-between; padding: 22px 24px; border-radius: 16px; background: var(--paper-raised); box-shadow: var(--shadow-border); }
+.exam-card-h { margin: 4px 0 8px; font-size: clamp(24px, 4vw, 34px); }
+.exam-card-price { margin: 10px 0 0; font-size: 17px; }
+.exam-card-cta { display: flex; flex-direction: column; gap: 10px; min-width: 220px; }
+@media (max-width: 720px) { .exam-card { flex-direction: column; align-items: stretch; padding: 16px; } .exam-card-cta { min-width: 0; } }
