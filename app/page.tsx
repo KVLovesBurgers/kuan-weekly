@@ -256,7 +256,7 @@ export default async function HomePage() {
               陽明交大應用數學系畢業。現任國中數學教師，曾任菁英國際 SAT 數學老師，也是梭羅國際教育 AMC 競賽數學老師；Stanford OHS（史丹佛線上高中）官方授權監考官，並指導該校學生數學。週練是講義方案：每週兩份
               PDF，不提供 LINE 即時答題。
             </p>
-            <p className="muted">學生案例：精誠高中學測數學 11 級到分科 58 級。更多經歷請看個人頁。</p>
+            <p className="muted">學生案例：SAT 數學 660→750、精誠高中學測數學 11 級→分科 58 級、段考 50→80、學生錄取 MSU／PSU／OSU。更多經歷請看個人頁。</p>
             <p style={{ marginTop: 20 }}>
               <a className="btn btn-paper" href={SITE.oneOnOneUrl}>
                 認識吳寬老師
@@ -326,7 +326,7 @@ export default async function HomePage() {
               <article className="card">
                 <p className="kicker">按月</p>
                 <TierPrices />
-                <p className="muted">第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。要停用請寄信 {SITE.contactEmail}。</p>
+                <p className="muted">第一週 NT$199，之後依年級每月：國小 699／國中 799／高中 999／SAT 1,099／AMC 1,099。要停用請寄信 {SITE.contactEmail}。</p>
               </article>
               <article className="card">
                 <p className="kicker">按年（＝月費×10）</p>

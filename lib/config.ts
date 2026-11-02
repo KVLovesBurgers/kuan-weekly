@@ -90,7 +90,7 @@ export const SAMPLES = {
 export const GRADE_SAMPLES_NOTE =
   "以下是範例題本（10 題），實際題本依孩子需求客製：填好孩子的年級、進度與弱點，吳寬老師再出專屬題本。";
 export const GRADE_SAMPLES = [
-  { key: "elem", label: "小學", unit: "分數、四則與單位換算", student: "/samples/sample-elem-student.pdf", parent: "/samples/sample-elem-parent.pdf" },
+  { key: "elem", label: "國小", unit: "分數、四則與單位換算", student: "/samples/sample-elem-student.pdf", parent: "/samples/sample-elem-parent.pdf" },
   { key: "g7", label: "國一", unit: "正負數、分數、一元一次", student: "/samples/sample-g7-student.pdf", parent: "/samples/sample-g7-parent.pdf" },
   { key: "g8", label: "國二", unit: "因式分解、一元二次、畢氏", student: "/samples/sample-g8-student.pdf", parent: "/samples/sample-g8-parent.pdf" },
   { key: "g9", label: "國三", unit: "相似、圓、機率、二次函數", student: "/samples/sample-g9-student.pdf", parent: "/samples/sample-g9-parent.pdf" },
@@ -156,13 +156,13 @@ export function capCountdownNote(now = new Date()) {
 export const money = (n: number) => n.toLocaleString("en-US");
 
 /**
- * 週練訂閱收費（2026-10-26 月費；2026-10-28 年繳＝月費×10）：第一週一律 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099。
+ * 週練訂閱收費（2026-10-26 月費；2026-10-28 年繳＝月費×10）：第一週一律 NT$199，之後依年級每月：國小 699／國中 799／高中 999／SAT 1,099／AMC 1,099。
  * 年繳＝該年級月費 × 10（約等於 10 個月價、省 2 個月）：小學 6,990／國中 7,990／高中 9,990／SAT・AMC 10,990。各年級皆可年繳。
  */
 export type PriceTier = "elementary" | "junior" | "senior" | "sat" | "amc";
 // NOTE 2026-10-26：分級月費（結帳金額以此為準）。年繳＝monthly×10（2026-10-28）。
 export const TIER_PRICES: Record<PriceTier, { label: string; grades: string; monthly: number }> = {
-  elementary: { label: "小學", grades: "小一到小六", monthly: 699 },
+  elementary: { label: "國小", grades: "小一到小六", monthly: 699 },
   junior: { label: "國中", grades: "國一、國二、國三", monthly: 799 },
   senior: { label: "高中", grades: "高一、高二、高三", monthly: 999 },
   sat: { label: "SAT", grades: "SAT Math", monthly: 1099 },
@@ -230,9 +230,9 @@ export const PLAN_YEARLY_LABEL = `年繳 ${OPEN_TIERS.map((k) => `${TIER_PRICES[
 /** 起算日說明（頁面、FAQ、匯款頁共用） */
 const p = (k: PriceTier) => money(TIER_PRICES[k].monthly);
 const py = (k: PriceTier) => money(yearlyFromMonthly(TIER_PRICES[k].monthly));
-/** 對外一句：第一週 NT$199，之後依年級每月：小學 699／國中 799／高中 999／SAT・AMC 1,099 */
-export const TIERED_MONTHLY_TEXT = `小學 ${p("elementary")}／國中 ${p("junior")}／高中 ${p("senior")}／SAT・AMC ${p("sat")}`;
-export const TIERED_YEARLY_TEXT = `小學 ${py("elementary")}／國中 ${py("junior")}／高中 ${py("senior")}／SAT・AMC ${py("sat")}`;
+/** 對外一句：第一週 NT$199，之後依年級每月：國小 699／國中 799／高中 999／SAT 1,099／AMC 1,099 */
+export const TIERED_MONTHLY_TEXT = `國小 ${p("elementary")}／國中 ${p("junior")}／高中 ${p("senior")}／SAT ${p("sat")}／AMC ${p("amc")}`;
+export const TIERED_YEARLY_TEXT = `國小 ${py("elementary")}／國中 ${py("junior")}／高中 ${py("senior")}／SAT ${py("sat")}／AMC ${py("amc")}`;
 export const START_NOTE = `第一週 NT$199（開通起算 7 天），之後依年級每月：${TIERED_MONTHLY_TEXT}。`;
 export const FREE_WEEK_RULE = `第一週 NT$199，之後依年級每月：${TIERED_MONTHLY_TEXT}`;
 /** 2026-10-26：分級 */
