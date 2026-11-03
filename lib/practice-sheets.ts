@@ -17,6 +17,7 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "學測一眼懂 換底連乘", title: "log₂3 · log₃4 · log₄8 等於多少？換底後中間全消，是 3", topic: "換底公式：log_a b ＝ log b ／ log a、連乘斜著對消只剩頭尾、底和真數拆成同底次方、用 a 表示 log", level: "高中", driveId: "change-of-base-practice", url: "https://kuan-weekly.vercel.app/pdf/change-of-base-practice.pdf", unit: "gsat-log", publishAt: "2026-11-02T19:45:00+08:00" },
   { series: "段考必錯 #10", title: "圓心角 100°，圓周角只有 50°？還有 130°", topic: "國三圓周角：C 在優弧或劣弧要分兩種情況、直徑所對圓周角 90°、圓內接四邊形對角互補、弧長比換角度", level: "國中", driveId: "duankao10-circle-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao10-circle-practice.pdf", unit: "jh-circle", publishAt: "2026-11-01T20:50:00+08:00" },
   { series: "段考必錯 #11", title: "−2² ＋ (−2)² 是 8 嗎？不是，是 0", topic: "國一指數律：沒有括號先算次方再加負號、有括號負號一起乘（與 −2⁴ 練習同一份）", level: "國中", driveId: "duankao11-g7-power-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao-g7-neg-power-practice.pdf", publishAt: "2026-11-01T20:50:00+08:00" },
   { series: "國一段考易錯", title: "−2⁴ − (−2)⁴ 是 0 嗎？不是，是 −32", topic: "國一指數律：沒有括號先算次方再加負號、有括號負號一起乘、負數偶數次方為正奇數次方為負", level: "國中", driveId: "duankao-g7-neg-power-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao-g7-neg-power-practice.pdf", publishAt: "2026-11-01T10:00:00+08:00" },
