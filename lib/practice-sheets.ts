@@ -17,6 +17,8 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "段考必錯 #15", title: "長方體 5、4、3，螞蟻沿表面爬最短多長？5√2 要穿過內部，是 √74", topic: "國二畢氏定理應用：表面最短路徑攤平兩個面、三種攤法比大小（最長邊單獨放）、空間對角線不是表面路徑、圓柱側面繞半圈", level: "國中", driveId: "duankao15-surface-path-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao15-surface-path-practice.pdf", publishAt: "2026-11-05T20:30:00+08:00" },
+  { series: "學測一眼懂 #31", title: "x²＋y²＝4，3x＋4y 最大是多少？不是 14 也不是 7√2，是 10", topic: "內積與柯西不等式：ax＋by＝(a, b)·(x, y)、圓上最大值＝√(a²＋b²)×半徑、最小值反方向、圓心不在原點先平移", level: "高中", driveId: "cauchy-circle-max-practice", url: "https://kuan-weekly.vercel.app/pdf/cauchy-circle-max-practice.pdf", unit: "vector", publishAt: "2026-11-05T17:30:00+08:00" },
   { series: "段考必錯 #14", title: "α²＋β²＝20，k 是 16 嗎？少乘 2 又沒實根，是 8", topic: "國三二次方程式根與係數：兩根和、積、α²＋β²＝(α＋β)²−2αβ、1/α＋1/β、判別式檢查實根", level: "國中", driveId: "duankao14-quad-roots-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao14-quad-roots-practice.pdf", publishAt: "2026-11-04T20:30:00+08:00" },
   { series: "段考必錯 #13", title: "(√5 − √3)² 是 2 嗎？交叉項不能丟，是 8 − 2√15", topic: "國二乘法公式＋根式：(a − b)² ＝ a² − 2ab ＋ b²、(k√a)² ＝ k²a、平方差交叉項相消、近似值驗算", level: "國中", driveId: "duankao13-sqrt-expand-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao13-sqrt-expand-practice.pdf", unit: "jh-mult", publishAt: "2026-11-04T20:30:00+08:00" },
   { series: "學測數學 sinθ＋cosθ", title: "sinθ ＋ cosθ ＝ √2，sinθcosθ 是多少？平方一步拆出來，是 1/2", topic: "sinθ ＋ cosθ 平方得 1 ＋ 2sinθcosθ、由和求積、由積求和、sinθ − cosθ 用角度範圍定正負、立方和", level: "高中", driveId: "sincos-sum-product-practice-1103", url: "https://kuan-weekly.vercel.app/pdf/sincos-sum-product-practice.pdf", unit: "trig", publishAt: "2026-11-04T10:00:00+08:00" },
