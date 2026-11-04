@@ -17,6 +17,7 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "段考必錯 #14", title: "α²＋β²＝20，k 是 16 嗎？少乘 2 又沒實根，是 8", topic: "國三二次方程式根與係數：兩根和、積、α²＋β²＝(α＋β)²−2αβ、1/α＋1/β、判別式檢查實根", level: "國中", driveId: "duankao14-quad-roots-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao14-quad-roots-practice.pdf", publishAt: "2026-11-04T20:30:00+08:00" },
   { series: "段考必錯 #13", title: "(√5 − √3)² 是 2 嗎？交叉項不能丟，是 8 − 2√15", topic: "國二乘法公式＋根式：(a − b)² ＝ a² − 2ab ＋ b²、(k√a)² ＝ k²a、平方差交叉項相消、近似值驗算", level: "國中", driveId: "duankao13-sqrt-expand-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao13-sqrt-expand-practice.pdf", unit: "jh-mult", publishAt: "2026-11-04T20:30:00+08:00" },
   { series: "學測數學 sinθ＋cosθ", title: "sinθ ＋ cosθ ＝ √2，sinθcosθ 是多少？平方一步拆出來，是 1/2", topic: "sinθ ＋ cosθ 平方得 1 ＋ 2sinθcosθ、由和求積、由積求和、sinθ − cosθ 用角度範圍定正負、立方和", level: "高中", driveId: "sincos-sum-product-practice-1103", url: "https://kuan-weekly.vercel.app/pdf/sincos-sum-product-practice.pdf", unit: "trig", publishAt: "2026-11-04T10:00:00+08:00" },
   { series: "學測一眼懂 sinθ＋cosθ", title: "sinθ ＋ cosθ ＝ 1/2，sinθcosθ 是多少？別急著解角度，是 −3/8", topic: "sinθ ＋ cosθ 平方得 1 ＋ 2sinθcosθ、由和求積、由積求和、sinθ − cosθ 用角度範圍定正負、立方和（與 √2 那支同一份）", level: "高中", driveId: "sincos-sum-product-practice", url: "https://kuan-weekly.vercel.app/pdf/sincos-sum-product-practice.pdf", unit: "trig", publishAt: "2026-11-04T10:00:00+08:00" },
