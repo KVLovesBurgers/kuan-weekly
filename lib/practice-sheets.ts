@@ -17,6 +17,8 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "段考必錯 #12", title: "(x−1)/3 − (x+2)/6 = 1，你算 x=6 嗎？去分母先補括號，是 x=10", topic: "國一一元一次方程式：去分母每一項都乘公倍數、分數線就是括號、減號後括號每項變號、小數分母先化整數、代回驗算", level: "國中", driveId: "duankao12-fraction-eq-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao12-fraction-eq-practice.pdf", publishAt: "2026-11-03T20:30:00+08:00" },
+  { series: "根號化簡", title: "√12 會化簡嗎？先找完全平方數，答案是 2√3", topic: "國二根式化簡：拆最大的完全平方因數、化成同類根式再加減、根號相乘再化簡、分母有理化", level: "國中", driveId: "sqrt-simplify-practice", url: "https://kuan-weekly.vercel.app/pdf/sqrt-simplify-practice.pdf", unit: "jh-mult", publishAt: "2026-11-02T20:30:00+08:00" },
   { series: "段考必錯 #15", title: "長方體 5、4、3，螞蟻沿表面爬最短多長？5√2 要穿過內部，是 √74", topic: "國二畢氏定理應用：表面最短路徑攤平兩個面、三種攤法比大小（最長邊單獨放）、空間對角線不是表面路徑、圓柱側面繞半圈", level: "國中", driveId: "duankao15-surface-path-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao15-surface-path-practice.pdf", publishAt: "2026-11-05T20:30:00+08:00" },
   { series: "學測一眼懂 #31", title: "x²＋y²＝4，3x＋4y 最大是多少？不是 14 也不是 7√2，是 10", topic: "內積與柯西不等式：ax＋by＝(a, b)·(x, y)、圓上最大值＝√(a²＋b²)×半徑、最小值反方向、圓心不在原點先平移", level: "高中", driveId: "cauchy-circle-max-practice", url: "https://kuan-weekly.vercel.app/pdf/cauchy-circle-max-practice.pdf", unit: "vector", publishAt: "2026-11-05T17:30:00+08:00" },
   { series: "段考必錯 #14", title: "α²＋β²＝20，k 是 16 嗎？少乘 2 又沒實根，是 8", topic: "國三二次方程式根與係數：兩根和、積、α²＋β²＝(α＋β)²−2αβ、1/α＋1/β、判別式檢查實根", level: "國中", driveId: "duankao14-quad-roots-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao14-quad-roots-practice.pdf", publishAt: "2026-11-04T20:30:00+08:00" },
