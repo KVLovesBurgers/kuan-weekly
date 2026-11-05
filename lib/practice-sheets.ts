@@ -17,6 +17,8 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "段考必錯 #16", title: "兩個兩位數，最大公因數 6、最小公倍數 72，和是 78？先除以 6 再找互質，是 42", topic: "國一最大公因數與最小公倍數：a × b ＝ (a, b) × [a, b]、設 6m、6n 且 m、n 互質、檢查位數條件、只用乘積去拆的陷阱", level: "國中", driveId: "duankao16-gcd-lcm-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao16-gcd-lcm-practice.pdf", publishAt: "2026-11-06T20:30:00+08:00" },
+  { series: "學測一眼懂 #32", title: "已知至少一顆是 6，兩顆都是 6 的機率是 1/6？樣本空間只剩 11 格，是 1/11", topic: "條件機率：已知條件先縮小樣本空間、P(B｜A) ＝ n(A∩B) ÷ n(A)、「至少一顆」用 6 ＋ 6 − 1、「已知第一顆」與「已知至少一顆」不同", level: "高中", driveId: "condprob-dice-practice", url: "https://kuan-weekly.vercel.app/pdf/condprob-dice-practice.pdf", unit: "prob", publishAt: "2026-11-06T17:30:00+08:00" },
   { series: "段考必錯 #12", title: "(x−1)/3 − (x+2)/6 = 1，你算 x=6 嗎？去分母先補括號，是 x=10", topic: "國一一元一次方程式：去分母每一項都乘公倍數、分數線就是括號、減號後括號每項變號、小數分母先化整數、代回驗算", level: "國中", driveId: "duankao12-fraction-eq-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao12-fraction-eq-practice.pdf", publishAt: "2026-11-03T20:30:00+08:00" },
   { series: "根號化簡", title: "√12 會化簡嗎？先找完全平方數，答案是 2√3", topic: "國二根式化簡：拆最大的完全平方因數、化成同類根式再加減、根號相乘再化簡、分母有理化", level: "國中", driveId: "sqrt-simplify-practice", url: "https://kuan-weekly.vercel.app/pdf/sqrt-simplify-practice.pdf", unit: "jh-mult", publishAt: "2026-11-02T20:30:00+08:00" },
   { series: "段考必錯 #15", title: "長方體 5、4、3，螞蟻沿表面爬最短多長？5√2 要穿過內部，是 √74", topic: "國二畢氏定理應用：表面最短路徑攤平兩個面、三種攤法比大小（最長邊單獨放）、空間對角線不是表面路徑、圓柱側面繞半圈", level: "國中", driveId: "duankao15-surface-path-practice", url: "https://kuan-weekly.vercel.app/pdf/duankao15-surface-path-practice.pdf", publishAt: "2026-11-05T20:30:00+08:00" },
