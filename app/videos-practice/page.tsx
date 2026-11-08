@@ -78,6 +78,39 @@ export default function VideosPracticePage() {
             </p>
           </div>
 
+          <section aria-label="補發練習，直接下載">
+            <h2 className="display" style={{ fontSize: 22, margin: "22px 0 8px" }}>補發練習</h2>
+            <p className="muted" style={{ margin: "0 0 12px" }}>
+              這兩份從這裡直接開啟 PDF。尚未併入下方自動清單，也還沒有對應的單元頁。
+            </p>
+            <ul className="vp-list">
+              <li className="card vp-card">
+                <div className="vp-meta">
+                  <strong className="vp-no">國一第三次段考／期末</strong>
+                </div>
+                <h3 className="display">一元一次方程式含參數</h3>
+                <p className="vp-tags">
+                  <span className="badge">國一</span>
+                </p>
+                <a className="btn btn-ink vp-btn" href="/pdf/catchup-g7-lineq-param-practice.pdf" target="_blank" rel="noopener">
+                  開啟練習題（附解答）
+                </a>
+              </li>
+              <li className="card vp-card">
+                <div className="vp-meta">
+                  <strong className="vp-no">學測等差級數</strong>
+                </div>
+                <h3 className="display">前 n 項和與一般項</h3>
+                <p className="vp-tags">
+                  <span className="badge">高一</span>
+                </p>
+                <a className="btn btn-ink vp-btn" href="/pdf/catchup-gsat-arith-sum-practice.pdf" target="_blank" rel="noopener">
+                  開啟練習題（附解答）
+                </a>
+              </li>
+            </ul>
+          </section>
+
           <VideoPracticeList rows={rows} kinds={kinds} units={units} grades={grades} />
 
           <p className="muted" style={{ marginTop: 28, fontSize: 14 }}>

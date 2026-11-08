@@ -17,7 +17,7 @@ export type VideoRow = {
   title: string;
   topic: string;
   level: PracticeSheet["level"];
-  /** 年級（108 課綱）：國二、國三、高一、高二、SAT；沒登記的新影片退回 level（國中／高中）。 */
+  /** 年級（108 課綱）：國一、國二、國三、高一、高二、SAT；沒登記的新影片退回 level（國中／高中）。 */
   grade: string;
   unit: string;
   unitTitle: string;
@@ -46,6 +46,8 @@ const PREFIX: Record<string, string> = { 畫圖一眼懂: "ey", 學測一眼懂:
  * 新影片沒寫在這裡時，退回 level（國中／高中／SAT），之後再補一行即可。
  */
 const GRADE: Record<string, string> = {
+  "g7-lineq-param": "國一", // 國一第三次段考 一元一次方程式含參數
+  "gsat-arith-sum": "高一", // 學測等差級數
   "1NB5HWRZl0NVXy5wpa7I8gSohv39_Pg_f": "高一", // 畫圖一眼懂 #25 餘弦定理
   "gsat-trap1-practice": "高一", // 學測陷阱題 #1 根式方程
   "gsat-real2-practice": "高一", // 學測真題 #2 排列組合
@@ -69,7 +71,7 @@ const GRADE: Record<string, string> = {
   "1hShrUHRkiwdeIpilMpr6YTrg7nCcKXzB": "高二", // 段考必錯 #5 sin 和角
 };
 
-export const GRADE_ORDER = ["國二", "國三", "高一", "高二", "SAT", "國中", "高中"];
+export const GRADE_ORDER = ["國一", "國二", "國三", "高一", "高二", "SAT", "國中", "高中"];
 
 function gradeOf(s: PracticeSheet): string {
   const key = s.driveId in GRADE ? s.driveId : (s.url?.match(/\/pdf\/([^/]+)\.pdf$/)?.[1] ?? "");

@@ -18,6 +18,7 @@ IDX = tc_index(BOLD)
 F = lambda s: ImageFont.truetype(BOLD, s, index=IDX)
 
 UNITS = [
+    ("jh-lineq", "國中", "一元一次方程式", "含參數：移項・無解・無限多解"),
     ("jh-mult", "國中", "乘法公式", "和的平方・差的平方・平方差"),
     ("jh-circle", "國中", "圓（國三）", "弧長扇形・圓周角・弦切角・圓內接四邊形"),
     ("trig", "高中", "三角函數", "tan 與斜率・單位圓・和角公式・正餘弦定理"),
