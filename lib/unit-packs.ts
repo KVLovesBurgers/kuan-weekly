@@ -20,6 +20,7 @@ export type UnitPack = {
 };
 
 export const UNIT_PACKS: UnitPack[] = [
+  { slug: "jh-lineq", title: "一元一次方程式", level: "國中", track: "jh", topic: "含參數的一元一次方程式：移項、無解、無限多解" },
   { slug: "jh-mult", title: "乘法公式", level: "國中", track: "jh", topic: "和的平方、差的平方、平方差，兩個平方相減要加括號" },
   { slug: "jh-circle", title: "圓（國三）", level: "國中", track: "jh", topic: "弧長與扇形、圓心角與圓周角、弦切角、圓內接四邊形" },
   {

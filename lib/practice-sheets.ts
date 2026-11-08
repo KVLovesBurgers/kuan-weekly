@@ -17,6 +17,8 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
+  { series: "國一第三次段考", title: "一元一次方程式含參數：無解、無限多解要分開看", topic: "含參數的一元一次方程式：移項後看係數，係數為 0 時無解或無限多解，正整數 a 要回頭檢查", level: "國中", driveId: "g7-lineq-param", url: "/pdf/catchup-g7-lineq-param-practice.pdf", unit: "jh-lineq", publishAt: "2026-11-08T17:00:00+08:00" },
+  { series: "學測等差級數", title: "前 n 項和已知，怎麼求後面的和？", topic: "等差級數：Sn＝An²＋Bn、由一項求前 n 項和、由 Sn 回推一般項，常數項要小心", level: "高中", driveId: "gsat-arith-sum", url: "/pdf/catchup-gsat-arith-sum-practice.pdf", unit: "series", publishAt: "2026-11-08T17:00:00+08:00" },
   { series: "學測陷阱題 #1", title: "根式方程只找到一個解？兩個解都要，和是 6", topic: "根式方程：定義域、平方後代回檢查增根、不能同除以可能為 0 的根號、換元 t ≥ 0", level: "高中", driveId: "gsat-trap1-practice", url: "https://kuan-weekly.vercel.app/pdf/gsat-trap1-practice.pdf", publishAt: "2026-10-25T17:30:00+08:00" },
   { series: "學測真題 #3", title: "解出 m＝0 要丟掉，答對率只有 18%（114 學測數A 第16題）", topic: "點到直線距離、相切時半徑＝距離、弦長 2√(r²−d²)，解出參數要回頭檢查相異兩點", level: "高中", driveId: "1QnqdNaLSQLPzweJhE18AM8K4h6wNw7IP", url: "https://kuan-weekly.vercel.app/pdf/gsat-real3-practice.pdf", unit: "circle-eq", publishAt: "2026-10-24T17:30:00+08:00" },
   { series: "學測真題 #2", title: "5、6 相鄰又 6、7 相鄰，不能各乘 2（115 學測數B 第14題）", topic: "相鄰排列的綑綁法：同一個數字出現在兩個相鄰條件裡，要合成一串", level: "高中", driveId: "1j3QXMRTUhBANKkpMjj5iXuSX-Issb_C9", url: "https://kuan-weekly.vercel.app/pdf/gsat-real2-practice.pdf", unit: "prob", publishAt: "2026-10-23T17:30:00+08:00" },
