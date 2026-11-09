@@ -147,3 +147,20 @@ export async function startCheckout(formData: FormData) {
 
   redirect(`/subscribe/pay?trade=${encodeURIComponent(tradeNo)}`);
 }
+
+// 國三會考系列課候補（2026-11-09 使用者拍板：只收候補、不報價、不收款）。
+export async function joinHuikaoWaitlist(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const child_grade = String(formData.get("grade") ?? "國三").trim();
+  const note = String(formData.get("note") ?? "").trim().slice(0, 500);
+  const src = String(formData.get("src") ?? "").trim().toLowerCase();
+  const cleanSource = /^[a-z0-9_-]{1,40}$/.test(src) ? src : "direct";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    redirect("/huikao?error=" + encodeURIComponent("請輸入有效信箱。") + (cleanSource !== "direct" ? "&src=" + cleanSource : ""));
+  }
+  const db = await getDb();
+  await db.prepare(
+    "INSERT INTO waitlist (id, email, child_grade, note, created_at) VALUES (?, ?, ?, ?, ?)",
+  ).run(uid("wait"), email, child_grade, `【會考課】src=${cleanSource}｜${note}`, new Date().toISOString());
+  redirect("/huikao?ok=1");
+}
