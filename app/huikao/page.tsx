@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "國三會考數學系列課｜加入候補｜寬數",
   description: "吳寬老師的國三會考數學系列課製作中。留下信箱加入候補，開放時第一時間通知。候補不收費。",
+  alternates: { canonical: "/huikao" },
 };
 
 export default async function HuikaoWaitlistPage({

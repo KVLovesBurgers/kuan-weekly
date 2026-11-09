@@ -4,6 +4,8 @@ import { joinWaitlist } from "@/app/actions/parent";
 import { GRADE_OPTIONS, seatLabel } from "@/lib/config";
 import { seatsRemaining } from "@/lib/db";
 
+export const metadata = { alternates: { canonical: "/waitlist" } };
+
 export const dynamic = "force-dynamic";
 
 export default async function WaitlistPage({

@@ -6,6 +6,7 @@ import { SITE } from "@/lib/config";
 export const metadata = {
   title: `隱私權政策｜${SITE.name}`,
   description: "寬數週練個資蒐集、使用與刪除說明。",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {
