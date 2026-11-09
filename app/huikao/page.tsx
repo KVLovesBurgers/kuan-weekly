@@ -25,8 +25,11 @@ export default async function HuikaoWaitlistPage({
         <div className="wrap" style={{ maxWidth: 560 }}>
           <p className="kicker">國三會考數學系列課</p>
           <h1 className="display">加入候補名單</h1>
+          <p>
+            會考數學總複習課｜全範圍 20 集。每集精講保 B、衝 A、A++ 三級例題，搭配分級隨堂題、小測和模考，以衝 A 為主。製作中，留言或私訊「會考課」，做好通知你。
+          </p>
           <p className="muted">
-            吳寬老師正在錄製國三會考數學系列課：每一單元講清觀念與常錯陷阱，附隨堂練習與詳解。留下信箱，課程開放時會依候補順序通知你。候補不收費，也不需要付款。
+            也可以留下信箱，課程開放時會依候補順序通知你。候補不收費，也不需要付款。
           </p>
           {sp.ok ? <p className="banner ok">已登記候補。開放時會寄信通知，無需付款。</p> : null}
           {sp.error ? <p className="banner warn">{sp.error}</p> : null}
