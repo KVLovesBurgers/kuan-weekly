@@ -17,7 +17,7 @@ export type PracticeSheet = {
 };
 
 export const PRACTICE_SHEETS: PracticeSheet[] = [
-  { series: "學測一眼懂", title: "恰有三個相異實根，m 是多少？配方後看頂點剛好碰到 0，是 m＝4", topic: "絕對值二次方程式根數：配方、圖形翻折、恰三根／四根／一根的參數條件、端點根要檢查", level: "高中", driveId: "gsat-three-roots-practice", url: "https://kuan-weekly.vercel.app/pdf/gsat-three-roots-practice.pdf", unit: "other", publishAt: "2026-11-09T14:30:00+08:00" },
+  { series: "學測一眼懂", title: "恰有三個相異實根，m 是多少？翻折後頂點高 1，是 m＝1", topic: "絕對值二次方程式根數：配方、圖形翻折、恰三根／四根／一根的參數條件、端點根要檢查", level: "高中", driveId: "gsat-three-roots-practice", url: "https://kuan-weekly.vercel.app/pdf/gsat-three-roots-practice.pdf", unit: "other", publishAt: "2026-11-09T14:30:00+08:00" },
   { series: "段考必錯 國二南一", title: "長方形沿對角線摺一下，這段多長？摺痕兩邊等長，用畢氏定理列方程", topic: "國二南一畢氏定理：對角線摺疊找等長線段、設未知數列畢氏方程、求 DE／EC／AE、已知線段反求寬", level: "國中", driveId: "g8-diagonal-fold-practice", url: "https://kuan-weekly.vercel.app/pdf/g8-diagonal-fold-practice.pdf", unit: "other", publishAt: "2026-11-09T14:30:00+08:00" },
   { series: "段考必錯 國一", title: "要是完全平方數又只有 6 個正因數，最小值真的只是 2？先質因數分解補成平方", topic: "國一質因數分解：完全平方數的指數都是偶數、正因數個數公式、同時滿足兩條件求最小正整數", level: "國中", driveId: "g7-square-six-divisors-practice", url: "https://kuan-weekly.vercel.app/pdf/g7-square-six-divisors-practice.pdf", unit: "other", publishAt: "2026-11-09T14:30:00+08:00" },
   { series: "段考必錯 國三進階挑戰", title: "兩相異正整數根，m 只能是多少？判別式不夠，湊成 (r−2)(s−2)＝2，是 6", topic: "國三二次方程式根與係數＋整數根：兩根和與積消去參數、湊成 (r−a)(s−b)＝k、正負因數組都要列、檢查正整數與相異", level: "國中", driveId: "integer-roots-practice", url: "https://kuan-weekly.vercel.app/pdf/integer-roots-practice.pdf", unit: "other", publishAt: "2026-11-08T20:00:00+08:00" },
